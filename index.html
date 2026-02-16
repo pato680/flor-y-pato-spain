@@ -4,813 +4,482 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="España 2026">
-<meta name="theme-color" content="#ffffff">
-<title>España 2026 - Viaje</title>
+<meta name="theme-color" content="#0a1628">
+<title>España 2026</title>
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" type="image/png" href="icon-180.png">
-<link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiRXNwYcOxYSAyMDI2Iiwic2hvcnRfbmFtZSI6IkVzcGHDsWEiLCJzdGFydF91cmwiOiIuIiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJiYWNrZ3JvdW5kX2NvbG9yIjoiI2ZmZmZmZiIsInRoZW1lX2NvbG9yIjoiI2ZmZmZmZiJ9">
 
-<!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
   :root {
     --safe-top: env(safe-area-inset-top, 20px);
     --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --red: #e63946;
+    --red-dark: #c1121f;
+    --blue: #1d3557;
+    --blue-light: #457b9d;
+    --blue-bright: #2196f3;
+    --white: #f1faee;
+    --bg: #0a1628;
+    --card: #111d33;
+    --card-hover: #162440;
+    --text: #f1faee;
+    --text-dim: #8899b0;
+    --border: rgba(255,255,255,0.06);
   }
 
   body {
-    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', system-ui, sans-serif;
-    background: #f2f2f7;
-    color: #1c1c1e;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text);
     min-height: 100vh;
     min-height: 100dvh;
-    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
   }
 
-  /* Sync bar */
+  /* Sync */
   .sync-bar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 200;
-    text-align: center;
-    padding: 3px 0;
-    font-size: 11px;
-    font-weight: 600;
+    position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+    text-align: center; padding: 3px 0; font-size: 10px; font-weight: 700;
+    letter-spacing: 0.5px; text-transform: uppercase;
   }
-  .sync-bar.online { background: #34c759; color: #fff; }
-  .sync-bar.offline { background: #ff9500; color: #fff; }
+  .sync-bar.online { background: var(--red); color: #fff; }
+  .sync-bar.offline { background: var(--blue-light); color: #fff; }
 
   /* Header */
   .header {
-    padding: calc(var(--safe-top) + 20px) 20px 12px;
-    background: #fff;
-    border-bottom: 0.5px solid #d1d1d6;
+    padding: calc(var(--safe-top) + 28px) 24px 20px;
+    background: linear-gradient(180deg, #0d1f3c 0%, var(--bg) 100%);
   }
-  .header-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
+  .header-row { display: flex; align-items: flex-start; justify-content: space-between; }
   .header h1 {
-    font-size: 34px;
-    font-weight: 700;
-    letter-spacing: -0.5px;
-    color: #1c1c1e;
+    font-size: 32px; font-weight: 900; letter-spacing: -1px;
+    background: linear-gradient(135deg, #fff 0%, #a8dadc 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
-  .header .subtitle {
-    color: #8e8e93;
-    font-size: 15px;
-    margin-top: 2px;
+  .header .dates {
+    font-size: 14px; color: var(--text-dim); font-weight: 500; margin-top: 4px;
   }
   .share-btn {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: #007aff;
-    color: #fff;
-    border: none;
-    font-size: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
+    width: 40px; height: 40px; border-radius: 12px;
+    background: rgba(255,255,255,0.08); border: 1px solid var(--border);
+    color: var(--text); font-size: 18px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    backdrop-filter: blur(10px);
   }
+  .share-btn:active { background: rgba(255,255,255,0.15); }
 
-  /* City pills */
-  .city-pills {
-    display: flex;
-    gap: 8px;
-    margin-top: 12px;
-    flex-wrap: wrap;
+  /* City legend */
+  .city-legend {
+    display: flex; gap: 6px; margin-top: 16px; flex-wrap: wrap;
   }
-  .city-pill {
-    font-size: 12px;
-    font-weight: 600;
-    padding: 4px 12px;
-    border-radius: 14px;
-    color: #fff;
+  .legend-item {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 11px; font-weight: 600; color: var(--text-dim);
+    padding: 4px 10px; border-radius: 8px;
+    background: rgba(255,255,255,0.04);
+  }
+  .legend-dot {
+    width: 8px; height: 8px; border-radius: 3px;
   }
 
   /* Calendar */
-  .calendar-section {
-    padding: 16px 16px 8px;
+  .cal-section { padding: 16px 16px 8px; }
+  .cal-card {
+    background: var(--card); border-radius: 20px;
+    padding: 20px; border: 1px solid var(--border);
   }
-  .calendar-card {
-    background: #fff;
-    border-radius: 16px;
-    padding: 16px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-  }
-  .cal-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 14px;
-  }
-  .cal-header h2 {
-    font-size: 17px;
-    font-weight: 600;
-    color: #1c1c1e;
+  .cal-title {
+    font-size: 18px; font-weight: 800; text-align: center;
+    margin-bottom: 16px; color: #fff;
+    letter-spacing: -0.3px;
   }
   .cal-weekdays {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    text-align: center;
-    margin-bottom: 6px;
+    display: grid; grid-template-columns: repeat(7, 1fr);
+    text-align: center; margin-bottom: 8px;
   }
-  .cal-weekday {
-    font-size: 11px;
-    font-weight: 600;
-    color: #8e8e93;
-    text-transform: uppercase;
+  .cal-wd {
+    font-size: 11px; font-weight: 700; color: var(--text-dim);
+    text-transform: uppercase; letter-spacing: 0.5px;
   }
   .cal-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 4px;
+    display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px;
   }
   .cal-day {
-    aspect-ratio: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: all 0.15s;
-    position: relative;
-    font-size: 15px;
-    font-weight: 500;
+    aspect-ratio: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    border-radius: 14px; font-size: 15px; font-weight: 600;
+    cursor: pointer; transition: all 0.15s; position: relative;
   }
   .cal-day.empty { cursor: default; }
-  .cal-day.inactive {
-    color: #c7c7cc;
-    cursor: default;
-  }
-  .cal-day.trip {
-    color: #fff;
-    font-weight: 600;
-  }
-  .cal-day.trip:active {
-    transform: scale(0.92);
-  }
+  .cal-day.off { color: #2a3a52; cursor: default; }
+  .cal-day.trip { color: #fff; }
+  .cal-day.trip:active { transform: scale(0.9); }
   .cal-day.selected {
-    ring: 3px solid #007aff;
-    box-shadow: 0 0 0 3px #007aff;
-    transform: scale(1.08);
+    transform: scale(1.12);
+    box-shadow: 0 0 0 2px #fff, 0 4px 20px rgba(230,57,70,0.4);
   }
-  .cal-day .cal-dot {
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.7);
-    margin-top: 2px;
+  .cal-dot-row { display: flex; gap: 2px; margin-top: 2px; }
+  .cal-ev-dot {
+    width: 3px; height: 3px; border-radius: 50%;
+    background: rgba(255,255,255,0.6);
   }
-  .cal-day.inactive .cal-dot { display: none; }
+
+  /* Tabs */
+  .tab-bar {
+    display: flex; gap: 4px; padding: 0 16px; margin-top: 8px;
+    overflow-x: auto; scrollbar-width: none;
+  }
+  .tab-bar::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    flex-shrink: 0; padding: 8px 16px; border-radius: 10px;
+    border: 1px solid var(--border); background: var(--card);
+    color: var(--text-dim); font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: all 0.15s; font-family: inherit;
+  }
+  .tab-btn.active {
+    background: var(--red); color: #fff;
+    border-color: var(--red); box-shadow: 0 4px 15px rgba(230,57,70,0.3);
+  }
 
   /* Day detail */
-  .day-detail {
-    padding: 0 16px 120px;
-  }
+  .detail-section { padding: 12px 16px 100px; }
+
   .detail-card {
-    background: #fff;
-    border-radius: 16px;
-    margin-top: 12px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-    overflow: hidden;
+    background: var(--card); border-radius: 20px;
+    border: 1px solid var(--border); overflow: hidden;
     animation: fadeUp 0.25s ease;
   }
   @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(12px); }
+    from { opacity: 0; transform: translateY(16px); }
     to { opacity: 1; transform: translateY(0); }
   }
-  .detail-header {
-    padding: 16px 16px 12px;
-    border-bottom: 0.5px solid #e5e5ea;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  .detail-head {
+    padding: 20px 20px 16px;
+    background: linear-gradient(135deg, var(--card) 0%, #162440 100%);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
   }
-  .detail-header h3 {
-    font-size: 20px;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+  .detail-left { display: flex; align-items: center; gap: 12px; }
+  .detail-icon {
+    width: 48px; height: 48px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
   }
-  .detail-city-badge {
-    font-size: 12px;
-    font-weight: 600;
-    padding: 3px 10px;
-    border-radius: 10px;
-    color: #fff;
-  }
-  .detail-date {
-    font-size: 13px;
-    color: #8e8e93;
-    font-weight: 500;
+  .detail-label { font-size: 20px; font-weight: 800; color: #fff; letter-spacing: -0.3px; }
+  .detail-city {
+    font-size: 12px; font-weight: 700; padding: 3px 10px;
+    border-radius: 8px; color: #fff; margin-top: 4px; display: inline-block;
   }
 
   /* Events */
-  .events-list {
-    padding: 8px 0;
-  }
-  .event-item {
-    display: flex;
-    align-items: flex-start;
-    padding: 10px 16px;
-    gap: 12px;
+  .events { padding: 8px 0; }
+  .ev-item {
+    display: flex; align-items: flex-start; padding: 14px 20px; gap: 14px;
     transition: background 0.15s;
   }
-  .event-item:active { background: #f2f2f7; }
-  .event-icon-circle {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    flex-shrink: 0;
+  .ev-item:active { background: var(--card-hover); }
+  .ev-icon {
+    width: 40px; height: 40px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
   }
-  .event-icon-circle.flight { background: #eef2ff; }
-  .event-icon-circle.transport { background: #f1f5f9; }
-  .event-icon-circle.tourism { background: #ecfdf5; }
-  .event-icon-circle.food { background: #fff7ed; }
-  .event-icon-circle.f1 { background: #fef2f2; }
+  .ev-icon.flight { background: rgba(99,102,241,0.15); }
+  .ev-icon.transport { background: rgba(148,163,184,0.12); }
+  .ev-icon.tourism { background: rgba(230,57,70,0.12); }
+  .ev-icon.food { background: rgba(249,115,22,0.12); }
+  .ev-icon.f1 { background: rgba(230,57,70,0.2); }
 
-  .event-info { flex: 1; min-width: 0; }
-  .event-info .event-title {
-    font-size: 15px;
-    font-weight: 600;
-    color: #1c1c1e;
+  .ev-info { flex: 1; min-width: 0; }
+  .ev-time {
+    font-size: 11px; font-weight: 700; color: var(--blue-bright);
+    text-transform: uppercase; letter-spacing: 0.3px;
   }
-  .event-info .event-detail {
-    font-size: 13px;
-    color: #8e8e93;
-    margin-top: 1px;
+  .ev-title { font-size: 15px; font-weight: 700; color: #fff; margin-top: 2px; }
+  .ev-detail { font-size: 13px; color: var(--text-dim); margin-top: 2px; }
+  .ev-del {
+    background: none; border: none; color: var(--red);
+    font-size: 18px; cursor: pointer; padding: 4px 8px;
+    border-radius: 8px; opacity: 0.5; flex-shrink: 0;
   }
-  .event-info .event-time-label {
-    font-size: 12px;
-    color: #007aff;
-    font-weight: 600;
-    margin-bottom: 2px;
-  }
-  .event-delete-btn {
-    background: none;
-    border: none;
-    color: #ff3b30;
-    font-size: 18px;
-    cursor: pointer;
-    padding: 4px 8px;
-    border-radius: 8px;
-    flex-shrink: 0;
-    opacity: 0.6;
-  }
-  .event-delete-btn:active { opacity: 1; background: #fff0f0; }
+  .ev-del:active { opacity: 1; background: rgba(230,57,70,0.1); }
 
-  .separator {
-    height: 0.5px;
-    background: #e5e5ea;
-    margin-left: 64px;
-  }
+  .ev-sep { height: 1px; background: var(--border); margin: 0 20px 0 74px; }
 
-  /* Add event */
-  .add-event-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    padding: 12px 16px;
-    color: #007aff;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    border: none;
-    background: none;
-    width: 100%;
+  /* Add */
+  .add-btn {
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 14px; color: var(--red); font-size: 14px; font-weight: 700;
+    cursor: pointer; border: none; background: none; width: 100%;
+    font-family: inherit; letter-spacing: -0.2px;
   }
-  .add-event-btn:active { background: #f2f2f7; }
+  .add-btn:active { background: var(--card-hover); }
 
   .add-form {
-    padding: 12px 16px 16px;
-    border-top: 0.5px solid #e5e5ea;
+    padding: 16px 20px 20px; border-top: 1px solid var(--border);
     animation: fadeUp 0.2s ease;
   }
-  .form-row { display: flex; gap: 8px; margin-bottom: 8px; }
-  .form-input {
-    background: #f2f2f7;
-    border: none;
-    border-radius: 10px;
-    padding: 10px 12px;
-    font-size: 15px;
-    font-family: inherit;
-    color: #1c1c1e;
-    outline: none;
-    width: 100%;
+  .f-row { display: flex; gap: 8px; margin-bottom: 8px; }
+  .f-input {
+    background: rgba(255,255,255,0.06); border: 1px solid var(--border);
+    border-radius: 12px; padding: 11px 14px; font-size: 15px;
+    font-family: inherit; color: #fff; outline: none; width: 100%;
   }
-  .form-input:focus { box-shadow: 0 0 0 2px #007aff40; }
-  .form-input.time-input { width: 80px; flex-shrink: 0; }
-  .form-select {
-    background: #f2f2f7;
-    border: none;
-    border-radius: 10px;
-    padding: 10px 12px;
-    font-size: 15px;
-    font-family: inherit;
-    color: #1c1c1e;
-    outline: none;
+  .f-input:focus { border-color: var(--red); box-shadow: 0 0 0 2px rgba(230,57,70,0.2); }
+  .f-input::placeholder { color: #4a5568; }
+  .f-input.time { width: 80px; flex-shrink: 0; }
+  .f-select {
+    background: rgba(255,255,255,0.06); border: 1px solid var(--border);
+    border-radius: 12px; padding: 11px 14px; font-size: 15px;
+    font-family: inherit; color: #fff; outline: none;
   }
-  .form-actions { display: flex; gap: 8px; margin-top: 4px; }
-  .btn-primary {
-    background: #007aff;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 10px;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    flex: 1;
+  .f-actions { display: flex; gap: 8px; margin-top: 4px; }
+  .btn-r {
+    background: var(--red); color: #fff; border: none;
+    padding: 12px 20px; border-radius: 12px; font-size: 15px;
+    font-weight: 700; cursor: pointer; flex: 1; font-family: inherit;
   }
-  .btn-secondary {
-    background: #e5e5ea;
-    color: #1c1c1e;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 10px;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
+  .btn-r:active { background: var(--red-dark); }
+  .btn-g {
+    background: rgba(255,255,255,0.06); color: var(--text-dim); border: 1px solid var(--border);
+    padding: 12px 20px; border-radius: 12px; font-size: 15px;
+    font-weight: 600; cursor: pointer; font-family: inherit;
   }
 
-  /* No selection hint */
-  .select-hint {
-    text-align: center;
-    padding: 40px 20px;
-    color: #8e8e93;
-    font-size: 15px;
+  /* Hint */
+  .hint {
+    text-align: center; padding: 50px 20px; color: var(--text-dim);
   }
-  .select-hint .hint-icon {
-    font-size: 40px;
-    margin-bottom: 8px;
-    display: block;
-  }
+  .hint-icon { font-size: 48px; display: block; margin-bottom: 12px; }
+  .hint-text { font-size: 15px; font-weight: 500; line-height: 1.5; }
 
   /* Modal */
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.4);
-    z-index: 300;
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    animation: fadeIn 0.2s;
+  .modal-bg {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+    z-index: 300; display: flex; align-items: flex-end;
+    justify-content: center; animation: fadeIn 0.2s;
   }
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-  .modal-sheet {
-    background: #fff;
-    border-radius: 16px 16px 0 0;
-    padding: 24px 20px calc(var(--safe-bottom) + 24px);
-    width: 100%;
-    max-width: 420px;
-    animation: slideUp 0.3s ease;
+  .modal {
+    background: var(--card); border-radius: 24px 24px 0 0;
+    padding: 28px 24px calc(var(--safe-bottom) + 28px);
+    width: 100%; max-width: 420px;
+    animation: slideUp 0.3s ease; border-top: 2px solid var(--red);
   }
   @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-  .modal-sheet h2 { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
-  .modal-sheet p { color: #8e8e93; font-size: 14px; margin-bottom: 16px; line-height: 1.5; }
-  .share-url-box {
-    background: #f2f2f7;
-    border-radius: 12px;
-    padding: 12px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 16px;
+  .modal h2 { font-size: 22px; font-weight: 800; margin-bottom: 6px; color: #fff; }
+  .modal p { color: var(--text-dim); font-size: 14px; margin-bottom: 16px; line-height: 1.5; }
+  .share-box {
+    background: rgba(255,255,255,0.04); border-radius: 14px; padding: 14px;
+    display: flex; align-items: center; gap: 10px; margin-bottom: 16px;
+    border: 1px solid var(--border);
   }
-  .share-url-box span {
-    flex: 1;
-    color: #007aff;
-    font-size: 13px;
-    font-family: ui-monospace, monospace;
-    word-break: break-all;
+  .share-box span {
+    flex: 1; color: var(--blue-bright); font-size: 13px;
+    font-family: ui-monospace, monospace; word-break: break-all;
   }
   .copy-btn {
-    background: #007aff;
-    color: #fff;
-    border: none;
-    padding: 8px 14px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 700;
-    cursor: pointer;
-    flex-shrink: 0;
+    background: var(--red); color: #fff; border: none;
+    padding: 8px 16px; border-radius: 10px; font-size: 13px;
+    font-weight: 700; cursor: pointer; flex-shrink: 0;
   }
-  .close-modal-btn {
-    background: #f2f2f7;
-    color: #007aff;
-    border: none;
-    padding: 14px;
-    border-radius: 12px;
-    width: 100%;
-    font-size: 17px;
-    font-weight: 600;
-    cursor: pointer;
+  .close-btn {
+    background: rgba(255,255,255,0.06); color: var(--text-dim);
+    border: 1px solid var(--border); padding: 14px; border-radius: 14px;
+    width: 100%; font-size: 16px; font-weight: 600; cursor: pointer;
+    font-family: inherit;
   }
 
-  .bottom-spacer { height: calc(var(--safe-bottom) + 20px); }
+  .spacer { height: calc(var(--safe-bottom) + 20px); }
 </style>
 </head>
 <body>
-
 <div id="app"></div>
-
 <script>
-// ==========================================
-// TRIP DATA
-// ==========================================
 const TRIP_DATA = [
   { date:"2026-06-05", label:"Viernes 5", city:"Vuelo", color:"#6366f1", icon:"\u2708\uFE0F",
     events:[{time:"21:45",title:"Vuelo a Madrid",detail:"IB 170 — Salida 9:45pm",type:"flight"}]},
-  { date:"2026-06-06", label:"Sábado 6", city:"Madrid", color:"#ef4444", icon:"\uD83C\uDFF0",
+  { date:"2026-06-06", label:"Sábado 6", city:"Madrid", color:"#e63946", icon:"\uD83C\uDFF0",
     events:[{time:"\uD83C\uDF05",title:"Llegada a Madrid",detail:"Check-in y descanso",type:"transport"},
             {time:"\uD83C\uDF06",title:"Paseo por el centro",detail:"Puerta del Sol, Plaza Mayor",type:"tourism"}]},
-  { date:"2026-06-07", label:"Domingo 7", city:"Madrid", color:"#ef4444", icon:"\uD83C\uDFF0",
+  { date:"2026-06-07", label:"Domingo 7", city:"Madrid", color:"#e63946", icon:"\uD83C\uDFF0",
     events:[{time:"\uD83C\uDF05",title:"Museo del Prado",detail:"Reservar entrada online",type:"tourism"},
             {time:"\uD83C\uDF06",title:"Parque del Retiro",detail:"Paseo y Palacio de Cristal",type:"tourism"}]},
-  { date:"2026-06-08", label:"Lunes 8", city:"Madrid", color:"#ef4444", icon:"\uD83C\uDFF0",
+  { date:"2026-06-08", label:"Lunes 8", city:"Madrid", color:"#e63946", icon:"\uD83C\uDFF0",
     events:[{time:"\uD83C\uDF05",title:"Palacio Real",detail:"Visita guiada",type:"tourism"},
             {time:"\uD83C\uDF06",title:"Barrio de La Latina",detail:"Tapas y paseo",type:"food"}]},
-  { date:"2026-06-09", label:"Martes 9", city:"Toledo", color:"#f59e0b", icon:"\u2694\uFE0F",
+  { date:"2026-06-09", label:"Martes 9", city:"Toledo", color:"#457b9d", icon:"\u2694\uFE0F",
     events:[{time:"\uD83C\uDF05",title:"Excursión a Toledo",detail:"Tren AVE desde Madrid (~30 min)",type:"transport"},
             {time:"\uD83D\uDD50",title:"Casco histórico",detail:"Catedral, Alcázar, calles medievales",type:"tourism"}]},
-  { date:"2026-06-10", label:"Miércoles 10", city:"Toledo", color:"#f59e0b", icon:"\u2694\uFE0F",
+  { date:"2026-06-10", label:"Miércoles 10", city:"Toledo", color:"#457b9d", icon:"\u2694\uFE0F",
     events:[{time:"\uD83C\uDF05",title:"Toledo día 2",detail:"Sinagoga, Museo del Greco, miradores",type:"tourism"},
             {time:"\uD83C\uDF06",title:"Regreso a Madrid",detail:"Tren de vuelta",type:"transport"}]},
-  { date:"2026-06-11", label:"Jueves 11", city:"Barcelona", color:"#3b82f6", icon:"\uD83C\uDF0A",
+  { date:"2026-06-11", label:"Jueves 11", city:"Barcelona", color:"#1d3557", icon:"\uD83C\uDF0A",
     events:[{time:"\uD83C\uDF05",title:"Viaje a Barcelona",detail:"Traslado y check-in Airbnb",type:"transport"},
             {time:"\uD83C\uDF06",title:"Las Ramblas",detail:"Barrio Gótico, La Boquería",type:"tourism"}]},
-  { date:"2026-06-12", label:"Viernes 12", city:"Barcelona", color:"#3b82f6", icon:"\uD83C\uDFCE\uFE0F",
+  { date:"2026-06-12", label:"Viernes 12", city:"Barcelona", color:"#1d3557", icon:"\uD83C\uDFCE\uFE0F",
     events:[{time:"\uD83C\uDFC1",title:"F1 — Práctica Libre",detail:"Circuit de Barcelona-Catalunya",type:"f1"}]},
-  { date:"2026-06-13", label:"Sábado 13", city:"Barcelona", color:"#3b82f6", icon:"\uD83C\uDFCE\uFE0F",
+  { date:"2026-06-13", label:"Sábado 13", city:"Barcelona", color:"#1d3557", icon:"\uD83C\uDFCE\uFE0F",
     events:[{time:"\uD83C\uDFC1",title:"F1 — Clasificación",detail:"Circuit de Barcelona-Catalunya",type:"f1"}]},
-  { date:"2026-06-14", label:"Domingo 14", city:"Barcelona", color:"#3b82f6", icon:"\uD83C\uDFCE\uFE0F",
+  { date:"2026-06-14", label:"Domingo 14", city:"Barcelona", color:"#1d3557", icon:"\uD83C\uDFCE\uFE0F",
     events:[{time:"\uD83C\uDFC1",title:"F1 — Carrera",detail:"Circuit de Barcelona-Catalunya",type:"f1"}]},
-  { date:"2026-06-15", label:"Lunes 15", city:"Barcelona", color:"#3b82f6", icon:"\uD83C\uDF0A",
+  { date:"2026-06-15", label:"Lunes 15", city:"Barcelona", color:"#1d3557", icon:"\uD83C\uDF0A",
     events:[{time:"\uD83C\uDF05",title:"Sagrada Familia",detail:"Reservar entrada online",type:"tourism"},
             {time:"\uD83C\uDF06",title:"Park Güell",detail:"Zona monumental de Gaudí",type:"tourism"}]},
-  { date:"2026-06-16", label:"Martes 16", city:"Barcelona", color:"#3b82f6", icon:"\uD83C\uDF0A",
+  { date:"2026-06-16", label:"Martes 16", city:"Barcelona", color:"#1d3557", icon:"\uD83C\uDF0A",
     events:[{time:"\uD83C\uDF05",title:"Barceloneta",detail:"Playa y paseo marítimo",type:"tourism"},
             {time:"\uD83C\uDF06",title:"Casa Batlló / La Pedrera",detail:"Arquitectura de Gaudí",type:"tourism"}]},
-  { date:"2026-06-17", label:"Miércoles 17", city:"Valencia", color:"#10b981", icon:"\uD83C\uDF4A",
+  { date:"2026-06-17", label:"Miércoles 17", city:"Valencia", color:"#a8dadc", icon:"\uD83C\uDF4A",
     events:[{time:"\uD83C\uDF05",title:"Viaje a Valencia",detail:"Traslado desde Barcelona",type:"transport"},
             {time:"\uD83C\uDF06",title:"Ciudad de las Artes y las Ciencias",detail:"Oceanogràfic, Hemisfèric",type:"tourism"}]},
-  { date:"2026-06-18", label:"Jueves 18", city:"Valencia", color:"#10b981", icon:"\uD83C\uDF4A",
+  { date:"2026-06-18", label:"Jueves 18", city:"Valencia", color:"#a8dadc", icon:"\uD83C\uDF4A",
     events:[{time:"\uD83C\uDF05",title:"Centro histórico",detail:"Catedral, Lonja de la Seda, Mercado Central",type:"tourism"},
             {time:"\uD83C\uDF06",title:"Playa de la Malvarrosa",detail:"Paella frente al mar",type:"food"}]},
-  { date:"2026-06-19", label:"Viernes 19", city:"Madrid", color:"#ef4444", icon:"\uD83C\uDFF0",
+  { date:"2026-06-19", label:"Viernes 19", city:"Madrid", color:"#e63946", icon:"\uD83C\uDFF0",
     events:[{time:"\uD83C\uDF05",title:"Regreso a Madrid",detail:"Traslado desde Valencia",type:"transport"},
             {time:"\uD83C\uDF06",title:"Últimas compras",detail:"Gran Vía, Malasaña, cena de despedida",type:"tourism"}]},
   { date:"2026-06-20", label:"Sábado 20", city:"Vuelo", color:"#6366f1", icon:"\u2708\uFE0F",
     events:[{time:"06:50",title:"Vuelo a Montevideo",detail:"IB 169 — Salida 6:50am",type:"flight"}]}
 ];
 
-const CITY_COLORS = { Madrid:"#ef4444", Toledo:"#f59e0b", Barcelona:"#3b82f6", Valencia:"#10b981", Vuelo:"#6366f1" };
+const CITY_COLORS = { Madrid:"#e63946", Toledo:"#457b9d", Barcelona:"#1d3557", Valencia:"#a8dadc", Vuelo:"#6366f1" };
 const EVENT_ICONS = { flight:"\u2708\uFE0F", transport:"\uD83D\uDE8C", tourism:"\uD83D\uDCCD", food:"\uD83C\uDF7D\uFE0F", f1:"\uD83C\uDFCE\uFE0F" };
+const CITIES = ["Todos","Madrid","Toledo","Barcelona","Valencia"];
 
-// ==========================================
-// STATE
-// ==========================================
-let state = {
-  tripData: JSON.parse(JSON.stringify(TRIP_DATA)),
-  selectedDate: null,
-  showAddForm: false,
-  showModal: false,
-  isOnline: false
-};
+let state = { tripData:JSON.parse(JSON.stringify(TRIP_DATA)), selectedDate:null, showAddForm:false, showModal:false, isOnline:false, filter:"Todos" };
+let db=null, dbRef=null;
 
-let db = null;
-let dbRef = null;
-
-// ==========================================
-// FIREBASE CONFIG (Flor y Pato Trip)
-// ==========================================
 const FIREBASE_CONFIG = {
-  apiKey: "AIzaSyDPZPk2nsOQ3oRMG7ADhS56zEFyORTE4QQ",
-  authDomain: "flor-y-pato-trip.firebaseapp.com",
-  databaseURL: "https://flor-y-pato-trip-default-rtdb.firebaseio.com",
-  projectId: "flor-y-pato-trip",
-  storageBucket: "flor-y-pato-trip.firebasestorage.app",
-  messagingSenderId: "862498607498",
-  appId: "1:862498607498:web:7e2ccf24cd913e6cb7c5c3"
+  apiKey:"AIzaSyDPZPk2nsOQ3oRMG7ADhS56zEFyORTE4QQ",
+  authDomain:"flor-y-pato-trip.firebaseapp.com",
+  databaseURL:"https://flor-y-pato-trip-default-rtdb.firebaseio.com",
+  projectId:"flor-y-pato-trip",
+  storageBucket:"flor-y-pato-trip.firebasestorage.app",
+  messagingSenderId:"862498607498",
+  appId:"1:862498607498:web:7e2ccf24cd913e6cb7c5c3"
 };
 
-function initFirebase(config) {
-  try {
-    const app = firebase.initializeApp(config);
-    db = firebase.database();
-    dbRef = db.ref('trip-espana-2026');
+function initFirebase(c){try{firebase.initializeApp(c);db=firebase.database();dbRef=db.ref('trip-espana-2026');dbRef.on('value',s=>{const d=s.val();if(d&&Array.isArray(d)){state.tripData=d;state.isOnline=true;render()}});db.ref('.info/connected').on('value',s=>{state.isOnline=s.val()===true;render()});dbRef.once('value',s=>{if(!s.val())dbRef.set(TRIP_DATA)});return true}catch(e){return false}}
+function saveToFirebase(){if(dbRef)dbRef.set(state.tripData)}
 
-    dbRef.on('value', (snapshot) => {
-      const data = snapshot.val();
-      if (data && Array.isArray(data)) {
-        state.tripData = data;
-        state.isOnline = true;
-        render();
-      }
-    });
+function getTripMap(){const m={};state.tripData.forEach(d=>{m[d.date]=d});return m}
 
-    db.ref('.info/connected').on('value', (snap) => {
-      state.isOnline = snap.val() === true;
-      render();
-    });
-
-    dbRef.once('value', (snapshot) => {
-      if (!snapshot.val()) dbRef.set(TRIP_DATA);
-    });
-
-    return true;
-  } catch(e) {
-    console.error('Firebase init error:', e);
-    return false;
-  }
-}
-
-function saveToFirebase() {
-  if (dbRef) dbRef.set(state.tripData);
-}
-
-// ==========================================
-// CALENDAR HELPERS
-// ==========================================
-function getTripDates() {
-  const map = {};
-  state.tripData.forEach(d => { map[d.date] = d; });
-  return map;
-}
-
-function renderCalendar() {
-  const tripDates = getTripDates();
-  // June 2026: starts on Monday (day 1)
-  const daysInMonth = 30;
-  const firstDayOfWeek = 1; // Monday = 1 (0=Sun)
-  // Our week starts Monday
-  const startOffset = firstDayOfWeek === 0 ? 6 : firstDayOfWeek - 1;
-
-  let cells = '';
-
-  // Empty cells before day 1
-  for (let i = 0; i < startOffset; i++) {
-    cells += '<div class="cal-day empty"></div>';
-  }
-
-  for (let day = 1; day <= daysInMonth; day++) {
-    const dateStr = `2026-06-${String(day).padStart(2, '0')}`;
-    const tripDay = tripDates[dateStr];
-    const isSelected = state.selectedDate === dateStr;
-    const hasEvents = tripDay && tripDay.events.length > 0;
-
-    if (tripDay) {
-      const color = tripDay.color;
-      cells += `<div class="cal-day trip ${isSelected ? 'selected' : ''}"
-        style="background:${color}${isSelected ? '' : 'dd'}"
-        onclick="selectDate('${dateStr}')">
-        ${day}
-        ${hasEvents ? '<div class="cal-dot"></div>' : ''}
-      </div>`;
+function renderCal(){
+  const tm=getTripMap();
+  const startOff=0; // June 2026 starts Monday
+  let c='';
+  for(let i=0;i<startOff;i++) c+='<div class="cal-day empty"></div>';
+  for(let d=1;d<=30;d++){
+    const ds=`2026-06-${String(d).padStart(2,'0')}`;
+    const td=tm[ds]; const sel=state.selectedDate===ds;
+    if(td){
+      const show = state.filter==="Todos" || td.city===state.filter;
+      c+=`<div class="cal-day trip ${sel?'selected':''}" style="background:${td.color}${sel?'':'cc'}${!show?';opacity:0.25':''}" onclick="selDate('${ds}')">${d}<div class="cal-dot-row">${td.events.map(()=>'<div class="cal-ev-dot"></div>').join('')}</div></div>`;
     } else {
-      cells += `<div class="cal-day inactive">${day}</div>`;
+      c+=`<div class="cal-day off">${d}</div>`;
     }
   }
-
-  return cells;
+  return c;
 }
 
-// ==========================================
-// MAIN RENDER
-// ==========================================
-function render() {
-  const tripDates = getTripDates();
-  const selectedDay = state.selectedDate ? tripDates[state.selectedDate] : null;
+function render(){
+  const tm=getTripMap();
+  const sd=state.selectedDate?tm[state.selectedDate]:null;
+  const cc={};state.tripData.forEach(d=>{if(d.city!=="Vuelo")cc[d.city]=(cc[d.city]||0)+1});
 
-  const cityCounts = {};
-  state.tripData.forEach(d => {
-    if (d.city !== "Vuelo") cityCounts[d.city] = (cityCounts[d.city] || 0) + 1;
-  });
+  let h='';
 
-  let html = '';
+  if(db) h+=`<div class="sync-bar ${state.isOnline?'online':'offline'}">${state.isOnline?'\u25CF En sincro':'\u25CB Sin conexión'}</div>`;
 
-  // Sync bar
-  if (db) {
-    html += `<div class="sync-bar ${state.isOnline ? 'online' : 'offline'}">
-      ${state.isOnline ? '\u2713 Sincronizado' : 'Sin conexión'}
-    </div>`;
-  }
-
-  // Header
-  html += `
-    <div class="header" style="${db ? 'padding-top: calc(var(--safe-top) + 32px)' : ''}">
-      <div class="header-top">
-        <div>
-          <h1>España 2026</h1>
-          <div class="subtitle">5 — 20 de Junio</div>
-        </div>
-        ${db ? '<button class="share-btn" onclick="showShareModal()">\uD83D\uDD17</button>' : ''}
-      </div>
-      <div class="city-pills">
-        ${Object.entries(cityCounts).map(([city, count]) =>
-          `<span class="city-pill" style="background:${CITY_COLORS[city]}">${city} · ${count}d</span>`
-        ).join('')}
-      </div>
+  h+=`<div class="header" style="${db?'padding-top:calc(var(--safe-top) + 36px)':''}">
+    <div class="header-row">
+      <div><h1>España 2026</h1><div class="dates">5 — 20 de Junio</div></div>
+      ${db?'<button class="share-btn" onclick="showModal()">\uD83D\uDD17</button>':''}
     </div>
-  `;
+    <div class="city-legend">
+      ${Object.entries(cc).map(([c,n])=>`<div class="legend-item"><div class="legend-dot" style="background:${CITY_COLORS[c]}"></div>${c} · ${n}d</div>`).join('')}
+    </div>
+  </div>`;
+
+  // Tabs
+  h+=`<div class="tab-bar">${CITIES.map(c=>`<button class="tab-btn ${state.filter===c?'active':''}" onclick="setFilter('${c}')">${c}</button>`).join('')}</div>`;
 
   // Calendar
-  html += `
-    <div class="calendar-section">
-      <div class="calendar-card">
-        <div class="cal-header">
-          <h2>Junio 2026</h2>
-        </div>
-        <div class="cal-weekdays">
-          <span class="cal-weekday">Lun</span>
-          <span class="cal-weekday">Mar</span>
-          <span class="cal-weekday">Mié</span>
-          <span class="cal-weekday">Jue</span>
-          <span class="cal-weekday">Vie</span>
-          <span class="cal-weekday">Sáb</span>
-          <span class="cal-weekday">Dom</span>
-        </div>
-        <div class="cal-grid">
-          ${renderCalendar()}
+  h+=`<div class="cal-section"><div class="cal-card">
+    <div class="cal-title">Junio 2026</div>
+    <div class="cal-weekdays">${['L','M','X','J','V','S','D'].map(d=>`<span class="cal-wd">${d}</span>`).join('')}</div>
+    <div class="cal-grid">${renderCal()}</div>
+  </div></div>`;
+
+  // Detail
+  h+='<div class="detail-section">';
+  if(sd){
+    h+=`<div class="detail-card">
+      <div class="detail-head">
+        <div class="detail-left">
+          <div class="detail-icon" style="background:${sd.color}22">${sd.icon}</div>
+          <div><div class="detail-label">${sd.label}</div><span class="detail-city" style="background:${sd.color}">${sd.city}</span></div>
         </div>
       </div>
-    </div>
-  `;
-
-  // Day Detail
-  html += '<div class="day-detail">';
-
-  if (selectedDay) {
-    html += `
-      <div class="detail-card">
-        <div class="detail-header">
-          <h3>
-            <span>${selectedDay.icon}</span>
-            <span>${selectedDay.label}</span>
-            <span class="detail-city-badge" style="background:${selectedDay.color}">${selectedDay.city}</span>
-          </h3>
-        </div>
-        <div class="events-list">
-          ${selectedDay.events.map((ev, j) => `
-            ${j > 0 ? '<div class="separator"></div>' : ''}
-            <div class="event-item">
-              <div class="event-icon-circle ${ev.type}">
-                ${EVENT_ICONS[ev.type] || '\uD83D\uDCCD'}
-              </div>
-              <div class="event-info">
-                <div class="event-time-label">${ev.time}</div>
-                <div class="event-title">${ev.title}</div>
-                <div class="event-detail">${ev.detail}</div>
-              </div>
-              <button class="event-delete-btn" onclick="deleteEvent('${selectedDay.date}', ${j})">\u00d7</button>
+      <div class="events">
+        ${sd.events.map((ev,j)=>`
+          ${j>0?'<div class="ev-sep"></div>':''}
+          <div class="ev-item">
+            <div class="ev-icon ${ev.type}">${EVENT_ICONS[ev.type]||'\uD83D\uDCCD'}</div>
+            <div class="ev-info">
+              <div class="ev-time">${ev.time}</div>
+              <div class="ev-title">${ev.title}</div>
+              <div class="ev-detail">${ev.detail}</div>
             </div>
-          `).join('')}
-        </div>
-
-        ${state.showAddForm ? `
-          <div class="add-form">
-            <div class="form-row">
-              <input class="form-input time-input" id="new-time" placeholder="Hora">
-              <input class="form-input" id="new-title" placeholder="Título de la actividad">
-            </div>
-            <div class="form-row">
-              <input class="form-input" id="new-detail" placeholder="Detalle o notas">
-            </div>
-            <div class="form-row">
-              <select class="form-select" id="new-type">
-                <option value="tourism">Turismo</option>
-                <option value="transport">Transporte</option>
-                <option value="food">Comida</option>
-                <option value="f1">F1</option>
-                <option value="flight">Vuelo</option>
-              </select>
-            </div>
-            <div class="form-actions">
-              <button class="btn-primary" onclick="addEvent('${selectedDay.date}')">Agregar</button>
-              <button class="btn-secondary" onclick="closeAddForm()">Cancelar</button>
-            </div>
-          </div>
-        ` : `
-          <button class="add-event-btn" onclick="openAddForm()">
-            + Agregar actividad
-          </button>
-        `}
+            <button class="ev-del" onclick="delEv('${sd.date}',${j})">\u00d7</button>
+          </div>`).join('')}
       </div>
-    `;
+      ${state.showAddForm?`
+        <div class="add-form">
+          <div class="f-row"><input class="f-input time" id="nt" placeholder="Hora"><input class="f-input" id="nn" placeholder="Título"></div>
+          <div class="f-row"><input class="f-input" id="nd" placeholder="Detalle"></div>
+          <div class="f-row"><select class="f-select" id="ny"><option value="tourism">Turismo</option><option value="transport">Transporte</option><option value="food">Comida</option><option value="f1">F1</option><option value="flight">Vuelo</option></select></div>
+          <div class="f-actions"><button class="btn-r" onclick="addEv('${sd.date}')">Agregar</button><button class="btn-g" onclick="closeAdd()">Cancelar</button></div>
+        </div>`:`<button class="add-btn" onclick="openAdd()">+ Agregar actividad</button>`}
+    </div>`;
   } else {
-    html += `
-      <div class="select-hint">
-        <span class="hint-icon">\uD83D\uDCC5</span>
-        Tocá un día del calendario<br>para ver las actividades
-      </div>
-    `;
+    h+=`<div class="hint"><span class="hint-icon">\uD83D\uDCC5</span><div class="hint-text">Tocá un día del calendario<br>para ver las actividades</div></div>`;
+  }
+  h+='</div>';
+
+  if(state.showModal){
+    const u=window.location.href;
+    h+=`<div class="modal-bg" onclick="closeM()"><div class="modal" onclick="event.stopPropagation()">
+      <h2>\uD83D\uDD17 Compartir</h2><p>Mandále este link a tu compañero de viaje. Los cambios se sincronizan en tiempo real.</p>
+      <div class="share-box"><span>${u}</span><button class="copy-btn" onclick="copyL()">Copiar</button></div>
+      <button class="close-btn" onclick="closeM()">Cerrar</button>
+    </div></div>`;
   }
 
-  html += '</div>';
-
-  // Modal
-  if (state.showModal) {
-    const url = window.location.href;
-    html += `
-      <div class="modal-overlay" onclick="closeModal()">
-        <div class="modal-sheet" onclick="event.stopPropagation()">
-          <h2>\uD83D\uDD17 Compartir viaje</h2>
-          <p>Compartí este link con tu compañero de viaje. Los cambios se sincronizan en tiempo real.</p>
-          <div class="share-url-box">
-            <span>${url}</span>
-            <button class="copy-btn" onclick="copyLink()">Copiar</button>
-          </div>
-          <button class="close-modal-btn" onclick="closeModal()">Cerrar</button>
-        </div>
-      </div>
-    `;
-  }
-
-  html += '<div class="bottom-spacer"></div>';
-  document.getElementById('app').innerHTML = html;
+  h+='<div class="spacer"></div>';
+  document.getElementById('app').innerHTML=h;
 }
 
-// ==========================================
-// ACTIONS
-// ==========================================
-function selectDate(date) {
-  state.selectedDate = state.selectedDate === date ? null : date;
-  state.showAddForm = false;
-  render();
-  if (state.selectedDate) {
-    setTimeout(() => {
-      const el = document.querySelector('.detail-card');
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }, 50);
-  }
-}
+function selDate(d){state.selectedDate=state.selectedDate===d?null:d;state.showAddForm=false;render();if(state.selectedDate)setTimeout(()=>{const e=document.querySelector('.detail-card');if(e)e.scrollIntoView({behavior:'smooth',block:'nearest'})},50)}
+function setFilter(c){state.filter=c;render()}
+function delEv(d,i){const x=state.tripData.findIndex(t=>t.date===d);if(x>=0){state.tripData[x].events.splice(i,1);saveToFirebase();render()}}
+function openAdd(){state.showAddForm=true;render()}
+function closeAdd(){state.showAddForm=false;render()}
+function addEv(d){const t=document.getElementById('nt').value||'\uD83D\uDD50',n=document.getElementById('nn').value,de=document.getElementById('nd').value||'',ty=document.getElementById('ny').value;if(!n)return;const x=state.tripData.findIndex(t=>t.date===d);if(x>=0){state.tripData[x].events.push({time:t,title:n,detail:de,type:ty});state.showAddForm=false;saveToFirebase();render()}}
+function showModal(){state.showModal=true;render()}
+function closeM(){state.showModal=false;render()}
+function copyL(){navigator.clipboard.writeText(window.location.href).then(()=>{const b=document.querySelector('.copy-btn');if(b){b.textContent='\u2713';setTimeout(()=>{b.textContent='Copiar'},1500)}})}
 
-function deleteEvent(date, idx) {
-  const di = state.tripData.findIndex(d => d.date === date);
-  if (di >= 0) {
-    state.tripData[di].events.splice(idx, 1);
-    saveToFirebase();
-    render();
-  }
-}
-
-function openAddForm() { state.showAddForm = true; render(); }
-function closeAddForm() { state.showAddForm = false; render(); }
-
-function addEvent(date) {
-  const time = document.getElementById('new-time').value || '\uD83D\uDD50';
-  const title = document.getElementById('new-title').value;
-  const detail = document.getElementById('new-detail').value || '';
-  const type = document.getElementById('new-type').value;
-  if (!title) return;
-
-  const di = state.tripData.findIndex(d => d.date === date);
-  if (di >= 0) {
-    state.tripData[di].events.push({ time, title, detail, type });
-    state.showAddForm = false;
-    saveToFirebase();
-    render();
-  }
-}
-
-function showShareModal() { state.showModal = true; render(); }
-function closeModal() { state.showModal = false; render(); }
-
-function copyLink() {
-  navigator.clipboard.writeText(window.location.href).then(() => {
-    const btn = document.querySelector('.copy-btn');
-    if (btn) { btn.textContent = '\u2713 Copiado'; setTimeout(() => { btn.textContent = 'Copiar'; }, 1500); }
-  });
-}
-
-// ==========================================
-// INIT
-// ==========================================
-(function init() {
-  const ok = initFirebase(FIREBASE_CONFIG);
-  if (!ok) state.isOnline = false;
-  render();
-})();
+(function(){const ok=initFirebase(FIREBASE_CONFIG);if(!ok)state.isOnline=false;render()})();
 </script>
 </body>
 </html>
