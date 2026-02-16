@@ -67,7 +67,7 @@
   .header-inner { position: relative; z-index: 1; display: flex; align-items: center; gap: 14px; }
 
   /* Nacional Shield SVG */
-  .shield { width: 52px; height: 58px; flex-shrink: 0; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3)); }
+  .shield { width: 50px; height: 60px; flex-shrink: 0; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3)); }
 
   .header-text { flex: 1; }
   .header h1 {
@@ -255,7 +255,7 @@
 
   /* Hint */
   .hint { text-align: center; padding: 40px 20px; color: var(--dim); }
-  .hint-shield { width: 48px; height: 54px; margin: 0 auto 12px; opacity: 0.15; }
+  .hint-shield { width: 46px; height: 56px; margin: 0 auto 12px; opacity: 0.15; }
   .hint-t { font-size: 14px; font-weight: 500; line-height: 1.5; }
 
   /* Modal */
@@ -381,33 +381,39 @@
 </div>
 <div id="app"></div>
 <script>
-// Nacional shield as inline SVG
-const SHIELD_SVG=`<svg viewBox="0 0 100 112" xmlns="http://www.w3.org/2000/svg">
+// Nacional shield — classic design: French shield, blue bg, red diagonal band, C N de F
+const SHIELD_SVG=`<svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="shieldBg" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#1B3C8C"/>
-      <stop offset="100%" stop-color="#142d6b"/>
-    </linearGradient>
+    <clipPath id="sc"><path d="M5 3 H95 V75 Q95 105 50 117 Q5 105 5 75 Z"/></clipPath>
   </defs>
-  <!-- Shield shape -->
-  <path d="M50 2 L96 18 C96 18 98 60 78 86 C64 104 50 110 50 110 C50 110 36 104 22 86 C2 60 4 18 4 18 Z" fill="url(#shieldBg)" stroke="#c9a726" stroke-width="2.5"/>
-  <!-- Inner border -->
-  <path d="M50 8 L90 22 C90 22 92 58 74 82 C62 97 50 103 50 103 C50 103 38 97 26 82 C8 58 10 22 10 22 Z" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
-  <!-- Red diagonal stripe -->
-  <path d="M30 15 L75 95 L65 100 L18 22 Z" fill="#D71920" opacity="0.9"/>
-  <!-- C N F text -->
-  <text x="50" y="48" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-weight="900" font-size="16" fill="white" letter-spacing="1">C N F</text>
-  <!-- NACIONAL text -->
-  <text x="50" y="68" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-weight="700" font-size="7" fill="rgba(255,255,255,0.8)" letter-spacing="2.5">NACIONAL</text>
-  <!-- Star -->
-  <polygon points="50,76 52,82 58,82 53,86 55,92 50,88 45,92 47,86 42,82 48,82" fill="#c9a726"/>
+  <!-- Shield outline -->
+  <path d="M5 3 H95 V75 Q95 105 50 117 Q5 105 5 75 Z" fill="#102e6a" stroke="#0a1e44" stroke-width="2"/>
+  <!-- Inner shield -->
+  <path d="M8 6 H92 V74 Q92 102 50 114 Q8 102 8 74 Z" fill="#1a3a7a"/>
+  <!-- Red diagonal band -->
+  <g clip-path="url(#sc)">
+    <rect x="-10" y="38" width="140" height="28" fill="#CE1126" transform="rotate(-48 50 60)"/>
+    <!-- Band borders -->
+    <rect x="-10" y="37" width="140" height="1.5" fill="rgba(255,255,255,0.15)" transform="rotate(-48 50 60)"/>
+    <rect x="-10" y="66.5" width="140" height="1.5" fill="rgba(255,255,255,0.15)" transform="rotate(-48 50 60)"/>
+  </g>
+  <!-- Letters: C top-left, N top-right -->
+  <text x="28" y="42" text-anchor="middle" font-family="serif" font-weight="bold" font-size="22" fill="white">C</text>
+  <text x="74" y="42" text-anchor="middle" font-family="serif" font-weight="bold" font-size="22" fill="white">N</text>
+  <!-- "de" on the red band, small -->
+  <text x="50" y="68" text-anchor="middle" font-family="serif" font-style="italic" font-size="12" fill="white" opacity="0.95">de</text>
+  <!-- F bottom -->
+  <text x="52" y="96" text-anchor="middle" font-family="serif" font-weight="bold" font-size="22" fill="white">F</text>
 </svg>`;
 
-const SHIELD_HINT=`<svg viewBox="0 0 100 112" xmlns="http://www.w3.org/2000/svg">
-  <path d="M50 2 L96 18 C96 18 98 60 78 86 C64 104 50 110 50 110 C50 110 36 104 22 86 C2 60 4 18 4 18 Z" fill="#1B3C8C" stroke="#c9a726" stroke-width="2.5"/>
-  <path d="M30 15 L75 95 L65 100 L18 22 Z" fill="#D71920" opacity="0.9"/>
-  <text x="50" y="48" text-anchor="middle" font-family="Inter,sans-serif" font-weight="900" font-size="16" fill="white">C N F</text>
-  <text x="50" y="68" text-anchor="middle" font-family="Inter,sans-serif" font-weight="700" font-size="7" fill="rgba(255,255,255,0.8)" letter-spacing="2.5">NACIONAL</text>
+const SHIELD_HINT=`<svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+  <defs><clipPath id="sh"><path d="M5 3 H95 V75 Q95 105 50 117 Q5 105 5 75 Z"/></clipPath></defs>
+  <path d="M5 3 H95 V75 Q95 105 50 117 Q5 105 5 75 Z" fill="#1a3a7a" stroke="#0a1e44" stroke-width="2"/>
+  <g clip-path="url(#sh)"><rect x="-10" y="38" width="140" height="28" fill="#CE1126" transform="rotate(-48 50 60)"/></g>
+  <text x="28" y="42" text-anchor="middle" font-family="serif" font-weight="bold" font-size="22" fill="white">C</text>
+  <text x="74" y="42" text-anchor="middle" font-family="serif" font-weight="bold" font-size="22" fill="white">N</text>
+  <text x="50" y="68" text-anchor="middle" font-family="serif" font-style="italic" font-size="12" fill="white">de</text>
+  <text x="52" y="96" text-anchor="middle" font-family="serif" font-weight="bold" font-size="22" fill="white">F</text>
 </svg>`;
 
 const TRIP=[
