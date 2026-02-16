@@ -93,12 +93,69 @@
   .wx-i{font-size:14px}
   .wx-t{font-size:10px;font-weight:800;color:var(--text)}
 
-  /* F1 BANNER */
-  .f1-banner{margin:16px 16px 0;background:var(--f1-gradient);border-radius:var(--r);padding:20px;color:#fff;position:relative;overflow:hidden}
-  .f1-banner::after{content:'🏁';position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:42px;opacity:.2}
-  .f1-title{font-size:19px;font-weight:900;letter-spacing:-.3px}
-  .f1-sub{font-size:12px;font-weight:600;opacity:.8;margin-top:5px}
-  .f1-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(0,0,0,.2);padding:5px 12px;border-radius:10px;font-size:10px;font-weight:800;margin-top:10px;letter-spacing:.4px}
+  /* F1 BANNER — EPIC */
+  .f1-banner{margin:16px 16px 0;background:#0d0d0d;border-radius:var(--r);color:#fff;position:relative;overflow:hidden}
+  .f1-carbon{position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 2px,rgba(255,255,255,.015) 2px,rgba(255,255,255,.015) 4px);pointer-events:none}
+  .f1-glow-rb{position:absolute;top:-40%;left:-10%;width:50%;height:180%;background:radial-gradient(ellipse,rgba(30,65,175,.25),transparent 70%);pointer-events:none}
+  .f1-glow-fer{position:absolute;top:-40%;right:-10%;width:50%;height:180%;background:radial-gradient(ellipse,rgba(220,0,0,.25),transparent 70%);pointer-events:none}
+  .f1-top{position:relative;z-index:2;padding:22px 20px 0;display:flex;align-items:center;justify-content:space-between}
+  .f1-gp{font-size:11px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.5)}
+  .f1-title{font-size:22px;font-weight:900;letter-spacing:-.5px;margin-top:2px}
+  .f1-title .vs{color:#ff3333;font-style:italic}
+  .f1-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);padding:5px 12px;border-radius:10px;font-size:10px;font-weight:800;letter-spacing:.4px;white-space:nowrap}
+
+  /* RACE TRACK ANIMATION */
+  .f1-track{position:relative;z-index:2;height:72px;margin:16px 20px 0;overflow:hidden}
+  .f1-road{position:absolute;bottom:0;left:0;right:0;height:36px;background:linear-gradient(180deg,#2a2a2a,#1a1a1a);border-radius:8px}
+  .f1-road::before{content:'';position:absolute;top:50%;left:0;right:0;height:2px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.5) 0px,rgba(255,255,255,.5) 20px,transparent 20px,transparent 40px);transform:translateY(-1px);animation:roadMove 1s linear infinite}
+  @keyframes roadMove{0%{transform:translateX(0) translateY(-1px)}100%{transform:translateX(-40px) translateY(-1px)}}
+  .f1-road::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:repeating-linear-gradient(90deg,#dc0000 0px,#dc0000 12px,#fff 12px,#fff 24px)}
+  .f1-car-rb,.f1-car-fer{position:absolute;bottom:6px;font-size:30px;z-index:3;filter:drop-shadow(0 2px 8px rgba(0,0,0,.5))}
+  .f1-car-rb{left:48%;animation:carRB 3s ease-in-out infinite}
+  .f1-car-fer{left:42%;animation:carFER 3s ease-in-out infinite}
+  @keyframes carRB{0%,100%{transform:translateX(0)}25%{transform:translateX(12px)}50%{transform:translateX(-6px)}75%{transform:translateX(8px)}}
+  @keyframes carFER{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}50%{transform:translateX(14px)}75%{transform:translateX(-4px)}}
+  .f1-sparks{position:absolute;bottom:4px;width:3px;height:3px;border-radius:50%;background:#ffd700;animation:spark .4s ease-out infinite;z-index:4}
+  @keyframes spark{0%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(0) translateY(-6px)}}
+  .f1-trail-rb,.f1-trail-fer{position:absolute;bottom:14px;height:4px;border-radius:2px;z-index:2;animation:trailPulse 1.5s ease-in-out infinite alternate}
+  .f1-trail-rb{right:52%;width:60px;background:linear-gradient(90deg,transparent,rgba(30,65,175,.6))}
+  .f1-trail-fer{right:56%;width:50px;background:linear-gradient(90deg,transparent,rgba(220,0,0,.5));animation-delay:.3s}
+  @keyframes trailPulse{0%{opacity:.4;width:40px}100%{opacity:.8;width:65px}}
+
+  /* STARTING LIGHTS */
+  .f1-lights{position:absolute;top:8px;right:20px;display:flex;gap:5px;z-index:5}
+  .f1-light{width:10px;height:10px;border-radius:50%;background:#333;border:1px solid #555;animation:lightSeq 4s ease infinite}
+  .f1-light:nth-child(1){animation-delay:0s}
+  .f1-light:nth-child(2){animation-delay:.4s}
+  .f1-light:nth-child(3){animation-delay:.8s}
+  .f1-light:nth-child(4){animation-delay:1.2s}
+  .f1-light:nth-child(5){animation-delay:1.6s}
+  @keyframes lightSeq{0%,15%{background:#333;box-shadow:none}16%,45%{background:#dc0000;box-shadow:0 0 8px #dc0000}46%,100%{background:#333;box-shadow:none}}
+
+  /* TEAMS ROW */
+  .f1-teams{position:relative;z-index:2;display:flex;gap:8px;padding:16px 20px 0}
+  .f1-team{flex:1;padding:12px;border-radius:14px;position:relative;overflow:hidden}
+  .f1-team.rb{background:linear-gradient(135deg,rgba(30,65,175,.15),rgba(30,65,175,.05));border:1px solid rgba(30,65,175,.2)}
+  .f1-team.fer{background:linear-gradient(135deg,rgba(220,0,0,.15),rgba(220,0,0,.05));border:1px solid rgba(220,0,0,.2)}
+  .f1-team-stripe{position:absolute;top:0;left:0;width:3px;height:100%;border-radius:0 2px 2px 0}
+  .f1-team.rb .f1-team-stripe{background:#1e41af}
+  .f1-team.fer .f1-team-stripe{background:#dc0000}
+  .f1-team-name{font-size:9px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.4)}
+  .f1-team-drivers{margin-top:6px}
+  .f1-driver{display:flex;align-items:center;gap:6px;margin-top:4px}
+  .f1-driver-num{font-size:14px;font-weight:900;font-style:italic;min-width:24px}
+  .f1-team.rb .f1-driver-num{color:#1e41af}
+  .f1-team.fer .f1-driver-num{color:#dc0000}
+  .f1-driver-name{font-size:11px;font-weight:700;color:rgba(255,255,255,.8)}
+
+  /* SCHEDULE ROW */
+  .f1-sched{position:relative;z-index:2;display:flex;gap:6px;padding:16px 20px 20px}
+  .f1-sess{flex:1;text-align:center;padding:10px 6px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06)}
+  .f1-sess.active{background:rgba(220,0,0,.12);border-color:rgba(220,0,0,.3)}
+  .f1-sess-day{font-size:9px;font-weight:700;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.5px}
+  .f1-sess-name{font-size:12px;font-weight:800;color:#fff;margin-top:3px}
+  .f1-sess-time{font-size:10px;font-weight:600;color:rgba(255,255,255,.5);margin-top:2px}
+  .f1-sess .f1-sess-ic{font-size:16px;margin-bottom:2px}
 
   /* SECTION HEADER (collapsible) */
   .sec-hdr{padding:18px 20px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;-webkit-user-select:none;user-select:none}
@@ -219,47 +276,74 @@
   .clb{background:var(--bg);color:var(--dim);border:none;padding:12px;border-radius:12px;width:100%;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit}
   @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 
-  /* SPLASH */
-  .splash{position:fixed;inset:0;z-index:9999;background:linear-gradient(135deg,#1B3C8C 0%,#2952b0 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .5s ease,transform .5s ease;overflow:hidden}
+  /* SPLASH — RB vs FERRARI */
+  .splash{position:fixed;inset:0;z-index:9999;background:#0a0a0a;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .5s ease,transform .5s ease;overflow:hidden}
   .splash.hide{opacity:0;transform:scale(1.05);pointer-events:none}
-  .splash::before,.splash::after{content:'';position:absolute;left:0;right:0;height:2px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.08) 0px,rgba(255,255,255,.08) 20px,transparent 20px,transparent 40px)}
-  .splash::before{top:38%}.splash::after{bottom:38%}
+  .splash-carbon{position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 2px,rgba(255,255,255,.012) 2px,rgba(255,255,255,.012) 4px)}
+  .splash-glow-l{position:absolute;top:20%;left:-20%;width:60%;height:60%;background:radial-gradient(ellipse,rgba(30,65,175,.3),transparent 70%);animation:glowPulse 3s ease-in-out infinite alternate}
+  .splash-glow-r{position:absolute;top:20%;right:-20%;width:60%;height:60%;background:radial-gradient(ellipse,rgba(220,0,0,.3),transparent 70%);animation:glowPulse 3s ease-in-out infinite alternate;animation-delay:1.5s}
+  @keyframes glowPulse{0%{opacity:.5;transform:scale(.9)}100%{opacity:1;transform:scale(1.1)}}
+
   .speed-lines{position:absolute;inset:0;overflow:hidden}
-  .speed-line{position:absolute;height:1px;background:linear-gradient(90deg,transparent,rgba(232,54,79,.4),transparent);animation:speedLine .8s linear infinite}
+  .speed-line{position:absolute;height:1px;animation:speedLine .8s linear infinite}
+  .speed-line.rb{background:linear-gradient(90deg,transparent,rgba(30,65,175,.5),transparent)}
+  .speed-line.fer{background:linear-gradient(90deg,transparent,rgba(220,0,0,.5),transparent)}
   @keyframes speedLine{0%{transform:translateX(-100%)}100%{transform:translateX(200vw)}}
-  .f1-car-wrap{position:relative;z-index:2;animation:carEntry 1.2s cubic-bezier(.16,1,.3,1) forwards}
-  @keyframes carEntry{0%{transform:translateX(-120vw) scale(.8);opacity:0}40%{opacity:1}70%{transform:translateX(0) scale(1)}85%{transform:translateX(10px)}100%{transform:translateX(0) scale(1);opacity:1}}
-  .f1-car{font-size:72px;filter:drop-shadow(0 0 30px rgba(232,54,79,.5));animation:carBounce .6s ease-in-out infinite alternate;animation-delay:1.2s}
-  @keyframes carBounce{0%{transform:translateY(0)}100%{transform:translateY(-3px)}}
-  .smoke{position:absolute;bottom:-10px;left:-60px;width:80px;height:30px;border-radius:50%;background:radial-gradient(ellipse,rgba(255,255,255,.2),transparent);animation:smokeAnim 1s ease-out forwards;animation-delay:.8s;opacity:0}
-  @keyframes smokeAnim{0%{opacity:0;transform:scale(.5) translateX(0)}50%{opacity:.6}100%{opacity:0;transform:scale(2) translateX(-40px)}}
-  .splash-title{position:relative;z-index:2;margin-top:28px;text-align:center;animation:titleReveal .6s cubic-bezier(.16,1,.3,1) forwards;animation-delay:.7s;opacity:0;transform:translateY(20px)}
+
+  .splash-vs{position:relative;z-index:2;display:flex;align-items:center;gap:24px}
+  .splash-car{font-size:60px;filter:drop-shadow(0 0 20px rgba(0,0,0,.5))}
+  .splash-car.left{animation:carFromLeft 1s cubic-bezier(.16,1,.3,1) forwards;opacity:0;transform:scaleX(-1)}
+  .splash-car.right{animation:carFromRight 1s cubic-bezier(.16,1,.3,1) forwards;opacity:0}
+  @keyframes carFromLeft{0%{opacity:0;transform:translateX(-60vw) scaleX(-1)}60%{opacity:1}80%{transform:translateX(8px) scaleX(-1)}100%{opacity:1;transform:translateX(0) scaleX(-1)}}
+  @keyframes carFromRight{0%{opacity:0;transform:translateX(60vw)}60%{opacity:1}80%{transform:translateX(-8px)}100%{opacity:1;transform:translateX(0)}}
+  .splash-vs-text{animation:vsReveal .4s cubic-bezier(.16,1,.3,1) forwards;animation-delay:.6s;opacity:0;transform:scale(3)}
+  @keyframes vsReveal{to{opacity:1;transform:scale(1)}}
+  .splash-vs-text span{font-size:36px;font-weight:900;font-style:italic;color:#fff;text-shadow:0 0 30px rgba(255,255,255,.3)}
+
+  .splash-title{position:relative;z-index:2;margin-top:32px;text-align:center;animation:titleReveal .6s cubic-bezier(.16,1,.3,1) forwards;animation-delay:.8s;opacity:0;transform:translateY(20px)}
   @keyframes titleReveal{to{opacity:1;transform:translateY(0)}}
-  .splash-title h2{font-size:32px;font-weight:900;color:#fff;letter-spacing:-1px;text-shadow:0 2px 20px rgba(0,0,0,.3)}
-  .splash-title h2 .red{color:var(--red)}
-  .splash-title .year{font-size:14px;font-weight:600;color:rgba(255,255,255,.5);letter-spacing:6px;margin-top:6px;text-transform:uppercase}
-  .checkered{position:absolute;bottom:0;left:0;right:0;height:24px;display:flex;flex-wrap:wrap;animation:checkReveal .4s ease forwards;animation-delay:1s;opacity:0}
+  .splash-title h2{font-size:28px;font-weight:900;color:#fff;letter-spacing:-1px;text-shadow:0 2px 20px rgba(0,0,0,.3)}
+  .splash-title .rb-c{color:#3b82f6}
+  .splash-title .fer-c{color:#dc0000}
+  .splash-title .year{font-size:12px;font-weight:700;color:rgba(255,255,255,.4);letter-spacing:6px;margin-top:8px;text-transform:uppercase}
+
+  .splash-lights{position:relative;z-index:2;display:flex;gap:8px;margin-top:24px;animation:titleReveal .5s ease forwards;animation-delay:1.1s;opacity:0}
+  .splash-light{width:14px;height:14px;border-radius:50%;background:#222;border:2px solid #444;animation:sLightSeq 2.5s ease infinite}
+  .splash-light:nth-child(1){animation-delay:1.2s}
+  .splash-light:nth-child(2){animation-delay:1.5s}
+  .splash-light:nth-child(3){animation-delay:1.8s}
+  .splash-light:nth-child(4){animation-delay:2.1s}
+  .splash-light:nth-child(5){animation-delay:2.4s}
+  @keyframes sLightSeq{0%,10%{background:#222;box-shadow:none}11%,35%{background:#dc0000;box-shadow:0 0 12px #dc0000}36%,100%{background:#222;box-shadow:none}}
+
+  .checkered{position:absolute;bottom:0;left:0;right:0;height:20px;display:flex;flex-wrap:wrap;animation:checkReveal .4s ease forwards;animation-delay:1.2s;opacity:0}
   @keyframes checkReveal{to{opacity:1}}
-  .checkered span{width:12px;height:12px;display:inline-block}
-  .splash-dots{position:relative;z-index:2;margin-top:20px;display:flex;gap:6px;animation:titleReveal .5s ease forwards;animation-delay:1s;opacity:0}
-  .splash-dots span{width:6px;height:6px;border-radius:50%;background:var(--red);animation:dotPulse 1s ease infinite}
-  .splash-dots span:nth-child(2){animation-delay:.2s}
-  .splash-dots span:nth-child(3){animation-delay:.4s}
-  @keyframes dotPulse{0%,80%,100%{opacity:.3;transform:scale(.8)}40%{opacity:1;transform:scale(1.2)}}
+  .checkered span{width:10px;height:10px;display:inline-block}
 </style>
 </head>
 <body>
 <div id="splash" class="splash">
+  <div class="splash-carbon"></div>
+  <div class="splash-glow-l"></div>
+  <div class="splash-glow-r"></div>
   <div class="speed-lines">
-    <div class="speed-line" style="top:20%;width:40%;animation-delay:.1s;animation-duration:.7s"></div>
-    <div class="speed-line" style="top:35%;width:60%;animation-delay:.3s;animation-duration:.6s"></div>
-    <div class="speed-line" style="top:50%;width:35%;animation-delay:0s;animation-duration:.8s"></div>
-    <div class="speed-line" style="top:65%;width:50%;animation-delay:.2s;animation-duration:.65s"></div>
-    <div class="speed-line" style="top:80%;width:45%;animation-delay:.4s;animation-duration:.75s"></div>
+    <div class="speed-line rb" style="top:18%;width:40%;animation-delay:.1s;animation-duration:.7s"></div>
+    <div class="speed-line fer" style="top:28%;width:55%;animation-delay:.25s;animation-duration:.6s"></div>
+    <div class="speed-line rb" style="top:42%;width:35%;animation-delay:0s;animation-duration:.8s"></div>
+    <div class="speed-line fer" style="top:58%;width:50%;animation-delay:.15s;animation-duration:.65s"></div>
+    <div class="speed-line rb" style="top:72%;width:45%;animation-delay:.35s;animation-duration:.75s"></div>
+    <div class="speed-line fer" style="top:82%;width:38%;animation-delay:.45s;animation-duration:.7s"></div>
   </div>
-  <div class="f1-car-wrap"><div class="f1-car">🏎️</div><div class="smoke"></div></div>
-  <div class="splash-title"><h2>España <span class="red">F1</span></h2><div class="year">Junio 2026</div></div>
-  <div class="splash-dots"><span></span><span></span><span></span></div>
+  <div class="splash-vs">
+    <div class="splash-car left">🏎️</div>
+    <div class="splash-vs-text"><span>VS</span></div>
+    <div class="splash-car right">🏎️</div>
+  </div>
+  <div class="splash-title">
+    <h2><span class="rb-c">Red Bull</span> vs <span class="fer-c">Ferrari</span></h2>
+    <div class="year">GP España · Junio 2026</div>
+  </div>
+  <div class="splash-lights"><span class="splash-light"></span><span class="splash-light"></span><span class="splash-light"></span><span class="splash-light"></span><span class="splash-light"></span></div>
   <div class="checkered" id="checkered"></div>
 </div>
 <div id="app"></div>
@@ -379,11 +463,54 @@ function R(){
   // CALENDAR
   h+=`<div class="section">${calHTML()}</div>`;
 
-  // F1 BANNER
+  // F1 BANNER — EPIC
   if(S.filt==='Todos'||S.filt==='Barcelona'){
     const f1d=Math.ceil((new Date('2026-06-12')-new Date())/864e5);
-    let f1s=f1d>0?`Faltan ${f1d} días`:f1d===0?'¡Hoy!':'Completado';
-    h+=`<div class="f1-banner"><div class="f1-title">🏎️ GP de España</div><div class="f1-sub">Circuit de Barcelona-Catalunya · Jun 12–14</div><div class="f1-badge">🏁 ${f1s}</div></div>`;
+    let f1s=f1d>0?`🏁 Faltan ${f1d} días`:f1d===0?'🟢 ¡LIGHTS OUT!':'🏁 Completado';
+    const td2=today();
+    const sessActive=(d)=>td2===d?'active':'';
+    h+=`<div class="f1-banner">
+      <div class="f1-carbon"></div>
+      <div class="f1-glow-rb"></div>
+      <div class="f1-glow-fer"></div>
+      <div class="f1-top">
+        <div><div class="f1-gp">Formula 1</div><div class="f1-title">GP de <span class="vs">España</span> 2026</div></div>
+        <div class="f1-badge">${f1s}</div>
+      </div>
+      <div class="f1-track">
+        <div class="f1-lights"><span class="f1-light"></span><span class="f1-light"></span><span class="f1-light"></span><span class="f1-light"></span><span class="f1-light"></span></div>
+        <div class="f1-trail-rb"></div>
+        <div class="f1-trail-fer"></div>
+        <div class="f1-car-rb">🏎️</div>
+        <div class="f1-car-fer">🏎️</div>
+        <div class="f1-road"></div>
+        <div class="f1-sparks" style="left:52%;animation-delay:0s"></div>
+        <div class="f1-sparks" style="left:46%;animation-delay:.2s"></div>
+      </div>
+      <div class="f1-teams">
+        <div class="f1-team rb">
+          <div class="f1-team-stripe"></div>
+          <div class="f1-team-name">Red Bull Racing</div>
+          <div class="f1-team-drivers">
+            <div class="f1-driver"><span class="f1-driver-num">1</span><span class="f1-driver-name">Verstappen</span></div>
+            <div class="f1-driver"><span class="f1-driver-num">22</span><span class="f1-driver-name">Tsunoda</span></div>
+          </div>
+        </div>
+        <div class="f1-team fer">
+          <div class="f1-team-stripe"></div>
+          <div class="f1-team-name">Scuderia Ferrari</div>
+          <div class="f1-team-drivers">
+            <div class="f1-driver"><span class="f1-driver-num">16</span><span class="f1-driver-name">Leclerc</span></div>
+            <div class="f1-driver"><span class="f1-driver-num">44</span><span class="f1-driver-name">Hamilton</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="f1-sched">
+        <div class="f1-sess ${sessActive('2026-06-12')}"><div class="f1-sess-ic">🏗️</div><div class="f1-sess-day">Vie 12</div><div class="f1-sess-name">Práctica</div><div class="f1-sess-time">14:30</div></div>
+        <div class="f1-sess ${sessActive('2026-06-13')}"><div class="f1-sess-ic">⏱️</div><div class="f1-sess-day">Sáb 13</div><div class="f1-sess-name">Qualy</div><div class="f1-sess-time">16:00</div></div>
+        <div class="f1-sess ${sessActive('2026-06-14')}"><div class="f1-sess-ic">🏆</div><div class="f1-sess-day">Dom 14</div><div class="f1-sess-name">Carrera</div><div class="f1-sess-time">15:00</div></div>
+      </div>
+    </div>`;
   }
 
   // TIMELINE
