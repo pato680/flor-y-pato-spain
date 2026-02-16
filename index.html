@@ -428,10 +428,9 @@ function R(){
 
   if(db)h+=`<div class="sync ${S.on?'on':'off'}">${S.on?'● Sincronizado':'○ Offline'}</div>`;
 
-  // Header with Nacional shield
+  // Header
   h+=`<div class="header">
     <div class="header-inner">
-      <div class="shield">${SHIELD_SVG}</div>
       <div class="header-text">
         <h1>España <span class="yr">2026</span></h1>
         <div class="sub">5 — 20 de Junio · 16 días</div>
@@ -479,7 +478,7 @@ function R(){
       </div>`:`<button class="add-b" onclick="S.add=true;R()">+ Agregar actividad</button>`}
     </div>`;
   }else{
-    h+=`<div class="hint"><div class="hint-shield">${SHIELD_HINT}</div><div class="hint-t">Tocá un día del calendario<br>para ver las actividades</div></div>`;
+    h+=`<div class="hint"><div class="hint-i">🇪🇸</div><div class="hint-t">Tocá un día del calendario<br>para ver las actividades</div></div>`;
   }
   h+='</div>';
 
