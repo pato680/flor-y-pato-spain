@@ -32,38 +32,39 @@
   .sync.on{background:rgba(52,199,89,.1);color:#34c759;border:1px solid rgba(52,199,89,.15)}
   .sync.off{background:rgba(134,134,139,.08);color:var(--dim);border:1px solid rgba(134,134,139,.1)}
 
-  /* HERO */
-  .hero{padding:calc(var(--safe-top)+56px) 20px 24px;background:linear-gradient(160deg,#0f1b3d 0%,#1B3C8C 40%,#2952b0 100%);position:relative;overflow:hidden}
+  /* HERO — card style */
+  .hero-safe{padding-top:calc(var(--safe-top)+12px);background:var(--bg)}
+  .hero{margin:0 16px;padding:20px;background:linear-gradient(160deg,#0f1b3d 0%,#1B3C8C 40%,#2952b0 100%);border-radius:var(--r);position:relative;overflow:hidden;box-shadow:0 4px 24px rgba(27,60,140,.25)}
   .hero::before{content:'';position:absolute;top:-30%;right:-20%;width:70%;height:80%;background:radial-gradient(circle,rgba(215,25,32,.08),transparent 70%);pointer-events:none}
   .hero-row{display:flex;align-items:center;justify-content:space-between}
-  .hero h1{font-size:28px;font-weight:900;letter-spacing:-.8px;color:#fff;line-height:1.1}
+  .hero h1{font-size:24px;font-weight:900;letter-spacing:-.6px;color:#fff;line-height:1.1}
   .hero h1 .yr{background:var(--accent-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-  .hero .sub{font-size:12px;color:rgba(255,255,255,.45);font-weight:500;margin-top:5px;letter-spacing:.3px}
-  .share-btn{width:40px;height:40px;border-radius:14px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.06);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#fff;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+  .hero .sub{font-size:11px;color:rgba(255,255,255,.45);font-weight:500;margin-top:4px;letter-spacing:.3px}
+  .share-btn{width:36px;height:36px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.06);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
   .share-btn:active{transform:scale(.9);background:rgba(255,255,255,.15)}
 
   /* COUNTDOWN */
-  .cd-row{display:flex;align-items:center;gap:14px;margin-top:18px;background:rgba(255,255,255,.06);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:14px 16px}
-  .cd-num{font-size:36px;font-weight:900;color:#fff;line-height:1;min-width:48px;text-align:center;background:var(--accent-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-  .cd-label{font-size:13px;font-weight:700;color:rgba(255,255,255,.85)}
-  .cd-sub{font-size:11px;color:rgba(255,255,255,.4);margin-top:2px}
-  .cd-live{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:800;color:#4ade80;letter-spacing:.5px;text-transform:uppercase}
-  .cd-live::before{content:'';width:6px;height:6px;border-radius:50%;background:#4ade80;animation:pulse 1.5s ease infinite}
+  .cd-row{display:flex;align-items:center;gap:12px;margin-top:14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:12px 14px}
+  .cd-num{font-size:32px;font-weight:900;color:#fff;line-height:1;min-width:44px;text-align:center;background:var(--accent-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .cd-label{font-size:12px;font-weight:700;color:rgba(255,255,255,.85)}
+  .cd-sub{font-size:10px;color:rgba(255,255,255,.4);margin-top:2px}
+  .cd-live{display:inline-flex;align-items:center;gap:5px;font-size:9px;font-weight:800;color:#4ade80;letter-spacing:.5px;text-transform:uppercase}
+  .cd-live::before{content:'';width:5px;height:5px;border-radius:50%;background:#4ade80;animation:pulse 1.5s ease infinite}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 
   /* ROUTE */
-  .route-wrap{margin-top:16px}
-  .route-lbl{font-size:9px;font-weight:700;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:6px}
-  .route-bar{display:flex;gap:2px;border-radius:12px;overflow:hidden;height:28px;background:rgba(0,0,0,.15)}
+  .route-wrap{margin-top:12px}
+  .route-lbl{font-size:9px;font-weight:700;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:5px}
+  .route-bar{display:flex;gap:2px;border-radius:10px;overflow:hidden;height:24px;background:rgba(0,0,0,.15)}
   .route-seg{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:7px;font-weight:800;color:rgba(255,255,255,.9);letter-spacing:.1px;overflow:hidden;line-height:1.2;min-width:0;padding:0 3px;transition:all .2s}
   .route-seg .seg-dates{font-size:6px;font-weight:600;color:rgba(255,255,255,.5)}
 
   /* FILTERS */
-  .filters{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px}
-  .fil{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:rgba(255,255,255,.4);cursor:pointer;padding:6px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.06);transition:all .15s;background:rgba(255,255,255,.03)}
+  .filters{display:flex;gap:5px;flex-wrap:wrap;margin-top:12px}
+  .fil{display:flex;align-items:center;gap:4px;font-size:10px;font-weight:600;color:rgba(255,255,255,.4);cursor:pointer;padding:5px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.06);transition:all .15s;background:rgba(255,255,255,.03)}
   .fil:active{transform:scale(.95)}
-  .fil.on{color:#fff;background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.15);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
-  .fil .fdot{width:7px;height:7px;border-radius:50%}
+  .fil.on{color:#fff;background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.15)}
+  .fil .fdot{width:6px;height:6px;border-radius:50%}
 
   /* SECTION CARD */
   .section{margin:16px 16px 0;background:var(--card);border-radius:var(--r);box-shadow:0 1px 8px rgba(0,0,0,.04)}
@@ -498,7 +499,7 @@ function R(){
   if(db)h+=`<div class="sync ${S.on?'on':'off'}">${S.on?'● Sync':'○ Offline'}</div>`;
 
   // HERO
-  h+=`<div class="hero">
+  h+=`<div class="hero-safe"></div><div class="hero">
     <div class="hero-row">
       <div><h1>España <span class="yr">2026</span></h1><div class="sub">${fd1} — ${fd2} de Junio · ${S.data.length} días</div></div>
       ${db?'<button class="share-btn" onclick="sM()">🔗</button>':''}
