@@ -137,22 +137,6 @@
   .f1-light:nth-child(5){animation-delay:1.6s}
   @keyframes lightSeq{0%,15%{background:#333;box-shadow:none}16%,45%{background:#dc0000;box-shadow:0 0 8px #dc0000}46%,100%{background:#333;box-shadow:none}}
 
-  /* TEAMS ROW */
-  .f1-teams{position:relative;z-index:2;display:flex;gap:8px;padding:16px 20px 0}
-  .f1-team{flex:1;padding:12px;border-radius:14px;position:relative;overflow:hidden}
-  .f1-team.rb{background:linear-gradient(135deg,rgba(30,65,175,.15),rgba(30,65,175,.05));border:1px solid rgba(30,65,175,.2)}
-  .f1-team.fer{background:linear-gradient(135deg,rgba(220,0,0,.15),rgba(220,0,0,.05));border:1px solid rgba(220,0,0,.2)}
-  .f1-team-stripe{position:absolute;top:0;left:0;width:3px;height:100%;border-radius:0 2px 2px 0}
-  .f1-team.rb .f1-team-stripe{background:#1e41af}
-  .f1-team.fer .f1-team-stripe{background:#dc0000}
-  .f1-team-name{font-size:9px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.4)}
-  .f1-team-drivers{margin-top:6px}
-  .f1-driver{display:flex;align-items:center;gap:6px;margin-top:4px}
-  .f1-driver-num{font-size:14px;font-weight:900;font-style:italic;min-width:24px}
-  .f1-team.rb .f1-driver-num{color:#1e41af}
-  .f1-team.fer .f1-driver-num{color:#dc0000}
-  .f1-driver-name{font-size:11px;font-weight:700;color:rgba(255,255,255,.8)}
-
   /* SCHEDULE ROW */
   .f1-sched{position:relative;z-index:2;display:flex;gap:6px;padding:16px 20px 20px}
   .f1-sess{flex:1;text-align:center;padding:10px 6px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06)}
@@ -381,8 +365,8 @@
     <div class="splash-car right">🏎️</div>
   </div>
   <div class="splash-title">
-    <h2><span class="rb-c">Red Bull</span> vs <span class="fer-c">Ferrari</span></h2>
-    <div class="year">GP España · Junio 2026</div>
+    <h2>España <span class="fer-c">F1</span> 2026</h2>
+    <div class="year">GP España · Junio 12–14</div>
   </div>
   <div class="splash-lights"><span class="splash-light"></span><span class="splash-light"></span><span class="splash-light"></span><span class="splash-light"></span><span class="splash-light"></span></div>
   <div class="checkered" id="checkered"></div>
@@ -518,7 +502,7 @@ function R(){
   // CALENDAR
   h+=`<div class="section">${calHTML()}</div>`;
 
-  // F1 BANNER — EPIC
+  // F1 BANNER — CLEAN
   if(S.filt==='Todos'||S.filt==='Barcelona'){
     const f1d=Math.ceil((new Date('2026-06-12')-new Date())/864e5);
     let f1s=f1d>0?`🏁 Faltan ${f1d} días`:f1d===0?'🟢 ¡LIGHTS OUT!':'🏁 Completado';
@@ -541,24 +525,6 @@ function R(){
         <div class="f1-road"></div>
         <div class="f1-sparks" style="left:52%;animation-delay:0s"></div>
         <div class="f1-sparks" style="left:46%;animation-delay:.2s"></div>
-      </div>
-      <div class="f1-teams">
-        <div class="f1-team rb">
-          <div class="f1-team-stripe"></div>
-          <div class="f1-team-name">Red Bull Racing</div>
-          <div class="f1-team-drivers">
-            <div class="f1-driver"><span class="f1-driver-num">1</span><span class="f1-driver-name">Verstappen</span></div>
-            <div class="f1-driver"><span class="f1-driver-num">22</span><span class="f1-driver-name">Tsunoda</span></div>
-          </div>
-        </div>
-        <div class="f1-team fer">
-          <div class="f1-team-stripe"></div>
-          <div class="f1-team-name">Scuderia Ferrari</div>
-          <div class="f1-team-drivers">
-            <div class="f1-driver"><span class="f1-driver-num">16</span><span class="f1-driver-name">Leclerc</span></div>
-            <div class="f1-driver"><span class="f1-driver-num">44</span><span class="f1-driver-name">Hamilton</span></div>
-          </div>
-        </div>
       </div>
       <div class="f1-sched">
         <div class="f1-sess ${sessActive('2026-06-12')}"><div class="f1-sess-ic">🏗️</div><div class="f1-sess-day">Vie 12</div><div class="f1-sess-name">Práctica</div><div class="f1-sess-time">14:30</div></div>
