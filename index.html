@@ -84,6 +84,8 @@
   .cal-cell.trip .cal-num{color:var(--text);font-weight:700}
   .cal-cell.empty .cal-num{color:#d2d2d7}
   .cal-city-bar{font-size:8px;font-weight:800;letter-spacing:.2px;color:#fff;padding:2px 4px;border-radius:4px;white-space:nowrap;overflow:hidden;max-width:100%;text-overflow:ellipsis;line-height:1.3}
+  .cal-split{display:flex;border-radius:4px;overflow:hidden;max-width:100%;gap:1px}
+  .cal-split-half{font-size:6px;font-weight:800;color:#fff;padding:2px 1px;flex:1;text-align:center;white-space:nowrap;line-height:1.4}
   .cal-icon{font-size:10px;line-height:1}
   .cal-divider{height:1px;background:var(--border);margin:0 20px 8px}
   .cal-legend{display:flex;gap:10px;padding:2px 20px 12px;flex-wrap:wrap}
@@ -378,18 +380,18 @@ const TRIP=[
   {date:"2026-06-08",label:"Lunes 8",city:"Madrid",color:"#D71920",icon:"🏰",events:[{time:"",title:"Madrid",detail:"",type:"tourism"}]},
   {date:"2026-06-09",label:"Martes 9",city:"Madrid",color:"#D71920",icon:"⚔️",events:[{time:"",title:"Toledo — Excursión",detail:"Day trip desde Madrid",type:"tourism"}]},
   {date:"2026-06-10",label:"Miércoles 10",city:"Madrid",color:"#D71920",icon:"🏰",events:[{time:"",title:"Madrid",detail:"",type:"tourism"}]},
-  {date:"2026-06-11",label:"Jueves 11",city:"Barcelona",color:"#3b5998",icon:"🌊",events:[{time:"",title:"Airbnb — Barcelona",detail:"Check-in Airbnb",type:"tourism"}]},
+  {date:"2026-06-11",label:"Jueves 11",city:"Barcelona",color:"#3b5998",icon:"🚂",from:"Madrid",fromColor:"#D71920",events:[{time:"",title:"Traslado Madrid → Barcelona",detail:"Tren/avión",type:"transport"},{time:"",title:"Airbnb — Barcelona",detail:"Check-in Airbnb",type:"tourism"}]},
   {date:"2026-06-12",label:"Viernes 12",city:"Barcelona",color:"#3b5998",icon:"🏎️",events:[{time:"",title:"Airbnb — Barcelona",detail:"",type:"tourism"},{time:"🏁",title:"F1 — Práctica Libre",detail:"Circuit de Barcelona-Catalunya",type:"f1"}]},
   {date:"2026-06-13",label:"Sábado 13",city:"Barcelona",color:"#3b5998",icon:"🏎️",events:[{time:"",title:"Airbnb — Barcelona",detail:"",type:"tourism"},{time:"🏁",title:"F1 — Clasificación",detail:"Circuit de Barcelona-Catalunya",type:"f1"}]},
   {date:"2026-06-14",label:"Domingo 14",city:"Barcelona",color:"#3b5998",icon:"🏎️",events:[{time:"",title:"Airbnb — Barcelona",detail:"",type:"tourism"},{time:"🏁",title:"F1 — Carrera",detail:"Circuit de Barcelona-Catalunya",type:"f1"}]},
   {date:"2026-06-15",label:"Lunes 15",city:"Barcelona",color:"#3b5998",icon:"🌊",events:[{time:"",title:"Airbnb — Barcelona",detail:"",type:"tourism"}]},
   {date:"2026-06-16",label:"Martes 16",city:"Barcelona",color:"#3b5998",icon:"🌊",events:[{time:"",title:"Airbnb — Barcelona",detail:"",type:"tourism"}]},
-  {date:"2026-06-17",label:"Miércoles 17",city:"Valencia",color:"#2a9d8f",icon:"🍊",events:[{time:"",title:"Valencia",detail:"Traslado desde Barcelona",type:"tourism"}]},
+  {date:"2026-06-17",label:"Miércoles 17",city:"Valencia",color:"#2a9d8f",icon:"🚂",from:"Barcelona",fromColor:"#3b5998",events:[{time:"",title:"Traslado Barcelona → Valencia",detail:"Tren/bus",type:"transport"},{time:"",title:"Valencia",detail:"Llegada y paseo",type:"tourism"}]},
   {date:"2026-06-18",label:"Jueves 18",city:"Valencia",color:"#2a9d8f",icon:"🍊",events:[{time:"",title:"Valencia",detail:"",type:"tourism"}]},
-  {date:"2026-06-19",label:"Viernes 19",city:"Madrid",color:"#D71920",icon:"🏰",events:[{time:"",title:"Madrid",detail:"Regreso para vuelta",type:"tourism"}]},
+  {date:"2026-06-19",label:"Viernes 19",city:"Madrid",color:"#D71920",icon:"🚂",from:"Valencia",fromColor:"#2a9d8f",events:[{time:"",title:"Traslado Valencia → Madrid",detail:"Tren/avión",type:"transport"},{time:"",title:"Madrid",detail:"Última noche",type:"tourism"}]},
   {date:"2026-06-20",label:"Sábado 20",city:"Vuelo",color:"#6366f1",icon:"✈️",events:[{time:"06:50",title:"Vuelo a Montevideo",detail:"IB 169 — Salida 6:50am",type:"flight"}]}
 ];
-const MAPS={"Vuelo a Madrid":"https://maps.google.com/?q=Aeropuerto+Barajas+Madrid","Madrid":"https://maps.google.com/?q=Madrid+centro","Toledo — Excursión":"https://maps.google.com/?q=Toledo+España","Airbnb — Barcelona":"https://maps.google.com/?q=Barcelona+centro","F1 — Práctica Libre":"https://maps.google.com/?q=Circuit+de+Barcelona-Catalunya","F1 — Clasificación":"https://maps.google.com/?q=Circuit+de+Barcelona-Catalunya","F1 — Carrera":"https://maps.google.com/?q=Circuit+de+Barcelona-Catalunya","Valencia":"https://maps.google.com/?q=Valencia+centro","Vuelo a Montevideo":"https://maps.google.com/?q=Aeropuerto+Barajas+Madrid"};
+const MAPS={"Vuelo a Madrid":"https://maps.google.com/?q=Aeropuerto+Barajas+Madrid","Madrid":"https://maps.google.com/?q=Madrid+centro","Toledo — Excursión":"https://maps.google.com/?q=Toledo+España","Traslado Madrid → Barcelona":"https://maps.google.com/?q=Madrid+a+Barcelona","Airbnb — Barcelona":"https://maps.google.com/?q=Barcelona+centro","F1 — Práctica Libre":"https://maps.google.com/?q=Circuit+de+Barcelona-Catalunya","F1 — Clasificación":"https://maps.google.com/?q=Circuit+de+Barcelona-Catalunya","F1 — Carrera":"https://maps.google.com/?q=Circuit+de+Barcelona-Catalunya","Traslado Barcelona → Valencia":"https://maps.google.com/?q=Barcelona+a+Valencia","Valencia":"https://maps.google.com/?q=Valencia+centro","Traslado Valencia → Madrid":"https://maps.google.com/?q=Valencia+a+Madrid","Vuelo a Montevideo":"https://maps.google.com/?q=Aeropuerto+Barajas+Madrid"};
 const DEFAULT_CC={Madrid:"#D71920",Barcelona:"#3b5998",Valencia:"#2a9d8f",Vuelo:"#6366f1",Sevilla:"#e67e22",Málaga:"#9b59b6",Granada:"#16a085",Bilbao:"#2c3e50"};
 const PRESET_COLORS=["#D71920","#3b5998","#2a9d8f","#6366f1","#e67e22","#9b59b6","#16a085","#2c3e50","#c0392b","#f59e0b","#ec4899","#06b6d4"];
 const ICONS=["🏰","🌊","🍊","✈️","⚔️","🏎️","🎭","🌅","🏔️","🍷","⛪","🏖️","🎨","🌺","🚂","🛳️"];
@@ -399,7 +401,7 @@ const DAYS_ES=["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sába
 
 function getCC(){const cc={...DEFAULT_CC};S.data.forEach(d=>{if(d.city&&d.color)cc[d.city]=d.color});return cc}
 function getCTS(){const cities=[];S.data.forEach(d=>{if(d.city&&d.city!=='Vuelo'&&!cities.includes(d.city))cities.push(d.city)});return["Todos",...cities]}
-function getROUTE(){const r=[];S.data.forEach(d=>{const last=r[r.length-1];if(last&&last.city===d.city){last.days++;last.endDate=d.date}else{r.push({city:d.city,days:1,startDate:d.date,endDate:d.date})}});return r.map(s=>{const sd=parseInt(s.startDate.slice(8)),ed=parseInt(s.endDate.slice(8));const dates=sd===ed?`${sd} Jun`:`${sd}–${ed}`;return{...s,dates}})}
+function getROUTE(){const r=[];S.data.forEach(d=>{if(d.from){r.push({city:d.from+'→'+d.city,days:.5,startDate:d.date,endDate:d.date,isTransit:true,fromColor:d.fromColor,toColor:d.color})}else{const last=r[r.length-1];if(last&&!last.isTransit&&last.city===d.city){last.days++;last.endDate=d.date}else{r.push({city:d.city,days:1,startDate:d.date,endDate:d.date})}}});return r.map(s=>{const sd=parseInt(s.startDate.slice(8)),ed=parseInt(s.endDate.slice(8));const dates=sd===ed?`${sd} Jun`:`${sd}–${ed}`;return{...s,dates}})}
 const DEFAULT_CK=[{text:"Pasaportes",done:false,cat:"docs"},{text:"Seguro de viaje",done:false,cat:"docs"},{text:"Reserva vuelos impresas",done:false,cat:"docs"},{text:"Entradas F1",done:false,cat:"f1"},{text:"Reserva Airbnb Barcelona",done:false,cat:"aloj"},{text:"Hotel Madrid",done:false,cat:"aloj"},{text:"Adaptador enchufe",done:false,cat:"equip"},{text:"Protector solar",done:false,cat:"equip"},{text:"Cargador portátil",done:false,cat:"equip"},{text:"Tarjeta de crédito internacional",done:false,cat:"docs"}];
 const WX={"2026-06-05":{i:"✈️",t:"-"},"2026-06-06":{i:"☀️",t:"31°"},"2026-06-07":{i:"☀️",t:"32°"},"2026-06-08":{i:"🌤️",t:"30°"},"2026-06-09":{i:"☀️",t:"33°"},"2026-06-10":{i:"☀️",t:"31°"},"2026-06-11":{i:"🌤️",t:"27°"},"2026-06-12":{i:"☀️",t:"28°"},"2026-06-13":{i:"☀️",t:"29°"},"2026-06-14":{i:"🌤️",t:"28°"},"2026-06-15":{i:"☀️",t:"29°"},"2026-06-16":{i:"☀️",t:"28°"},"2026-06-17":{i:"☀️",t:"30°"},"2026-06-18":{i:"☀️",t:"31°"},"2026-06-19":{i:"☀️",t:"32°"},"2026-06-20":{i:"✈️",t:"-"}};
 
@@ -407,7 +409,7 @@ let S={data:JSON.parse(JSON.stringify(TRIP)),sel:null,add:false,modal:false,on:f
 let db=null,ref=null,notesRef=null,ckRef=null,expRef=null;
 const FC={apiKey:"AIzaSyDPZPk2nsOQ3oRMG7ADhS56zEFyORTE4QQ",authDomain:"flor-y-pato-trip.firebaseapp.com",databaseURL:"https://flor-y-pato-trip-default-rtdb.firebaseio.com",projectId:"flor-y-pato-trip",storageBucket:"flor-y-pato-trip.firebasestorage.app",messagingSenderId:"862498607498",appId:"1:862498607498:web:7e2ccf24cd913e6cb7c5c3"};
 
-const DATA_VERSION=2;
+const DATA_VERSION=3;
 function migrateData(d){if(!d||!Array.isArray(d))return null;let changed=false;d.forEach(day=>{if(day.city==='Toledo'){day.city='Madrid';day.color='#D71920';changed=true}});return changed?d:null}
 function initFB(){try{firebase.initializeApp(FC);db=firebase.database();ref=db.ref('trip-espana-2026');notesRef=db.ref('trip-notes-2026');ckRef=db.ref('trip-checklist-2026');expRef=db.ref('trip-expenses-2026');const verRef=db.ref('trip-data-version');
 verRef.once('value',sv=>{const ver=sv.val()||0;if(ver<DATA_VERSION){ref.set(TRIP);verRef.set(DATA_VERSION)}});
@@ -430,7 +432,7 @@ function calHTML(){
     wk.forEach(d=>{
       if(!d){h+=`<div class="cal-cell empty"><div class="cal-num"></div></div>`;return}
       const ds=`2026-06-${String(d).padStart(2,'0')}`,day=t[ds],sl=S.sel===ds,it=ds===td;
-      const vis=day&&(S.filt==="Todos"||day.city===S.filt);
+      const vis=day&&(S.filt==="Todos"||day.city===S.filt||day.from===S.filt);
       const cls=['cal-cell'];
       if(day)cls.push('trip');if(it)cls.push('today');if(sl)cls.push('sel');
       const bgTint=day&&vis?`background:${day.color}0D`:'';
@@ -438,9 +440,15 @@ function calHTML(){
       h+=`<div class="cal-num">${d}</div>`;
       if(day&&vis){
         const isF1=F1_DATES.includes(ds);
-        const abbr=cityAbbr(day.city);
-        const barColor=isF1?'linear-gradient(135deg,#E8364F,#ff6b35)':day.color;
-        h+=`<div class="cal-city-bar" style="background:${barColor}">${isF1?'🏎️ F1':abbr}</div>`;
+        if(day.from){
+          const fromAbbr=cityAbbr(day.from);
+          const toAbbr=cityAbbr(day.city);
+          h+=`<div class="cal-split"><div class="cal-split-half" style="background:${day.fromColor||'#888'}">${fromAbbr}</div><div class="cal-split-half" style="background:${day.color}">→${toAbbr}</div></div>`;
+        } else {
+          const abbr=cityAbbr(day.city);
+          const barColor=isF1?'linear-gradient(135deg,#E8364F,#ff6b35)':day.color;
+          h+=`<div class="cal-city-bar" style="background:${barColor}">${isF1?'🏎️ F1':abbr}</div>`;
+        }
       }
       h+=`</div>`;
     });
@@ -450,7 +458,7 @@ function calHTML(){
   const cities={};S.data.forEach(d=>{if(d.city&&!cities[d.city])cities[d.city]={color:d.color,icon:d.icon}});
   h+=`<div class="cal-legend">${Object.entries(cities).map(([c,v])=>`<div class="cal-leg-item"><div class="cal-leg-dot" style="background:${v.color}"></div>${v.icon} ${c}</div>`).join('')}</div>`;
   // Weather row
-  const fd=S.filt==="Todos"?S.data:S.data.filter(d=>d.city===S.filt);
+  const fd=S.filt==="Todos"?S.data:S.data.filter(d=>d.city===S.filt||d.from===S.filt);
   h+=`<div class="cal-divider"></div><div class="wx-row">`;
   fd.forEach(day=>{const w=WX[day.date];if(w)h+=`<div class="wx"><div class="wx-d">${day.date.slice(8)}</div><div class="wx-i">${w.i}</div><div class="wx-t">${w.t}</div></div>`});
   h+=`</div>`;
@@ -492,7 +500,7 @@ function R(){
     </div>
     <div class="route-wrap">
       <div class="route-lbl">Ruta</div>
-      <div class="route-bar">${ROUTE.map(r=>`<div class="route-seg" style="flex:${r.days};background:${CC[r.city]||'#888'}">${r.city==='Vuelo'?'✈️':r.city}<span class="seg-dates">${r.dates}</span></div>`).join('')}</div>
+      <div class="route-bar">${ROUTE.map(r=>{if(r.isTransit){return`<div class="route-seg" style="flex:${r.days};background:linear-gradient(90deg,${r.fromColor},${r.toColor});font-size:8px">→</div>`}return`<div class="route-seg" style="flex:${r.days};background:${CC[r.city]||'#888'}">${r.city==='Vuelo'?'✈️':r.city}<span class="seg-dates">${r.dates}</span></div>`}).join('')}</div>
     </div>
     <div class="filters">${CTS.map(c=>{const on=S.filt===c;return c==="Todos"?`<div class="fil ${on?'on':''}" onclick="flt('${c}')">Todos</div>`:`<div class="fil ${on?'on':''}" onclick="flt('${c}')"><span class="fdot" style="background:${CC[c]||'#888'}"></span>${c}</div>`}).join('')}</div>
   </div>`;
@@ -534,7 +542,7 @@ function R(){
 
   // TIMELINE
   h+=`<div class="section"><div class="sec-hdr open"><div class="sec-hdr-left"><span class="sec-hdr-ic">📅</span><h2>Timeline</h2></div><span class="badge">${S.data.length} días</span></div><div class="tl">`;
-  const fd=S.filt==="Todos"?S.data:S.data.filter(d=>d.city===S.filt);
+  const fd=S.filt==="Todos"?S.data:S.data.filter(d=>d.city===S.filt||d.from===S.filt);
   fd.forEach(day=>{
     const isOpen=S.sel===day.date,isF1=F1_DATES.includes(day.date),isToday=day.date===td;
     const cls=['tl-item'];if(isOpen)cls.push('open');if(isF1)cls.push('f1');if(isToday)cls.push('is-today');
@@ -544,7 +552,7 @@ function R(){
         <span class="tl-em">${day.icon}</span>
         <div class="tl-info">
           <div class="tl-name">${day.label}${isToday?' · <span style="color:var(--blue);font-size:11px">HOY</span>':''}</div>
-          <span class="tl-tag" style="background:${isF1?'var(--f1-gradient)':day.color}">${day.city}${isF1?' · F1':''}</span>
+          ${day.from?`<span class="tl-tag" style="background:linear-gradient(90deg,${day.fromColor},${day.color})">${day.from} → ${day.city}</span>`:`<span class="tl-tag" style="background:${isF1?'var(--f1-gradient)':day.color}">${day.city}${isF1?' · F1':''}</span>`}
         </div>
         <div class="tl-actions">
           <span class="tl-cnt">${day.events.length}</span>
