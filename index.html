@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="España 2026">
+<meta name="theme-color" content="#0f172a">
+<title>España 2026 - Viaje</title>
+<link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiRXNwYcOxYSAyMDI2Iiwic2hvcnRfbmFtZSI6IkVzcGHDsWEiLCJzdGFydF91cmwiOiIuIiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJiYWNrZ3JvdW5kX2NvbG9yIjoiIzBmMTcyYSIsInRoZW1lX2NvbG9yIjoiIzBmMTcyYSJ9">
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  :root {
+    --safe-top: env(safe-area-inset-top, 20px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    color: #e2e8f0;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow-x: hidden;
+  }
+
+  /* Setup Screen */
+  .setup-screen {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    text-align: center;
+  }
+  .setup-screen h1 { font-size: 32px; color: #fff; margin-bottom: 8px; }
+  .setup-screen p { color: #94a3b8; font-size: 15px; max-width: 340px; margin-bottom: 24px; }
+  .setup-input {
+    width: 100%;
+    max-width: 360px;
+    background: #1e293b;
+    border: 1px solid #334155;
+    color: #e2e8f0;
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 14px;
+    font-family: monospace;
+    margin-bottom: 12px;
+    outline: none;
+    text-align: center;
+  }
+  .setup-input:focus { border-color: #6366f1; }
+  .setup-input::placeholder { color: #64748b; font-family: inherit; }
+  .setup-btn {
+    background: #6366f1;
+    color: #fff;
+    border: none;
+    padding: 14px 40px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 8px;
+    width: 100%;
+    max-width: 360px;
+  }
+  .setup-btn:disabled { opacity: 0.5; }
+  .setup-btn.offline-btn { background: #475569; margin-top: 16px; }
+  .setup-divider { color: #475569; margin: 12px 0; font-size: 13px; }
+  .setup-error { color: #f87171; font-size: 13px; margin-top: 8px; }
+  .setup-note { color: #64748b; font-size: 12px; max-width: 340px; margin-top: 16px; line-height: 1.5; }
+
+  /* Sync indicator */
+  .sync-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 4px 0;
+    font-size: 11px;
+    font-weight: 600;
+    transition: all 0.3s;
+  }
+  .sync-bar.online { background: #065f46; color: #6ee7b7; }
+  .sync-bar.offline { background: #7c2d12; color: #fdba74; }
+  .sync-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  .sync-bar.online .sync-dot { background: #6ee7b7; }
+  .sync-bar.offline .sync-dot { background: #fdba74; }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* Header */
+  .header {
+    padding: calc(var(--safe-top) + 24px) 20px 16px;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: linear-gradient(to bottom, #0f172a 60%, transparent);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+  .header h1 { font-size: 28px; font-weight: 800; color: #fff; }
+  .header .subtitle { color: #94a3b8; font-size: 15px; margin-top: 2px; }
+
+  .stats {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+  .stat-pill {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    color: #fff;
+  }
+
+  /* Filter Tabs */
+  .filters {
+    display: flex;
+    gap: 6px;
+    padding: 8px 16px 12px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .filters::-webkit-scrollbar { display: none; }
+  .filter-btn {
+    flex-shrink: 0;
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: none;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: #334155;
+    color: #94a3b8;
+  }
+  .filter-btn.active {
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    transform: scale(1.05);
+  }
+
+  /* Timeline */
+  .timeline { padding: 0 16px 120px; position: relative; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 28px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #334155;
+  }
+
+  .day-card { position: relative; margin-bottom: 10px; padding-left: 40px; }
+  .day-dot {
+    position: absolute;
+    left: 19px;
+    top: 18px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 3px solid #1e293b;
+    z-index: 2;
+  }
+  .day-content {
+    background: rgba(30, 41, 59, 0.7);
+    border-radius: 16px;
+    padding: 14px 16px;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+  }
+  .day-content.expanded {
+    background: rgba(30, 41, 59, 0.95);
+    border-color: rgba(148, 163, 184, 0.15);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+  }
+  .day-header { display: flex; align-items: center; justify-content: space-between; }
+  .day-header-left { display: flex; align-items: center; gap: 10px; }
+  .day-icon { font-size: 24px; }
+  .day-label { font-size: 16px; font-weight: 700; color: #fff; }
+  .city-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 10px;
+    border-radius: 12px;
+    color: #fff;
+    margin-left: 8px;
+  }
+  .day-meta { display: flex; align-items: center; gap: 6px; }
+  .event-count { font-size: 12px; color: #64748b; }
+  .chevron { color: #64748b; font-size: 12px; transition: transform 0.3s; }
+  .chevron.open { transform: rotate(180deg); }
+
+  .preview-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .preview-tag { font-size: 11px; background: #334155; color: #94a3b8; padding: 3px 10px; border-radius: 12px; }
+
+  .events-list { margin-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+  .event-card {
+    border-left: 4px solid;
+    border-radius: 12px;
+    padding: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    animation: slideIn 0.2s ease;
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .event-card.flight { background: #eef2ff; border-color: #6366f1; color: #3730a3; }
+  .event-card.transport { background: #f1f5f9; border-color: #94a3b8; color: #475569; }
+  .event-card.tourism { background: #ecfdf5; border-color: #10b981; color: #065f46; }
+  .event-card.food { background: #fff7ed; border-color: #f97316; color: #9a3412; }
+  .event-card.f1 { background: #fef2f2; border-color: #ef4444; color: #991b1b; }
+
+  .event-time { font-size: 13px; font-weight: 700; }
+  .event-title { font-size: 14px; font-weight: 600; margin-left: 6px; }
+  .event-detail { font-size: 12px; opacity: 0.7; margin-top: 3px; }
+  .event-delete {
+    background: none;
+    border: none;
+    color: #ef4444;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 0 4px;
+    opacity: 0.6;
+    flex-shrink: 0;
+  }
+
+  .add-btn {
+    width: 100%;
+    padding: 10px;
+    border: 2px dashed #475569;
+    border-radius: 12px;
+    background: transparent;
+    color: #64748b;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 4px;
+  }
+  .add-btn:hover { border-color: #94a3b8; color: #94a3b8; }
+
+  .add-form {
+    background: #0f172a;
+    border-radius: 12px;
+    padding: 12px;
+    margin-top: 8px;
+    animation: slideIn 0.2s ease;
+  }
+  .add-form .form-row { display: flex; gap: 8px; margin-bottom: 8px; }
+  .add-form input, .add-form select {
+    background: #1e293b;
+    border: 1px solid #334155;
+    color: #e2e8f0;
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 14px;
+    font-family: inherit;
+    outline: none;
+  }
+  .add-form input:focus, .add-form select:focus { border-color: #6366f1; }
+  .add-form input.time-input { width: 70px; }
+  .add-form input.title-input { flex: 1; }
+  .add-form input.detail-input { width: 100%; }
+  .add-form .form-actions { display: flex; gap: 8px; }
+  .btn-save {
+    background: #10b981;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .btn-cancel {
+    background: #475569;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .bottom-spacer { height: calc(var(--safe-bottom) + 20px); }
+  .footer-hint { text-align: center; padding: 20px; color: #475569; font-size: 13px; }
+
+  /* Share button */
+  .share-fab {
+    position: fixed;
+    bottom: calc(var(--safe-bottom) + 24px);
+    right: 20px;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: #6366f1;
+    color: #fff;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(99,102,241,0.5);
+    z-index: 150;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Share modal */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 300;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    animation: fadeIn 0.2s;
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .modal-sheet {
+    background: #1e293b;
+    border-radius: 20px 20px 0 0;
+    padding: 24px 20px calc(var(--safe-bottom) + 24px);
+    width: 100%;
+    max-width: 420px;
+    animation: slideUp 0.3s ease;
+  }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  .modal-sheet h2 { color: #fff; font-size: 20px; margin-bottom: 8px; }
+  .modal-sheet p { color: #94a3b8; font-size: 14px; margin-bottom: 16px; }
+  .share-url {
+    background: #0f172a;
+    border-radius: 10px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .share-url span {
+    flex: 1;
+    color: #6ee7b7;
+    font-size: 13px;
+    font-family: monospace;
+    word-break: break-all;
+  }
+  .copy-btn {
+    background: #6366f1;
+    color: #fff;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .close-modal {
+    background: #334155;
+    color: #fff;
+    border: none;
+    padding: 12px;
+    border-radius: 12px;
+    width: 100%;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<div id="app"></div>
+
+<script>
+// ==========================================
+// DEFAULT TRIP DATA
+// ==========================================
+const TRIP_DATA = [
+  { date:"2026-06-05", label:"Vie 5", city:"Vuelo", color:"#6366f1", icon:"\u2708\uFE0F",
+    events:[{time:"21:45",title:"Vuelo a Madrid",detail:"IB 170 — Salida 9:45pm",type:"flight"}]},
+  { date:"2026-06-06", label:"Sáb 6", city:"Madrid", color:"#ef4444", icon:"\uD83C\uDFF0",
+    events:[{time:"\uD83C\uDF05",title:"Llegada a Madrid",detail:"Check-in y descanso",type:"transport"},
+            {time:"\uD83C\uDF06",title:"Paseo por el centro",detail:"Puerta del Sol, Plaza Mayor",type:"tourism"}]},
+  { date:"2026-06-07", label:"Dom 7", city:"Madrid", color:"#ef4444", icon:"\uD83C\uDFF0",
+    events:[{time:"\uD83C\uDF05",title:"Museo del Prado",detail:"Reservar entrada online",type:"tourism"},
+            {time:"\uD83C\uDF06",title:"Parque del Retiro",detail:"Paseo y Palacio de Cristal",type:"tourism"}]},
+  { date:"2026-06-08", label:"Lun 8", city:"Madrid", color:"#ef4444", icon:"\uD83C\uDFF0",
+    events:[{time:"\uD83C\uDF05",title:"Palacio Real",detail:"Visita guiada",type:"tourism"},
+            {time:"\uD83C\uDF06",title:"Barrio de La Latina",detail:"Tapas y paseo",type:"food"}]},
+  { date:"2026-06-09", label:"Mar 9", city:"Toledo", color:"#f59e0b", icon:"\u2694\uFE0F",
+    events:[{time:"\uD83C\uDF05",title:"Excursión a Toledo",detail:"Tren AVE desde Madrid (~30 min)",type:"transport"},
+            {time:"\uD83D\uDD50",title:"Casco histórico",detail:"Catedral, Alcázar, calles medievales",type:"tourism"}]},
+  { date:"2026-06-10", label:"Mié 10", city:"Toledo", color:"#f59e0b", icon:"\u2694\uFE0F",
+    events:[{time:"\uD83C\uDF05",title:"Toledo día 2",detail:"Sinagoga, Museo del Greco, miradores",type:"tourism"},
+            {time:"\uD83C\uDF06",title:"Regreso a Madrid",detail:"Tren de vuelta",type:"transport"}]},
+  { date:"2026-06-11", label:"Jue 11", city:"Barcelona", color:"#3b82f6", icon:"\uD83C\uDF0A",
+    events:[{time:"\uD83C\uDF05",title:"Viaje a Barcelona",detail:"Traslado y check-in Airbnb",type:"transport"},
+            {time:"\uD83C\uDF06",title:"Las Ramblas",detail:"Barrio Gótico, La Boquería",type:"tourism"}]},
+  { date:"2026-06-12", label:"Vie 12", city:"Barcelona", color:"#3b82f6", icon:"\uD83C\uDFCE\uFE0F",
+    events:[{time:"\uD83C\uDFC1",title:"F1 — Práctica Libre",detail:"Circuit de Barcelona-Catalunya",type:"f1"}]},
+  { date:"2026-06-13", label:"Sáb 13", city:"Barcelona", color:"#3b82f6", icon:"\uD83C\uDFCE\uFE0F",
+    events:[{time:"\uD83C\uDFC1",title:"F1 — Clasificación",detail:"Circuit de Barcelona-Catalunya",type:"f1"}]},
+  { date:"2026-06-14", label:"Dom 14", city:"Barcelona", color:"#3b82f6", icon:"\uD83C\uDFCE\uFE0F",
+    events:[{time:"\uD83C\uDFC1",title:"F1 — Carrera",detail:"Circuit de Barcelona-Catalunya",type:"f1"}]},
+  { date:"2026-06-15", label:"Lun 15", city:"Barcelona", color:"#3b82f6", icon:"\uD83C\uDF0A",
+    events:[{time:"\uD83C\uDF05",title:"Sagrada Familia",detail:"Reservar entrada online",type:"tourism"},
+            {time:"\uD83C\uDF06",title:"Park Güell",detail:"Zona monumental de Gaudí",type:"tourism"}]},
+  { date:"2026-06-16", label:"Mar 16", city:"Barcelona", color:"#3b82f6", icon:"\uD83C\uDF0A",
+    events:[{time:"\uD83C\uDF05",title:"Barceloneta",detail:"Playa y paseo marítimo",type:"tourism"},
+            {time:"\uD83C\uDF06",title:"Casa Batlló / La Pedrera",detail:"Arquitectura de Gaudí",type:"tourism"}]},
+  { date:"2026-06-17", label:"Mié 17", city:"Valencia", color:"#10b981", icon:"\uD83C\uDF4A",
+    events:[{time:"\uD83C\uDF05",title:"Viaje a Valencia",detail:"Traslado desde Barcelona",type:"transport"},
+            {time:"\uD83C\uDF06",title:"Ciudad de las Artes y las Ciencias",detail:"Oceanogràfic, Hemisfèric",type:"tourism"}]},
+  { date:"2026-06-18", label:"Jue 18", city:"Valencia", color:"#10b981", icon:"\uD83C\uDF4A",
+    events:[{time:"\uD83C\uDF05",title:"Centro histórico",detail:"Catedral, Lonja de la Seda, Mercado Central",type:"tourism"},
+            {time:"\uD83C\uDF06",title:"Playa de la Malvarrosa",detail:"Paella frente al mar",type:"food"}]},
+  { date:"2026-06-19", label:"Vie 19", city:"Madrid", color:"#ef4444", icon:"\uD83C\uDFF0",
+    events:[{time:"\uD83C\uDF05",title:"Regreso a Madrid",detail:"Traslado desde Valencia",type:"transport"},
+            {time:"\uD83C\uDF06",title:"Últimas compras",detail:"Gran Vía, Malasaña, cena de despedida",type:"tourism"}]},
+  { date:"2026-06-20", label:"Sáb 20", city:"Vuelo", color:"#6366f1", icon:"\u2708\uFE0F",
+    events:[{time:"06:50",title:"Vuelo a Montevideo",detail:"IB 169 — Salida 6:50am",type:"flight"}]}
+];
+
+const CITIES = ["Todos", "Madrid", "Toledo", "Barcelona", "Valencia", "Vuelo"];
+const CITY_COLORS = { Madrid:"#ef4444", Toledo:"#f59e0b", Barcelona:"#3b82f6", Valencia:"#10b981", Vuelo:"#6366f1", Todos:"#8b5cf6" };
+
+// ==========================================
+// STATE
+// ==========================================
+let state = {
+  tripData: JSON.parse(JSON.stringify(TRIP_DATA)),
+  filter: "Todos",
+  expandedDay: null,
+  showAddForm: false,
+  isOnline: false,
+  showModal: false,
+  mode: null // 'setup', 'app'
+};
+
+let db = null;
+let dbRef = null;
+
+// ==========================================
+// FIREBASE CONFIG (Flor y Pato Trip)
+// ==========================================
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyDPZPk2nsOQ3oRMG7ADhS56zEFyORTE4QQ",
+  authDomain: "flor-y-pato-trip.firebaseapp.com",
+  databaseURL: "https://flor-y-pato-trip-default-rtdb.firebaseio.com",
+  projectId: "flor-y-pato-trip",
+  storageBucket: "flor-y-pato-trip.firebasestorage.app",
+  messagingSenderId: "862498607498",
+  appId: "1:862498607498:web:7e2ccf24cd913e6cb7c5c3"
+};
+
+function initFirebase(config) {
+  try {
+    const app = firebase.initializeApp(config);
+    db = firebase.database();
+    dbRef = db.ref('trip-espana-2026');
+
+    // Listen for real-time updates
+    dbRef.on('value', (snapshot) => {
+      const data = snapshot.val();
+      if (data && Array.isArray(data)) {
+        state.tripData = data;
+        state.isOnline = true;
+        render();
+      }
+    });
+
+    // Connection state
+    db.ref('.info/connected').on('value', (snap) => {
+      state.isOnline = snap.val() === true;
+      render();
+    });
+
+    // If DB is empty, initialize with default data
+    dbRef.once('value', (snapshot) => {
+      if (!snapshot.val()) {
+        dbRef.set(TRIP_DATA);
+      }
+    });
+
+    return true;
+  } catch(e) {
+    console.error('Firebase init error:', e);
+    return false;
+  }
+}
+
+function saveToFirebase() {
+  if (dbRef) {
+    dbRef.set(state.tripData);
+  }
+}
+
+// ==========================================
+// SETUP SCREEN
+// ==========================================
+function renderSetup() {
+  const savedConfig = getSavedConfig();
+
+  document.getElementById('app').innerHTML = `
+    <div class="setup-screen">
+      <h1>\u2708\uFE0F España 2026</h1>
+      <p>Conectá Firebase para sincronizar el itinerario en tiempo real con tu compañero de viaje</p>
+
+      <input class="setup-input" id="cfg-apiKey" placeholder="API Key" value="${savedConfig.apiKey || ''}">
+      <input class="setup-input" id="cfg-authDomain" placeholder="Auth Domain (ej: miapp.firebaseapp.com)" value="${savedConfig.authDomain || ''}">
+      <input class="setup-input" id="cfg-databaseURL" placeholder="Database URL (ej: https://miapp-default-rtdb...)" value="${savedConfig.databaseURL || ''}">
+      <input class="setup-input" id="cfg-projectId" placeholder="Project ID" value="${savedConfig.projectId || ''}">
+
+      <button class="setup-btn" onclick="connectFirebase()">Conectar</button>
+
+      <div class="setup-divider">— o —</div>
+
+      <button class="setup-btn offline-btn" onclick="startOffline()">Usar sin sincronización</button>
+
+      <div id="setup-error"></div>
+
+      <div class="setup-note">
+        Estos datos los sacás de la consola de Firebase.<br>
+        Se guardan en este dispositivo para la próxima vez.
+      </div>
+    </div>
+  `;
+}
+
+function getSavedConfig() {
+  try {
+    return JSON.parse(localStorage.getItem('firebase-config') || '{}');
+  } catch(e) { return {}; }
+}
+
+function connectFirebase() {
+  const config = {
+    apiKey: document.getElementById('cfg-apiKey').value.trim(),
+    authDomain: document.getElementById('cfg-authDomain').value.trim(),
+    databaseURL: document.getElementById('cfg-databaseURL').value.trim(),
+    projectId: document.getElementById('cfg-projectId').value.trim()
+  };
+
+  if (!config.apiKey || !config.databaseURL) {
+    document.getElementById('setup-error').innerHTML = '<div class="setup-error">Necesitás al menos la API Key y la Database URL</div>';
+    return;
+  }
+
+  try {
+    localStorage.setItem('firebase-config', JSON.stringify(config));
+  } catch(e) {}
+
+  const ok = initFirebase(config);
+  if (ok) {
+    state.mode = 'app';
+    render();
+  } else {
+    document.getElementById('setup-error').innerHTML = '<div class="setup-error">Error al conectar. Verificá los datos.</div>';
+  }
+}
+
+function startOffline() {
+  state.mode = 'app';
+  state.isOnline = false;
+  render();
+}
+
+// ==========================================
+// MAIN APP RENDER
+// ==========================================
+function render() {
+  if (state.mode === 'setup' || !state.mode) {
+    renderSetup();
+    return;
+  }
+
+  const filtered = state.filter === "Todos" ? state.tripData : state.tripData.filter(d => d.city === state.filter);
+  const cityCounts = {};
+  state.tripData.forEach(d => { if (d.city !== "Vuelo") cityCounts[d.city] = (cityCounts[d.city] || 0) + 1; });
+
+  let html = '';
+
+  // Sync bar
+  if (db) {
+    html += `<div class="sync-bar ${state.isOnline ? 'online' : 'offline'}">
+      <span class="sync-dot"></span>
+      ${state.isOnline ? 'Sincronizado en tiempo real' : 'Sin conexión — cambios locales'}
+    </div>`;
+  }
+
+  // Header
+  html += `
+    <div class="header">
+      <h1>\u2708\uFE0F España 2026</h1>
+      <div class="subtitle">5 — 20 de Junio</div>
+      <div class="stats">
+        ${Object.entries(cityCounts).map(([city, count]) =>
+          `<span class="stat-pill" style="background:${CITY_COLORS[city]}cc">${city}: ${count} días</span>`
+        ).join('')}
+      </div>
+    </div>
+
+    <div class="filters">
+      ${CITIES.map(city =>
+        `<button class="filter-btn ${state.filter === city ? 'active' : ''}"
+          style="${state.filter === city ? 'background:' + CITY_COLORS[city] : ''}"
+          onclick="setFilter('${city}')">${city}</button>`
+      ).join('')}
+    </div>
+
+    <div class="timeline">
+      ${filtered.map((day) => {
+        const isExpanded = state.expandedDay === day.date;
+        return `
+          <div class="day-card">
+            <div class="day-dot" style="background:${day.color}"></div>
+            <div class="day-content ${isExpanded ? 'expanded' : ''}" onclick="toggleDay('${day.date}')">
+              <div class="day-header">
+                <div class="day-header-left">
+                  <span class="day-icon">${day.icon}</span>
+                  <div>
+                    <span class="day-label">${day.label}</span>
+                    <span class="city-badge" style="background:${day.color}">${day.city}</span>
+                  </div>
+                </div>
+                <div class="day-meta">
+                  <span class="event-count">${day.events.length}</span>
+                  <span class="chevron ${isExpanded ? 'open' : ''}">\u25BC</span>
+                </div>
+              </div>
+
+              ${!isExpanded ? `
+                <div class="preview-tags">
+                  ${day.events.map(ev => `<span class="preview-tag">${ev.title}</span>`).join('')}
+                </div>
+              ` : `
+                <div class="events-list">
+                  ${day.events.map((ev, j) => `
+                    <div class="event-card ${ev.type}" onclick="event.stopPropagation()">
+                      <div>
+                        <div>
+                          <span class="event-time">${ev.time}</span>
+                          <span class="event-title">${ev.title}</span>
+                        </div>
+                        <div class="event-detail">${ev.detail}</div>
+                      </div>
+                      <button class="event-delete" onclick="event.stopPropagation(); deleteEvent('${day.date}', ${j})">\u00d7</button>
+                    </div>
+                  `).join('')}
+
+                  ${state.showAddForm === day.date ? `
+                    <div class="add-form" onclick="event.stopPropagation()">
+                      <div class="form-row">
+                        <input class="time-input" id="new-time" placeholder="Hora">
+                        <input class="title-input" id="new-title" placeholder="Título">
+                      </div>
+                      <div class="form-row">
+                        <input class="detail-input" id="new-detail" placeholder="Detalle">
+                      </div>
+                      <div class="form-row">
+                        <select id="new-type">
+                          <option value="tourism">Turismo</option>
+                          <option value="transport">Transporte</option>
+                          <option value="food">Comida</option>
+                          <option value="f1">F1</option>
+                          <option value="flight">Vuelo</option>
+                        </select>
+                      </div>
+                      <div class="form-actions">
+                        <button class="btn-save" onclick="event.stopPropagation(); addEvent('${day.date}')">Guardar</button>
+                        <button class="btn-cancel" onclick="event.stopPropagation(); closeAddForm()">Cancelar</button>
+                      </div>
+                    </div>
+                  ` : `
+                    <button class="add-btn" onclick="event.stopPropagation(); openAddForm('${day.date}')">+ Agregar actividad</button>
+                  `}
+                </div>
+              `}
+            </div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+
+    <div class="footer-hint">\uD83D\uDCCC Toca un día para ver o editar actividades</div>
+    <div class="bottom-spacer"></div>
+  `;
+
+  // Share FAB
+  if (db) {
+    html += `<button class="share-fab" onclick="showShareModal()">\uD83D\uDD17</button>`;
+  }
+
+  // Share modal
+  if (state.showModal) {
+    const url = window.location.href;
+    html += `
+      <div class="modal-overlay" onclick="closeModal()">
+        <div class="modal-sheet" onclick="event.stopPropagation()">
+          <h2>\uD83D\uDD17 Compartir viaje</h2>
+          <p>Compartí este link con tu compañero de viaje. Al abrirlo, solo necesita ingresar los mismos datos de Firebase para ver y editar el itinerario en tiempo real.</p>
+          <div class="share-url">
+            <span id="share-link">${url}</span>
+            <button class="copy-btn" onclick="copyLink()">Copiar</button>
+          </div>
+          <p style="font-size:12px; color:#64748b;">Tu compañero necesita los mismos 4 datos de Firebase para conectarse. Enviáselos por WhatsApp junto con el link.</p>
+          <button class="close-modal" onclick="closeModal()">Cerrar</button>
+        </div>
+      </div>
+    `;
+  }
+
+  document.getElementById('app').innerHTML = html;
+}
+
+// ==========================================
+// ACTIONS
+// ==========================================
+function setFilter(city) {
+  state.filter = city;
+  state.expandedDay = null;
+  state.showAddForm = false;
+  render();
+}
+
+function toggleDay(date) {
+  state.expandedDay = state.expandedDay === date ? null : date;
+  state.showAddForm = false;
+  render();
+  if (state.expandedDay) {
+    setTimeout(() => {
+      const el = document.querySelector('.day-content.expanded');
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 50);
+  }
+}
+
+function deleteEvent(date, idx) {
+  const di = state.tripData.findIndex(d => d.date === date);
+  if (di >= 0) {
+    state.tripData[di].events.splice(idx, 1);
+    saveToFirebase();
+    render();
+  }
+}
+
+function openAddForm(date) { state.showAddForm = date; render(); }
+function closeAddForm() { state.showAddForm = false; render(); }
+
+function addEvent(date) {
+  const time = document.getElementById('new-time').value || '\uD83D\uDD50';
+  const title = document.getElementById('new-title').value;
+  const detail = document.getElementById('new-detail').value || '';
+  const type = document.getElementById('new-type').value;
+  if (!title) return;
+
+  const di = state.tripData.findIndex(d => d.date === date);
+  if (di >= 0) {
+    state.tripData[di].events.push({ time, title, detail, type });
+    state.showAddForm = false;
+    saveToFirebase();
+    render();
+  }
+}
+
+function showShareModal() { state.showModal = true; render(); }
+function closeModal() { state.showModal = false; render(); }
+
+function copyLink() {
+  const url = window.location.href;
+  navigator.clipboard.writeText(url).then(() => {
+    const btn = document.querySelector('.copy-btn');
+    if (btn) { btn.textContent = '\u2705'; setTimeout(() => { btn.textContent = 'Copiar'; }, 1500); }
+  });
+}
+
+// ==========================================
+// INIT
+// ==========================================
+(function init() {
+  const ok = initFirebase(FIREBASE_CONFIG);
+  if (ok) {
+    state.mode = 'app';
+  } else {
+    // Fallback offline
+    state.mode = 'app';
+    state.isOnline = false;
+  }
+  render();
+})();
+</script>
+</body>
+</html>
