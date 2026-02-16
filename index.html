@@ -266,7 +266,7 @@
   /* MODAL */
   .mbg{position:fixed;inset:0;background:rgba(0,0,0,.35);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:300;display:flex;align-items:flex-end;justify-content:center;animation:fin .2s}
   @keyframes fin{from{opacity:0}to{opacity:1}}
-  .msh{background:var(--card);border-radius:24px 24px 0 0;padding:24px 20px calc(var(--safe-bottom)+24px);width:100%;max-width:420px;animation:sup .3s cubic-bezier(.16,1,.3,1)}
+  .msh{background:var(--card);border-radius:24px 24px 0 0;padding:24px 20px calc(var(--safe-bottom)+24px);width:100%;max-width:420px;animation:sup .3s cubic-bezier(.16,1,.3,1);max-height:85dvh;overflow-y:auto}
   @keyframes sup{from{transform:translateY(100%)}to{transform:translateY(0)}}
   .msh h2{font-size:20px;font-weight:800;margin-bottom:4px}
   .msh p{color:var(--dim);font-size:13px;margin-bottom:14px;line-height:1.5}
@@ -275,6 +275,42 @@
   .cpb{background:var(--accent-gradient);color:#fff;border:none;padding:7px 14px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer}
   .clb{background:var(--bg);color:var(--dim);border:none;padding:12px;border-radius:12px;width:100%;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit}
   @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+  /* DAY MODAL */
+  .dm-lbl{font-size:11px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;margin:14px 0 6px}
+  .dm-lbl:first-of-type{margin-top:8px}
+  .dm-cities{display:flex;gap:6px;flex-wrap:wrap}
+  .dm-city{padding:8px 14px;border-radius:12px;border:2px solid var(--border);cursor:pointer;text-align:center;min-width:72px;transition:all .15s}
+  .dm-city:active{transform:scale(.95)}
+  .dm-city.sel{border-color:var(--red);background:var(--red-soft)}
+  .dm-city-ic{font-size:18px}
+  .dm-city-n{font-size:11px;font-weight:700;margin-top:2px}
+  .dm-icons{display:flex;gap:6px;flex-wrap:wrap}
+  .dm-icon{width:40px;height:40px;border-radius:10px;border:2px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;transition:all .15s}
+  .dm-icon:active{transform:scale(.9)}
+  .dm-icon.sel{border-color:var(--red);background:var(--red-soft)}
+  .dm-actions{display:flex;gap:8px;margin-top:18px}
+  .dm-btn{flex:1;padding:13px;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;border:none;font-family:inherit;transition:transform .1s}
+  .dm-btn:active{transform:scale(.97)}
+  .dm-btn.primary{background:var(--accent-gradient);color:#fff}
+  .dm-btn.secondary{background:var(--bg);color:var(--dim)}
+  .dm-btn.danger{background:rgba(215,25,32,.08);color:var(--red)}
+  .dm-custom{display:flex;gap:6px;margin-top:8px}
+  .dm-color-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+  .dm-color{width:28px;height:28px;border-radius:50%;border:2px solid transparent;cursor:pointer;transition:all .12s}
+  .dm-color:active{transform:scale(.9)}
+  .dm-color.sel{border-color:var(--text);box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--text)}
+
+  /* ADD DAY BTN */
+  .add-day-btn{margin:4px 0 8px;display:flex;align-items:center;justify-content:center;gap:6px;padding:14px;color:var(--blue);font-size:14px;font-weight:700;cursor:pointer;border:2px dashed var(--border);border-radius:14px;background:none;width:100%;font-family:inherit;transition:all .15s}
+  .add-day-btn:active{background:var(--card-hover);border-color:var(--blue);transform:scale(.98)}
+
+  /* DELETE DAY / EDIT BTN */
+  .tl-actions{display:flex;gap:4px;align-items:center}
+  .tl-act{background:none;border:none;font-size:14px;cursor:pointer;padding:6px;border-radius:8px;opacity:.3;transition:all .12s}
+  .tl-act:active{opacity:1;transform:scale(.9)}
+  .tl-act.edit:active{color:var(--blue)}
+  .tl-act.del:active{color:var(--red)}
 
   /* SPLASH — RB vs FERRARI */
   .splash{position:fixed;inset:0;z-index:9999;background:#0a0a0a;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .5s ease,transform .5s ease;overflow:hidden}
@@ -367,15 +403,20 @@ const TRIP=[
   {date:"2026-06-20",label:"Sábado 20",city:"Vuelo",color:"#6366f1",icon:"✈️",events:[{time:"06:50",title:"Vuelo a Montevideo",detail:"IB 169 — Salida 6:50am",type:"flight"}]}
 ];
 const MAPS={"Vuelo a Madrid":"https://maps.google.com/?q=Aeropuerto+Barajas+Madrid","Madrid":"https://maps.google.com/?q=Madrid+centro","Toledo — Excursión":"https://maps.google.com/?q=Toledo+España","Airbnb — Barcelona":"https://maps.google.com/?q=Barcelona+centro","F1 — Práctica Libre":"https://maps.google.com/?q=Circuit+de+Barcelona-Catalunya","F1 — Clasificación":"https://maps.google.com/?q=Circuit+de+Barcelona-Catalunya","F1 — Carrera":"https://maps.google.com/?q=Circuit+de+Barcelona-Catalunya","Valencia":"https://maps.google.com/?q=Valencia+centro","Vuelo a Montevideo":"https://maps.google.com/?q=Aeropuerto+Barajas+Madrid"};
-const CC={Madrid:"#D71920",Barcelona:"#3b5998",Valencia:"#2a9d8f",Vuelo:"#6366f1"};
+const DEFAULT_CC={Madrid:"#D71920",Barcelona:"#3b5998",Valencia:"#2a9d8f",Vuelo:"#6366f1",Sevilla:"#e67e22",Málaga:"#9b59b6",Granada:"#16a085",Bilbao:"#2c3e50",Toledo:"#c0392b"};
+const PRESET_COLORS=["#D71920","#3b5998","#2a9d8f","#6366f1","#e67e22","#9b59b6","#16a085","#2c3e50","#c0392b","#f59e0b","#ec4899","#06b6d4"];
+const ICONS=["🏰","🌊","🍊","✈️","⚔️","🏎️","🎭","🌅","🏔️","🍷","⛪","🏖️","🎨","🌺","🚂","🛳️"];
 const EI={flight:"✈️",transport:"🚌",tourism:"📍",food:"🍽️",f1:"🏎️"};
-const CTS=["Todos","Madrid","Barcelona","Valencia"];
 const F1_DATES=["2026-06-12","2026-06-13","2026-06-14"];
-const ROUTE=[{city:"Vuelo",dates:"5 Jun",days:1},{city:"Madrid",dates:"6–10",days:5},{city:"Barcelona",dates:"11–16",days:6},{city:"Valencia",dates:"17–18",days:2},{city:"Madrid",dates:"19",days:1},{city:"Vuelo",dates:"20 Jun",days:1}];
+const DAYS_ES=["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
+
+function getCC(){const cc={...DEFAULT_CC};S.data.forEach(d=>{if(d.city&&d.color)cc[d.city]=d.color});return cc}
+function getCTS(){const cities=[];S.data.forEach(d=>{if(d.city&&d.city!=='Vuelo'&&!cities.includes(d.city))cities.push(d.city)});return["Todos",...cities]}
+function getROUTE(){const r=[];S.data.forEach(d=>{const last=r[r.length-1];if(last&&last.city===d.city){last.days++;last.endDate=d.date}else{r.push({city:d.city,days:1,startDate:d.date,endDate:d.date})}});return r.map(s=>{const sd=parseInt(s.startDate.slice(8)),ed=parseInt(s.endDate.slice(8));const dates=sd===ed?`${sd} Jun`:`${sd}–${ed}`;return{...s,dates}})}
 const DEFAULT_CK=[{text:"Pasaportes",done:false,cat:"docs"},{text:"Seguro de viaje",done:false,cat:"docs"},{text:"Reserva vuelos impresas",done:false,cat:"docs"},{text:"Entradas F1",done:false,cat:"f1"},{text:"Reserva Airbnb Barcelona",done:false,cat:"aloj"},{text:"Hotel Madrid",done:false,cat:"aloj"},{text:"Adaptador enchufe",done:false,cat:"equip"},{text:"Protector solar",done:false,cat:"equip"},{text:"Cargador portátil",done:false,cat:"equip"},{text:"Tarjeta de crédito internacional",done:false,cat:"docs"}];
 const WX={"2026-06-05":{i:"✈️",t:"-"},"2026-06-06":{i:"☀️",t:"31°"},"2026-06-07":{i:"☀️",t:"32°"},"2026-06-08":{i:"🌤️",t:"30°"},"2026-06-09":{i:"☀️",t:"33°"},"2026-06-10":{i:"☀️",t:"31°"},"2026-06-11":{i:"🌤️",t:"27°"},"2026-06-12":{i:"☀️",t:"28°"},"2026-06-13":{i:"☀️",t:"29°"},"2026-06-14":{i:"🌤️",t:"28°"},"2026-06-15":{i:"☀️",t:"29°"},"2026-06-16":{i:"☀️",t:"28°"},"2026-06-17":{i:"☀️",t:"30°"},"2026-06-18":{i:"☀️",t:"31°"},"2026-06-19":{i:"☀️",t:"32°"},"2026-06-20":{i:"✈️",t:"-"}};
 
-let S={data:JSON.parse(JSON.stringify(TRIP)),sel:null,add:false,modal:false,on:false,filt:"Todos",notes:{},ck:null,exp:[],showCk:false,showExp:false};
+let S={data:JSON.parse(JSON.stringify(TRIP)),sel:null,add:false,modal:false,on:false,filt:"Todos",notes:{},ck:null,exp:[],showCk:false,showExp:false,dayModal:null,dmCity:'',dmIcon:'',dmDate:'',dmColor:'',dmCustomCity:''};
 let db=null,ref=null,notesRef=null,ckRef=null,expRef=null;
 const FC={apiKey:"AIzaSyDPZPk2nsOQ3oRMG7ADhS56zEFyORTE4QQ",authDomain:"flor-y-pato-trip.firebaseapp.com",databaseURL:"https://flor-y-pato-trip-default-rtdb.firebaseio.com",projectId:"flor-y-pato-trip",storageBucket:"flor-y-pato-trip.firebasestorage.app",messagingSenderId:"862498607498",appId:"1:862498607498:web:7e2ccf24cd913e6cb7c5c3"};
 
@@ -439,14 +480,16 @@ function evHTML(day){
 }
 
 function R(){
-  const t=tm(),td=today(),cd=countdown();
+  const t=tm(),td=today(),cd=countdown(),CC=getCC(),CTS=getCTS(),ROUTE=getROUTE();
+  const firstDate=S.data.length?S.data[0].date:'',lastDate=S.data.length?S.data[S.data.length-1].date:'';
+  const fd1=firstDate?parseInt(firstDate.slice(8)):5,fd2=lastDate?parseInt(lastDate.slice(8)):20;
   let h='';
   if(db)h+=`<div class="sync ${S.on?'on':'off'}">${S.on?'● Sync':'○ Offline'}</div>`;
 
   // HERO
   h+=`<div class="hero">
     <div class="hero-row">
-      <div><h1>España <span class="yr">2026</span></h1><div class="sub">5 — 20 de Junio · 16 días</div></div>
+      <div><h1>España <span class="yr">2026</span></h1><div class="sub">${fd1} — ${fd2} de Junio · ${S.data.length} días</div></div>
       ${db?'<button class="share-btn" onclick="sM()">🔗</button>':''}
     </div>
     <div class="cd-row">
@@ -455,9 +498,9 @@ function R(){
     </div>
     <div class="route-wrap">
       <div class="route-lbl">Ruta</div>
-      <div class="route-bar">${ROUTE.map(r=>`<div class="route-seg" style="flex:${r.days};background:${CC[r.city]}">${r.city==='Vuelo'?'✈️':r.city}<span class="seg-dates">${r.dates}</span></div>`).join('')}</div>
+      <div class="route-bar">${ROUTE.map(r=>`<div class="route-seg" style="flex:${r.days};background:${CC[r.city]||'#888'}">${r.city==='Vuelo'?'✈️':r.city}<span class="seg-dates">${r.dates}</span></div>`).join('')}</div>
     </div>
-    <div class="filters">${CTS.map(c=>{const on=S.filt===c;return c==="Todos"?`<div class="fil ${on?'on':''}" onclick="flt('${c}')">Todos</div>`:`<div class="fil ${on?'on':''}" onclick="flt('${c}')"><span class="fdot" style="background:${CC[c]}"></span>${c}</div>`}).join('')}</div>
+    <div class="filters">${CTS.map(c=>{const on=S.filt===c;return c==="Todos"?`<div class="fil ${on?'on':''}" onclick="flt('${c}')">Todos</div>`:`<div class="fil ${on?'on':''}" onclick="flt('${c}')"><span class="fdot" style="background:${CC[c]||'#888'}"></span>${c}</div>`}).join('')}</div>
   </div>`;
 
   // CALENDAR
@@ -514,7 +557,7 @@ function R(){
   }
 
   // TIMELINE
-  h+=`<div class="section"><div class="sec-hdr open"><div class="sec-hdr-left"><span class="sec-hdr-ic">📅</span><h2>Timeline</h2></div></div><div class="tl">`;
+  h+=`<div class="section"><div class="sec-hdr open"><div class="sec-hdr-left"><span class="sec-hdr-ic">📅</span><h2>Timeline</h2></div><span class="badge">${S.data.length} días</span></div><div class="tl">`;
   const fd=S.filt==="Todos"?S.data:S.data.filter(d=>d.city===S.filt);
   fd.forEach(day=>{
     const isOpen=S.sel===day.date,isF1=F1_DATES.includes(day.date),isToday=day.date===td;
@@ -527,7 +570,11 @@ function R(){
           <div class="tl-name">${day.label}${isToday?' · <span style="color:var(--blue);font-size:11px">HOY</span>':''}</div>
           <span class="tl-tag" style="background:${isF1?'var(--f1-gradient)':day.color}">${day.city}${isF1?' · F1':''}</span>
         </div>
-        <span class="tl-cnt">${day.events.length}</span>
+        <div class="tl-actions">
+          <span class="tl-cnt">${day.events.length}</span>
+          <button class="tl-act edit" onclick="event.stopPropagation();openEditDay('${day.date}')" title="Editar">✏️</button>
+          <button class="tl-act del" onclick="event.stopPropagation();delDay('${day.date}')" title="Eliminar">🗑️</button>
+        </div>
       </div>
       <div class="tl-expand"><div class="tl-expand-in">`;
     h+=evHTML(day);
@@ -538,6 +585,7 @@ function R(){
     }
     h+=`</div></div></div>`;
   });
+  h+=`<button class="add-day-btn" onclick="openAddDay()">+ Agregar día</button>`;
   h+=`</div></div>`;
 
   // CHECKLIST
@@ -569,11 +617,36 @@ function R(){
   if(exps.length){h+=`<div class="exp-list">${exps.slice().reverse().map((e,ri)=>{const i=exps.length-1-ri;return`<div class="exp-row"><div class="exp-row-ic">${cI[e.cat]||'💰'}</div><div class="exp-row-nfo"><div class="exp-row-n">${e.desc}</div><div class="exp-row-d">${e.city} · ${e.date||''}</div></div><div class="exp-row-a">€${Number(e.amount).toFixed(0)}</div><button class="exp-row-x" onclick="dExp(${i})">×</button></div>`}).join('')}</div>`}
   h+=`<div class="exp-form">
     <div class="exp-fr"><input class="fi" id="eD" placeholder="Descripción" style="flex:2"><div style="display:flex;align-items:center;gap:2px;flex:1"><span class="exp-cur">€</span><input class="fi" id="eA" placeholder="0" type="number" style="flex:1"></div></div>
-    <div class="exp-fr"><select class="fs" id="eC" style="flex:1"><option>Madrid</option><option>Barcelona</option><option>Valencia</option></select><select class="fs" id="eCat" style="flex:1"><option value="comida">Comida</option><option value="transporte">Transporte</option><option value="alojamiento">Alojamiento</option><option value="entradas">Entradas</option><option value="compras">Compras</option><option value="otro">Otro</option></select><button class="btn-go" onclick="aExp()" style="flex:0;padding:9px 16px">+</button></div>
+    <div class="exp-fr"><select class="fs" id="eC" style="flex:1">${getCTS().filter(c=>c!=='Todos').map(c=>`<option>${c}</option>`).join('')}</select><select class="fs" id="eCat" style="flex:1"><option value="comida">Comida</option><option value="transporte">Transporte</option><option value="alojamiento">Alojamiento</option><option value="entradas">Entradas</option><option value="compras">Compras</option><option value="otro">Otro</option></select><button class="btn-go" onclick="aExp()" style="flex:0;padding:9px 16px">+</button></div>
   </div></div></div>`;
 
-  // Modal
+  // Modal Share
   if(S.modal){const u=location.href;h+=`<div class="mbg" onclick="cM()"><div class="msh" onclick="event.stopPropagation()"><h2>🔗 Compartir</h2><p>Mandále este link a tu compañero de viaje. Los cambios se sincronizan al instante.</p><div class="sbox"><span>${u}</span><button class="cpb" onclick="cpL()">Copiar</button></div><button class="clb" onclick="cM()">Cerrar</button></div></div>`}
+
+  // Day Modal (add/edit)
+  if(S.dayModal){
+    const isEdit=S.dayModal==='edit';
+    const existingCities=Object.keys(CC).filter(c=>c!=='Vuelo');
+    const allCities=[...new Set([...existingCities,...Object.keys(DEFAULT_CC).filter(c=>c!=='Vuelo')])];
+    h+=`<div class="mbg" onclick="closeDM()"><div class="msh" onclick="event.stopPropagation()">
+      <h2>${isEdit?'✏️ Editar día':'📅 Agregar día'}</h2>
+      <p>${isEdit?'Cambiá la ciudad o el ícono de este día':'Elegí la fecha, ciudad e ícono para el nuevo día'}</p>`;
+    if(!isEdit){
+      h+=`<div class="dm-lbl">Fecha</div>
+        <input class="fi" type="date" id="dmDate" value="${S.dmDate}" min="2026-06-01" max="2026-06-30" onchange="S.dmDate=this.value" style="width:100%">`;
+    }
+    h+=`<div class="dm-lbl">Ciudad</div>
+      <div class="dm-cities">${allCities.map(c=>`<div class="dm-city ${S.dmCity===c?'sel':''}" onclick="S.dmCity='${c}';S.dmColor=DEFAULT_CC['${c}']||'#888';S.dmCustomCity='';R()"><div class="dm-city-ic">${c==='Madrid'?'🏰':c==='Barcelona'?'🌊':c==='Valencia'?'🍊':c==='Sevilla'?'🌺':c==='Málaga'?'🏖️':c==='Granada'?'⛪':c==='Bilbao'?'🏔️':c==='Toledo'?'⚔️':'🏙️'}</div><div class="dm-city-n">${c}</div></div>`).join('')}</div>
+      <div class="dm-custom"><input class="fi" id="dmCustom" placeholder="O ciudad personalizada..." value="${S.dmCustomCity}" oninput="S.dmCustomCity=this.value;S.dmCity='';R()" style="flex:1"></div>`;
+    h+=`<div class="dm-lbl">Color</div>
+      <div class="dm-color-row">${PRESET_COLORS.map(c=>`<div class="dm-color ${S.dmColor===c?'sel':''}" style="background:${c}" onclick="S.dmColor='${c}';R()"></div>`).join('')}</div>`;
+    h+=`<div class="dm-lbl">Ícono</div>
+      <div class="dm-icons">${ICONS.map(ic=>`<div class="dm-icon ${S.dmIcon===ic?'sel':''}" onclick="S.dmIcon='${ic}';R()">${ic}</div>`).join('')}</div>`;
+    h+=`<div class="dm-actions">
+      <button class="dm-btn secondary" onclick="closeDM()">Cancelar</button>
+      <button class="dm-btn primary" onclick="${isEdit?'saveEditDay()':'saveAddDay()'}">${isEdit?'Guardar':'Agregar'}</button>
+    </div></div></div>`;
+  }
 
   document.getElementById('app').innerHTML=h;
 }
@@ -590,6 +663,51 @@ function tCK(i){if(S.ck){S.ck[i].done=!S.ck[i].done;saveCK();R()}}
 function aCK(){const inp=document.getElementById('ckI');if(!inp||!inp.value.trim())return;S.ck=S.ck||[];S.ck.push({text:inp.value.trim(),done:false,cat:"otro"});saveCK();R()}
 function aExp(){const d=document.getElementById('eD'),a=document.getElementById('eA'),c=document.getElementById('eC'),cat=document.getElementById('eCat');if(!d||!d.value.trim()||!a||!a.value)return;S.exp=S.exp||[];S.exp.push({desc:d.value.trim(),amount:Number(a.value),city:c.value,cat:cat.value,date:today()});saveExp();R()}
 function dExp(i){S.exp.splice(i,1);saveExp();R()}
+
+// DAY MANAGEMENT
+function openAddDay(){
+  // Default to next day after last day in trip
+  const lastD=S.data.length?S.data[S.data.length-1].date:'2026-06-05';
+  const nd=new Date(lastD+'T12:00:00');nd.setDate(nd.getDate()+1);
+  const nds=nd.toISOString().slice(0,10);
+  S.dayModal='add';S.dmDate=nds;S.dmCity='';S.dmIcon='🏰';S.dmColor='#888';S.dmCustomCity='';R();
+}
+function openEditDay(date){
+  const day=S.data.find(d=>d.date===date);if(!day)return;
+  S.dayModal='edit';S.dmDate=date;S.dmCity=day.city;S.dmIcon=day.icon;S.dmColor=day.color;S.dmCustomCity='';R();
+}
+function closeDM(){S.dayModal=null;R()}
+function saveAddDay(){
+  const date=S.dmDate||document.getElementById('dmDate')?.value;
+  if(!date)return;
+  const city=S.dmCustomCity.trim()||S.dmCity;
+  if(!city){alert('Elegí una ciudad');return}
+  // Check if date already exists
+  if(S.data.find(d=>d.date===date)){alert('Ya hay un día con esa fecha');return}
+  const d=new Date(date+'T12:00:00');
+  const dayName=DAYS_ES[d.getDay()];
+  const dayNum=d.getDate();
+  const color=S.dmColor||DEFAULT_CC[city]||'#888';
+  const newDay={date,label:`${dayName} ${dayNum}`,city,color,icon:S.dmIcon||'🏰',events:[{time:'',title:city,detail:'',type:'tourism'}]};
+  S.data.push(newDay);
+  S.data.sort((a,b)=>a.date.localeCompare(b.date));
+  S.dayModal=null;save();R();
+}
+function saveEditDay(){
+  const day=S.data.find(d=>d.date===S.dmDate);if(!day)return;
+  const city=S.dmCustomCity.trim()||S.dmCity;
+  if(!city){alert('Elegí una ciudad');return}
+  day.city=city;
+  day.icon=S.dmIcon||day.icon;
+  day.color=S.dmColor||DEFAULT_CC[city]||day.color;
+  S.dayModal=null;save();R();
+}
+function delDay(date){
+  if(!confirm('¿Eliminar este día del viaje?'))return;
+  S.data=S.data.filter(d=>d.date!==date);
+  if(S.sel===date)S.sel=null;
+  save();R();
+}
 
 function autoScroll(){const td=today(),dates=S.data.map(d=>d.date);let tgt=dates.includes(td)?td:(dates.filter(d=>d>=td)[0]||null);if(tgt){S.sel=tgt;R();setTimeout(()=>{const el=document.getElementById('day-'+tgt);if(el)el.scrollIntoView({behavior:'smooth',block:'center'})},300)}}
 
