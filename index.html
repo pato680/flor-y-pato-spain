@@ -81,7 +81,7 @@
   .cal-num{width:26px;height:26px;display:flex;align-items:center;justify-content:center;border-radius:50%;font-size:12px;font-weight:600;color:var(--dim);transition:all .12s;z-index:2}
   .cal-cell.trip .cal-num{color:var(--text);font-weight:700}
   .cal-cell.empty .cal-num{color:#d2d2d7}
-  .cal-city-bar{font-size:7px;font-weight:800;letter-spacing:.3px;color:#fff;padding:1px 5px;border-radius:4px;white-space:nowrap;overflow:hidden;max-width:100%;text-overflow:ellipsis;line-height:1.4}
+  .cal-city-bar{font-size:8px;font-weight:800;letter-spacing:.2px;color:#fff;padding:2px 4px;border-radius:4px;white-space:nowrap;overflow:hidden;max-width:100%;text-overflow:ellipsis;line-height:1.3}
   .cal-icon{font-size:10px;line-height:1}
   .cal-divider{height:1px;background:var(--border);margin:0 20px 8px}
   .cal-legend{display:flex;gap:10px;padding:2px 20px 12px;flex-wrap:wrap}
@@ -406,7 +406,7 @@ const TRIP=[
   {date:"2026-06-20",label:"Sábado 20",city:"Vuelo",color:"#6366f1",icon:"✈️",events:[{time:"06:50",title:"Vuelo a Montevideo",detail:"IB 169 — Salida 6:50am",type:"flight"}]}
 ];
 const MAPS={"Vuelo a Madrid":"https://maps.google.com/?q=Aeropuerto+Barajas+Madrid","Madrid":"https://maps.google.com/?q=Madrid+centro","Toledo — Excursión":"https://maps.google.com/?q=Toledo+España","Airbnb — Barcelona":"https://maps.google.com/?q=Barcelona+centro","F1 — Práctica Libre":"https://maps.google.com/?q=Circuit+de+Barcelona-Catalunya","F1 — Clasificación":"https://maps.google.com/?q=Circuit+de+Barcelona-Catalunya","F1 — Carrera":"https://maps.google.com/?q=Circuit+de+Barcelona-Catalunya","Valencia":"https://maps.google.com/?q=Valencia+centro","Vuelo a Montevideo":"https://maps.google.com/?q=Aeropuerto+Barajas+Madrid"};
-const DEFAULT_CC={Madrid:"#D71920",Barcelona:"#3b5998",Valencia:"#2a9d8f",Vuelo:"#6366f1",Sevilla:"#e67e22",Málaga:"#9b59b6",Granada:"#16a085",Bilbao:"#2c3e50",Toledo:"#c0392b"};
+const DEFAULT_CC={Madrid:"#D71920",Barcelona:"#3b5998",Valencia:"#2a9d8f",Vuelo:"#6366f1",Sevilla:"#e67e22",Málaga:"#9b59b6",Granada:"#16a085",Bilbao:"#2c3e50"};
 const PRESET_COLORS=["#D71920","#3b5998","#2a9d8f","#6366f1","#e67e22","#9b59b6","#16a085","#2c3e50","#c0392b","#f59e0b","#ec4899","#06b6d4"];
 const ICONS=["🏰","🌊","🍊","✈️","⚔️","🏎️","🎭","🌅","🏔️","🍷","⛪","🏖️","🎨","🌺","🚂","🛳️"];
 const EI={flight:"✈️",transport:"🚌",tourism:"📍",food:"🍽️",f1:"🏎️"};
@@ -423,7 +423,8 @@ let S={data:JSON.parse(JSON.stringify(TRIP)),sel:null,add:false,modal:false,on:f
 let db=null,ref=null,notesRef=null,ckRef=null,expRef=null;
 const FC={apiKey:"AIzaSyDPZPk2nsOQ3oRMG7ADhS56zEFyORTE4QQ",authDomain:"flor-y-pato-trip.firebaseapp.com",databaseURL:"https://flor-y-pato-trip-default-rtdb.firebaseio.com",projectId:"flor-y-pato-trip",storageBucket:"flor-y-pato-trip.firebasestorage.app",messagingSenderId:"862498607498",appId:"1:862498607498:web:7e2ccf24cd913e6cb7c5c3"};
 
-function initFB(){try{firebase.initializeApp(FC);db=firebase.database();ref=db.ref('trip-espana-2026');notesRef=db.ref('trip-notes-2026');ckRef=db.ref('trip-checklist-2026');expRef=db.ref('trip-expenses-2026');ref.on('value',s=>{const d=s.val();if(d&&Array.isArray(d)){S.data=d;S.on=true;R()}});db.ref('.info/connected').on('value',s=>{S.on=s.val()===true;R()});ref.once('value',s=>{if(!s.val())ref.set(TRIP)});notesRef.on('value',s=>{S.notes=s.val()||{};R()});ckRef.on('value',s=>{S.ck=s.val()||DEFAULT_CK;R()});ckRef.once('value',s=>{if(!s.val())ckRef.set(DEFAULT_CK)});expRef.on('value',s=>{S.exp=s.val()||[];R()});return true}catch(e){return false}}
+function migrateData(d){if(!d||!Array.isArray(d))return d;let changed=false;d.forEach(day=>{if(day.city==='Toledo'){day.city='Madrid';day.color='#D71920';if(!day.events.some(e=>e.title.includes('Toledo'))){day.events.forEach(e=>{if(e.title==='Toledo')e.title='Toledo — Excursión'})}changed=true}});return changed?d:null}
+function initFB(){try{firebase.initializeApp(FC);db=firebase.database();ref=db.ref('trip-espana-2026');notesRef=db.ref('trip-notes-2026');ckRef=db.ref('trip-checklist-2026');expRef=db.ref('trip-expenses-2026');ref.on('value',s=>{const d=s.val();if(d&&Array.isArray(d)){const fix=migrateData(d);if(fix){S.data=fix;ref.set(fix)}else{S.data=d}S.on=true;R()}});db.ref('.info/connected').on('value',s=>{S.on=s.val()===true;R()});ref.once('value',s=>{if(!s.val())ref.set(TRIP)});notesRef.on('value',s=>{S.notes=s.val()||{};R()});ckRef.on('value',s=>{S.ck=s.val()||DEFAULT_CK;R()});ckRef.once('value',s=>{if(!s.val())ckRef.set(DEFAULT_CK)});expRef.on('value',s=>{S.exp=s.val()||[];R()});return true}catch(e){return false}}
 function save(){if(ref)ref.set(S.data)}
 function saveNotes(){if(notesRef)notesRef.set(S.notes)}
 function saveCK(){if(ckRef)ckRef.set(S.ck)}
