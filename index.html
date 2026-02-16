@@ -16,468 +16,526 @@
 
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
-
-  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 
   :root {
     --safe-top: env(safe-area-inset-top, 20px);
     --safe-bottom: env(safe-area-inset-bottom, 0px);
-    --red: #e63946;
-    --red-dark: #c1121f;
-    --blue: #1d3557;
-    --blue-light: #457b9d;
-    --blue-bright: #1d3557;
-    --white: #ffffff;
-    --bg: #f5f5f7;
-    --card: #ffffff;
-    --card-hover: #f0f0f5;
-    --text: #1c1c1e;
-    --text-dim: #6b7280;
-    --border: rgba(0,0,0,0.08);
+    --red: #e63946; --red-soft: #fee2e5; --red-dark: #c1121f;
+    --blue: #1d3557; --blue-mid: #457b9d; --blue-soft: #e8eef4;
+    --bg: #f8f9fc; --card: #ffffff; --text: #111827; --dim: #6b7280;
+    --border: rgba(0,0,0,0.06);
+    --shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03);
+    --shadow-lg: 0 4px 20px rgba(0,0,0,0.08);
   }
 
   body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    min-height: 100dvh;
-    overflow-x: hidden;
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
+    background: var(--bg); color: var(--text);
+    min-height: 100dvh; overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
   }
 
-  /* Sync */
-  .sync-bar {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 200;
-    text-align: center; padding: 3px 0; font-size: 10px; font-weight: 700;
-    letter-spacing: 0.5px; text-transform: uppercase;
+  /* Sync pill */
+  .sync {
+    position: fixed; top: calc(var(--safe-top) + 8px); left: 50%; transform: translateX(-50%);
+    z-index: 200; padding: 4px 14px; border-radius: 20px;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.3px;
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    animation: fadeDown 0.4s ease;
   }
-  .sync-bar.online { background: var(--red); color: #fff; }
-  .sync-bar.offline { background: var(--blue-light); color: #fff; }
+  @keyframes fadeDown { from { opacity:0; transform:translateX(-50%) translateY(-10px); } to { opacity:1; transform:translateX(-50%) translateY(0); } }
+  .sync.on { background: rgba(230,57,70,0.1); color: var(--red); border: 1px solid rgba(230,57,70,0.2); }
+  .sync.off { background: rgba(69,123,157,0.1); color: var(--blue-mid); border: 1px solid rgba(69,123,157,0.2); }
 
-  /* Header */
-  .header {
-    padding: calc(var(--safe-top) + 28px) 24px 20px;
-    background: #fff; border-bottom: 1px solid var(--border);
+  /* Hero header */
+  .hero {
+    padding: calc(var(--safe-top) + 52px) 24px 24px;
+    background: linear-gradient(160deg, #fff 0%, #f0f4ff 50%, #fef1f2 100%);
+    position: relative; overflow: hidden;
   }
-  .header-row { display: flex; align-items: flex-start; justify-content: space-between; }
-  .header h1 {
-    font-size: 32px; font-weight: 900; letter-spacing: -1px;
-    color: var(--blue);
+  .hero::after {
+    content: ''; position: absolute; top: -60px; right: -40px;
+    width: 180px; height: 180px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(230,57,70,0.08) 0%, transparent 70%);
   }
-  .header .dates {
-    font-size: 14px; color: var(--text-dim); font-weight: 500; margin-top: 4px;
-  }
+  .hero-row { display: flex; align-items: flex-start; justify-content: space-between; position: relative; z-index: 1; }
+  .hero h1 { font-size: 28px; font-weight: 900; color: var(--blue); letter-spacing: -0.8px; line-height: 1.1; }
+  .hero h1 span { color: var(--red); }
+  .hero .sub { font-size: 14px; color: var(--dim); font-weight: 500; margin-top: 6px; }
   .share-btn {
-    width: 40px; height: 40px; border-radius: 12px;
-    background: var(--red); border: none;
-    color: #fff; font-size: 18px; cursor: pointer;
+    width: 42px; height: 42px; border-radius: 14px; border: none;
+    background: var(--red); color: #fff; font-size: 18px; cursor: pointer;
     display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 2px 8px rgba(230,57,70,0.3);
+    box-shadow: 0 4px 14px rgba(230,57,70,0.25);
+    transition: transform 0.15s;
   }
-  .share-btn:active { background: var(--red-dark); }
+  .share-btn:active { transform: scale(0.92); }
 
-  /* City legend */
-  .city-legend {
-    display: flex; gap: 6px; margin-top: 16px; flex-wrap: wrap;
-  }
-  .legend-item {
-    display: flex; align-items: center; gap: 5px;
-    font-size: 11px; font-weight: 600; color: var(--text-dim);
-    padding: 4px 10px; border-radius: 8px;
-    background: rgba(0,0,0,0.03);
-  }
-  .legend-dot {
-    width: 8px; height: 8px; border-radius: 3px;
-  }
-
-  /* Calendar */
-  .cal-section { padding: 16px 16px 8px; }
-  .cal-card {
-    background: var(--card); border-radius: 20px;
-    padding: 20px; border: 1px solid var(--border);
-  }
-  .cal-title {
-    font-size: 18px; font-weight: 800; text-align: center;
-    margin-bottom: 16px; color: var(--blue);
-    letter-spacing: -0.3px;
-  }
-  .cal-weekdays {
-    display: grid; grid-template-columns: repeat(7, 1fr);
-    text-align: center; margin-bottom: 8px;
-  }
-  .cal-wd {
-    font-size: 11px; font-weight: 700; color: var(--text-dim);
-    text-transform: uppercase; letter-spacing: 0.5px;
-  }
-  .cal-grid {
-    display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px;
-  }
-  .cal-day {
-    aspect-ratio: 1; display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    border-radius: 14px; font-size: 15px; font-weight: 600;
-    cursor: pointer; transition: all 0.15s; position: relative;
-  }
-  .cal-day.empty { cursor: default; }
-  .cal-day.off { color: #c7c7cc; cursor: default; }
-  .cal-day.trip { color: #fff; }
-  .cal-day.trip:active { transform: scale(0.9); }
-  .cal-day.selected {
-    transform: scale(1.12);
-    box-shadow: 0 0 0 2px var(--red), 0 4px 20px rgba(230,57,70,0.3);
-  }
-  .cal-dot-row { display: flex; gap: 2px; margin-top: 2px; }
-  .cal-ev-dot {
-    width: 3px; height: 3px; border-radius: 50%;
-    background: rgba(255,255,255,0.6);
+  /* City chips */
+  .chips { display: flex; gap: 6px; margin-top: 16px; flex-wrap: wrap; position: relative; z-index: 1; }
+  .chip {
+    display: flex; align-items: center; gap: 6px;
+    padding: 6px 12px; border-radius: 10px;
+    font-size: 12px; font-weight: 600; color: #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
   }
 
   /* Tabs */
-  .tab-bar {
-    display: flex; gap: 4px; padding: 0 16px; margin-top: 8px;
+  .tabs {
+    display: flex; gap: 6px; padding: 16px 20px 8px;
     overflow-x: auto; scrollbar-width: none;
   }
-  .tab-bar::-webkit-scrollbar { display: none; }
-  .tab-btn {
-    flex-shrink: 0; padding: 8px 16px; border-radius: 10px;
-    border: 1px solid var(--border); background: var(--card);
-    color: var(--text-dim); font-size: 13px; font-weight: 600;
-    cursor: pointer; transition: all 0.15s; font-family: inherit;
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab {
+    flex-shrink: 0; padding: 8px 18px; border-radius: 12px;
+    border: 1.5px solid var(--border); background: #fff;
+    color: var(--dim); font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: all 0.2s; font-family: inherit;
   }
-  .tab-btn.active {
-    background: var(--red); color: #fff;
-    border-color: var(--red); box-shadow: 0 4px 15px rgba(230,57,70,0.3);
+  .tab.on {
+    background: var(--blue); color: #fff; border-color: var(--blue);
+    box-shadow: 0 4px 12px rgba(29,53,87,0.2);
   }
 
-  /* Day detail */
-  .detail-section { padding: 12px 16px 100px; }
-
-  .detail-card {
-    background: var(--card); border-radius: 20px;
-    border: 1px solid var(--border); overflow: hidden;
-    animation: fadeUp 0.25s ease;
+  /* Calendar */
+  .cal-wrap { padding: 8px 16px; }
+  .cal {
+    background: #fff; border-radius: 22px; padding: 20px;
+    box-shadow: var(--shadow); border: 1px solid var(--border);
   }
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(16px); }
+  .cal-month {
+    font-size: 16px; font-weight: 800; text-align: center;
+    color: var(--blue); margin-bottom: 14px; letter-spacing: -0.2px;
+  }
+  .cal-wk {
+    display: grid; grid-template-columns: repeat(7,1fr);
+    text-align: center; margin-bottom: 6px;
+  }
+  .cal-wk span { font-size: 11px; font-weight: 700; color: var(--dim); text-transform: uppercase; letter-spacing: 0.5px; }
+  .cal-g { display: grid; grid-template-columns: repeat(7,1fr); gap: 5px; }
+  .cd {
+    aspect-ratio: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    border-radius: 13px; font-size: 14px; font-weight: 600;
+    cursor: pointer; transition: all 0.2s ease; position: relative;
+  }
+  .cd.e { cursor: default; }
+  .cd.x { color: #d1d5db; cursor: default; }
+  .cd.t { color: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
+  .cd.t:active { transform: scale(0.88); }
+  .cd.sel {
+    transform: scale(1.15); z-index: 2;
+    box-shadow: 0 0 0 2.5px var(--red), 0 6px 20px rgba(230,57,70,0.25);
+  }
+  .dots { display: flex; gap: 2px; margin-top: 2px; }
+  .dot { width: 3px; height: 3px; border-radius: 50%; background: rgba(255,255,255,0.65); }
+
+  /* Detail */
+  .det-wrap { padding: 8px 16px 100px; }
+  .det {
+    background: #fff; border-radius: 22px; overflow: hidden;
+    box-shadow: var(--shadow); border: 1px solid var(--border);
+    animation: up 0.3s cubic-bezier(0.16,1,0.3,1);
+  }
+  @keyframes up {
+    from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
   }
-  .detail-head {
-    padding: 20px 20px 16px;
-    background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+  .det-top {
+    padding: 20px; display: flex; align-items: center; gap: 14px;
+    background: linear-gradient(135deg, #fafbff, #fff5f5);
     border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: space-between;
   }
-  .detail-left { display: flex; align-items: center; gap: 12px; }
-  .detail-icon {
-    width: 48px; height: 48px; border-radius: 14px;
+  .det-ico {
+    width: 52px; height: 52px; border-radius: 16px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 24px;
+    font-size: 26px; background: #fff; box-shadow: var(--shadow);
   }
-  .detail-label { font-size: 20px; font-weight: 800; color: var(--text); letter-spacing: -0.3px; }
-  .detail-city {
-    font-size: 12px; font-weight: 700; padding: 3px 10px;
-    border-radius: 8px; color: #fff; margin-top: 4px; display: inline-block;
+  .det-name { font-size: 20px; font-weight: 800; color: var(--text); letter-spacing: -0.4px; }
+  .det-badge {
+    display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 10px;
+    border-radius: 8px; color: #fff; margin-top: 4px;
   }
 
   /* Events */
-  .events { padding: 8px 0; }
-  .ev-item {
+  .evs { padding: 6px 0; }
+  .ev {
     display: flex; align-items: flex-start; padding: 14px 20px; gap: 14px;
     transition: background 0.15s;
   }
-  .ev-item:active { background: var(--card-hover); }
-  .ev-icon {
-    width: 40px; height: 40px; border-radius: 12px;
+  .ev:active { background: #f9fafb; }
+  .ev-ic {
+    width: 42px; height: 42px; border-radius: 13px;
     display: flex; align-items: center; justify-content: center;
     font-size: 18px; flex-shrink: 0;
   }
-  .ev-icon.flight { background: #eef2ff; }
-  .ev-icon.transport { background: #f1f5f9; }
-  .ev-icon.tourism { background: #fef2f2; }
-  .ev-icon.food { background: #fff7ed; }
-  .ev-icon.f1 { background: #fef2f2; }
-
-  .ev-info { flex: 1; min-width: 0; }
-  .ev-time {
-    font-size: 11px; font-weight: 700; color: var(--blue-bright);
-    text-transform: uppercase; letter-spacing: 0.3px;
+  .ev-ic.flight { background: var(--blue-soft); }
+  .ev-ic.transport { background: #f1f5f9; }
+  .ev-ic.tourism { background: var(--red-soft); }
+  .ev-ic.food { background: #fef3c7; }
+  .ev-ic.f1 { background: var(--red-soft); }
+  .ev-nfo { flex: 1; min-width: 0; }
+  .ev-t { font-size: 11px; font-weight: 700; color: var(--red); letter-spacing: 0.3px; }
+  .ev-n { font-size: 15px; font-weight: 700; color: var(--text); margin-top: 2px; }
+  .ev-d { font-size: 13px; color: var(--dim); margin-top: 1px; }
+  .ev-x {
+    background: none; border: none; color: var(--red); font-size: 18px;
+    cursor: pointer; padding: 6px; border-radius: 10px; opacity: 0.4;
+    flex-shrink: 0; transition: all 0.15s;
   }
-  .ev-title { font-size: 15px; font-weight: 700; color: var(--text); margin-top: 2px; }
-  .ev-detail { font-size: 13px; color: var(--text-dim); margin-top: 2px; }
-  .ev-del {
-    background: none; border: none; color: var(--red);
-    font-size: 18px; cursor: pointer; padding: 4px 8px;
-    border-radius: 8px; opacity: 0.5; flex-shrink: 0;
-  }
-  .ev-del:active { opacity: 1; background: #fff0f0; }
-
-  .ev-sep { height: 1px; background: var(--border); margin: 0 20px 0 74px; }
+  .ev-x:active { opacity: 1; background: var(--red-soft); }
+  .ev-sep { height: 1px; background: var(--border); margin: 0 20px 0 76px; }
 
   /* Add */
-  .add-btn {
+  .add-b {
     display: flex; align-items: center; justify-content: center; gap: 6px;
     padding: 14px; color: var(--red); font-size: 14px; font-weight: 700;
     cursor: pointer; border: none; background: none; width: 100%;
-    font-family: inherit; letter-spacing: -0.2px;
+    font-family: inherit; transition: background 0.15s;
   }
-  .add-btn:active { background: var(--card-hover); }
-
-  .add-form {
+  .add-b:active { background: #fef2f2; }
+  .add-f {
     padding: 16px 20px 20px; border-top: 1px solid var(--border);
-    animation: fadeUp 0.2s ease;
+    animation: up 0.2s ease;
   }
-  .f-row { display: flex; gap: 8px; margin-bottom: 8px; }
-  .f-input {
-    background: rgba(0,0,0,0.05); border: 1px solid var(--border);
+  .fr { display: flex; gap: 8px; margin-bottom: 8px; }
+  .fi {
+    background: var(--bg); border: 1.5px solid var(--border);
     border-radius: 12px; padding: 11px 14px; font-size: 15px;
     font-family: inherit; color: var(--text); outline: none; width: 100%;
+    transition: border-color 0.2s, box-shadow 0.2s;
   }
-  .f-input:focus { border-color: var(--red); box-shadow: 0 0 0 2px rgba(230,57,70,0.15); }
-  .f-input::placeholder { color: #9ca3af; }
-  .f-input.time { width: 80px; flex-shrink: 0; }
-  .f-select {
-    background: rgba(0,0,0,0.05); border: 1px solid var(--border);
+  .fi:focus { border-color: var(--red); box-shadow: 0 0 0 3px rgba(230,57,70,0.1); }
+  .fi::placeholder { color: #b0b5bf; }
+  .fi.tm { width: 80px; flex-shrink: 0; }
+  .fs {
+    background: var(--bg); border: 1.5px solid var(--border);
     border-radius: 12px; padding: 11px 14px; font-size: 15px;
     font-family: inherit; color: var(--text); outline: none;
   }
-  .f-actions { display: flex; gap: 8px; margin-top: 4px; }
-  .btn-r {
-    background: var(--red); color: #fff; border: none;
+  .fa { display: flex; gap: 8px; margin-top: 4px; }
+  .br {
+    background: linear-gradient(135deg, var(--red), #d62839); color: #fff; border: none;
     padding: 12px 20px; border-radius: 12px; font-size: 15px;
     font-weight: 700; cursor: pointer; flex: 1; font-family: inherit;
+    box-shadow: 0 4px 12px rgba(230,57,70,0.2);
+    transition: transform 0.15s;
   }
-  .btn-r:active { background: var(--red-dark); }
-  .btn-g {
-    background: rgba(0,0,0,0.05); color: var(--text-dim); border: 1px solid var(--border);
+  .br:active { transform: scale(0.97); }
+  .bg {
+    background: var(--bg); color: var(--dim); border: 1.5px solid var(--border);
     padding: 12px 20px; border-radius: 12px; font-size: 15px;
     font-weight: 600; cursor: pointer; font-family: inherit;
   }
 
   /* Hint */
-  .hint {
-    text-align: center; padding: 50px 20px; color: var(--text-dim);
-  }
-  .hint-icon { font-size: 48px; display: block; margin-bottom: 12px; }
-  .hint-text { font-size: 15px; font-weight: 500; line-height: 1.5; }
+  .hint { text-align: center; padding: 50px 20px; color: var(--dim); }
+  .hint-i { font-size: 52px; display: block; margin-bottom: 10px; filter: grayscale(0.2); }
+  .hint-t { font-size: 15px; font-weight: 500; line-height: 1.6; }
 
   /* Modal */
-  .modal-bg {
-    position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+  .mbg {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.45);
+    backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
     z-index: 300; display: flex; align-items: flex-end;
-    justify-content: center; animation: fadeIn 0.2s;
+    justify-content: center; animation: fi .2s;
   }
-  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-  .modal {
-    background: #fff; border-radius: 24px 24px 0 0;
+  @keyframes fi { from { opacity:0 } to { opacity:1 } }
+  .msh {
+    background: #fff; border-radius: 28px 28px 0 0;
     padding: 28px 24px calc(var(--safe-bottom) + 28px);
     width: 100%; max-width: 420px;
-    animation: slideUp 0.3s ease; border-top: 2px solid var(--red);
+    animation: su .3s cubic-bezier(0.16,1,0.3,1);
   }
-  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-  .modal h2 { font-size: 22px; font-weight: 800; margin-bottom: 6px; color: var(--blue); }
-  .modal p { color: var(--text-dim); font-size: 14px; margin-bottom: 16px; line-height: 1.5; }
-  .share-box {
-    background: rgba(0,0,0,0.03); border-radius: 14px; padding: 14px;
+  @keyframes su { from { transform:translateY(100%) } to { transform:translateY(0) } }
+  .msh h2 { font-size: 22px; font-weight: 800; color: var(--blue); margin-bottom: 6px; }
+  .msh p { color: var(--dim); font-size: 14px; margin-bottom: 16px; line-height: 1.5; }
+  .sbox {
+    background: var(--bg); border-radius: 14px; padding: 14px;
     display: flex; align-items: center; gap: 10px; margin-bottom: 16px;
     border: 1px solid var(--border);
   }
-  .share-box span {
-    flex: 1; color: var(--blue-bright); font-size: 13px;
-    font-family: ui-monospace, monospace; word-break: break-all;
-  }
-  .copy-btn {
+  .sbox span { flex: 1; color: var(--blue); font-size: 12px; font-family: ui-monospace, monospace; word-break: break-all; }
+  .cpb {
     background: var(--red); color: #fff; border: none;
     padding: 8px 16px; border-radius: 10px; font-size: 13px;
     font-weight: 700; cursor: pointer; flex-shrink: 0;
   }
-  .close-btn {
-    background: rgba(0,0,0,0.05); color: var(--text-dim);
-    border: 1px solid var(--border); padding: 14px; border-radius: 14px;
-    width: 100%; font-size: 16px; font-weight: 600; cursor: pointer;
-    font-family: inherit;
+  .clb {
+    background: var(--bg); color: var(--dim); border: 1.5px solid var(--border);
+    padding: 14px; border-radius: 14px; width: 100%;
+    font-size: 16px; font-weight: 600; cursor: pointer; font-family: inherit;
   }
 
   .spacer { height: calc(var(--safe-bottom) + 20px); }
+
+  /* ===== F1 Splash Animation ===== */
+  .splash {
+    position: fixed; inset: 0; z-index: 9999;
+    background: linear-gradient(135deg, var(--blue) 0%, #0f1d33 100%);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    overflow: hidden;
+  }
+  .splash.hide { opacity: 0; transform: scale(1.05); pointer-events: none; }
+
+  /* Track lines */
+  .splash::before, .splash::after {
+    content: ''; position: absolute; left: 0; right: 0; height: 2px;
+    background: repeating-linear-gradient(90deg, rgba(255,255,255,0.1) 0px, rgba(255,255,255,0.1) 20px, transparent 20px, transparent 40px);
+  }
+  .splash::before { top: 38%; }
+  .splash::after { bottom: 38%; }
+
+  /* Speed lines */
+  .speed-lines {
+    position: absolute; inset: 0; overflow: hidden;
+  }
+  .speed-line {
+    position: absolute; height: 1px; background: linear-gradient(90deg, transparent, rgba(230,57,70,0.4), transparent);
+    animation: speedLine 0.8s linear infinite;
+  }
+  @keyframes speedLine {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(200vw); }
+  }
+
+  /* F1 car */
+  .f1-car-wrap {
+    position: relative; z-index: 2;
+    animation: carEntry 1.2s cubic-bezier(0.16,1,0.3,1) forwards;
+  }
+  @keyframes carEntry {
+    0% { transform: translateX(-120vw) scale(0.8); opacity: 0; }
+    40% { opacity: 1; }
+    70% { transform: translateX(0) scale(1); }
+    85% { transform: translateX(10px) scale(1); }
+    100% { transform: translateX(0) scale(1); opacity: 1; }
+  }
+  .f1-car {
+    font-size: 72px; filter: drop-shadow(0 0 30px rgba(230,57,70,0.5));
+    animation: carBounce 0.6s ease-in-out infinite alternate;
+    animation-delay: 1.2s;
+  }
+  @keyframes carBounce {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-3px); }
+  }
+
+  /* Tire smoke */
+  .smoke {
+    position: absolute; bottom: -10px; left: -60px;
+    width: 80px; height: 30px; border-radius: 50%;
+    background: radial-gradient(ellipse, rgba(255,255,255,0.3), transparent);
+    animation: smokeAnim 1s ease-out forwards;
+    animation-delay: 0.8s; opacity: 0;
+  }
+  @keyframes smokeAnim {
+    0% { opacity: 0; transform: scale(0.5) translateX(0); }
+    50% { opacity: 0.6; }
+    100% { opacity: 0; transform: scale(2) translateX(-40px); }
+  }
+
+  /* Title reveal */
+  .splash-title {
+    position: relative; z-index: 2; margin-top: 28px; text-align: center;
+    animation: titleReveal 0.6s cubic-bezier(0.16,1,0.3,1) forwards;
+    animation-delay: 0.7s; opacity: 0; transform: translateY(20px);
+  }
+  @keyframes titleReveal {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .splash-title h2 {
+    font-size: 32px; font-weight: 900; color: #fff; letter-spacing: -1px;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.3);
+  }
+  .splash-title h2 .red { color: var(--red); }
+  .splash-title .year {
+    font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.5);
+    letter-spacing: 6px; margin-top: 6px; text-transform: uppercase;
+  }
+
+  /* Checkered flag bar */
+  .checkered {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 24px;
+    display: flex; flex-wrap: wrap;
+    animation: checkReveal 0.4s ease forwards; animation-delay: 1s; opacity: 0;
+  }
+  @keyframes checkReveal { to { opacity: 1; } }
+  .checkered span {
+    width: 12px; height: 12px; display: inline-block;
+  }
+
+  /* Loading dots */
+  .splash-dots {
+    position: relative; z-index: 2; margin-top: 20px;
+    display: flex; gap: 6px;
+    animation: titleReveal 0.5s ease forwards; animation-delay: 1s; opacity: 0;
+  }
+  .splash-dots span {
+    width: 6px; height: 6px; border-radius: 50%; background: var(--red);
+    animation: dotPulse 1s ease infinite;
+  }
+  .splash-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .splash-dots span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes dotPulse {
+    0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
+    40% { opacity: 1; transform: scale(1.2); }
+  }
 </style>
 </head>
 <body>
+<div id="splash" class="splash">
+  <div class="speed-lines">
+    <div class="speed-line" style="top:20%;width:40%;animation-delay:0.1s;animation-duration:0.7s"></div>
+    <div class="speed-line" style="top:35%;width:60%;animation-delay:0.3s;animation-duration:0.6s"></div>
+    <div class="speed-line" style="top:50%;width:35%;animation-delay:0s;animation-duration:0.8s"></div>
+    <div class="speed-line" style="top:65%;width:50%;animation-delay:0.2s;animation-duration:0.65s"></div>
+    <div class="speed-line" style="top:80%;width:45%;animation-delay:0.4s;animation-duration:0.75s"></div>
+  </div>
+  <div class="f1-car-wrap">
+    <div class="f1-car">🏎️</div>
+    <div class="smoke"></div>
+  </div>
+  <div class="splash-title">
+    <h2>España <span class="red">F1</span></h2>
+    <div class="year">Junio 2026</div>
+  </div>
+  <div class="splash-dots"><span></span><span></span><span></span></div>
+  <div class="checkered" id="checkered"></div>
+</div>
 <div id="app"></div>
 <script>
-const TRIP_DATA = [
-  { date:"2026-06-05", label:"Viernes 5", city:"Vuelo", color:"#6366f1", icon:"\u2708\uFE0F",
-    events:[{time:"21:45",title:"Vuelo a Madrid",detail:"IB 170 — Salida 9:45pm",type:"flight"}]},
-  { date:"2026-06-06", label:"Sábado 6", city:"Madrid", color:"#e63946", icon:"\uD83C\uDFF0",
-    events:[{time:"\uD83C\uDF05",title:"Llegada a Madrid",detail:"Check-in y descanso",type:"transport"},
-            {time:"\uD83C\uDF06",title:"Paseo por el centro",detail:"Puerta del Sol, Plaza Mayor",type:"tourism"}]},
-  { date:"2026-06-07", label:"Domingo 7", city:"Madrid", color:"#e63946", icon:"\uD83C\uDFF0",
-    events:[{time:"\uD83C\uDF05",title:"Museo del Prado",detail:"Reservar entrada online",type:"tourism"},
-            {time:"\uD83C\uDF06",title:"Parque del Retiro",detail:"Paseo y Palacio de Cristal",type:"tourism"}]},
-  { date:"2026-06-08", label:"Lunes 8", city:"Madrid", color:"#e63946", icon:"\uD83C\uDFF0",
-    events:[{time:"\uD83C\uDF05",title:"Palacio Real",detail:"Visita guiada",type:"tourism"},
-            {time:"\uD83C\uDF06",title:"Barrio de La Latina",detail:"Tapas y paseo",type:"food"}]},
-  { date:"2026-06-09", label:"Martes 9", city:"Toledo", color:"#457b9d", icon:"\u2694\uFE0F",
-    events:[{time:"\uD83C\uDF05",title:"Excursión a Toledo",detail:"Tren AVE desde Madrid (~30 min)",type:"transport"},
-            {time:"\uD83D\uDD50",title:"Casco histórico",detail:"Catedral, Alcázar, calles medievales",type:"tourism"}]},
-  { date:"2026-06-10", label:"Miércoles 10", city:"Toledo", color:"#457b9d", icon:"\u2694\uFE0F",
-    events:[{time:"\uD83C\uDF05",title:"Toledo día 2",detail:"Sinagoga, Museo del Greco, miradores",type:"tourism"},
-            {time:"\uD83C\uDF06",title:"Regreso a Madrid",detail:"Tren de vuelta",type:"transport"}]},
-  { date:"2026-06-11", label:"Jueves 11", city:"Barcelona", color:"#1d3557", icon:"\uD83C\uDF0A",
-    events:[{time:"\uD83C\uDF05",title:"Viaje a Barcelona",detail:"Traslado y check-in Airbnb",type:"transport"},
-            {time:"\uD83C\uDF06",title:"Las Ramblas",detail:"Barrio Gótico, La Boquería",type:"tourism"}]},
-  { date:"2026-06-12", label:"Viernes 12", city:"Barcelona", color:"#1d3557", icon:"\uD83C\uDFCE\uFE0F",
-    events:[{time:"\uD83C\uDFC1",title:"F1 — Práctica Libre",detail:"Circuit de Barcelona-Catalunya",type:"f1"}]},
-  { date:"2026-06-13", label:"Sábado 13", city:"Barcelona", color:"#1d3557", icon:"\uD83C\uDFCE\uFE0F",
-    events:[{time:"\uD83C\uDFC1",title:"F1 — Clasificación",detail:"Circuit de Barcelona-Catalunya",type:"f1"}]},
-  { date:"2026-06-14", label:"Domingo 14", city:"Barcelona", color:"#1d3557", icon:"\uD83C\uDFCE\uFE0F",
-    events:[{time:"\uD83C\uDFC1",title:"F1 — Carrera",detail:"Circuit de Barcelona-Catalunya",type:"f1"}]},
-  { date:"2026-06-15", label:"Lunes 15", city:"Barcelona", color:"#1d3557", icon:"\uD83C\uDF0A",
-    events:[{time:"\uD83C\uDF05",title:"Sagrada Familia",detail:"Reservar entrada online",type:"tourism"},
-            {time:"\uD83C\uDF06",title:"Park Güell",detail:"Zona monumental de Gaudí",type:"tourism"}]},
-  { date:"2026-06-16", label:"Martes 16", city:"Barcelona", color:"#1d3557", icon:"\uD83C\uDF0A",
-    events:[{time:"\uD83C\uDF05",title:"Barceloneta",detail:"Playa y paseo marítimo",type:"tourism"},
-            {time:"\uD83C\uDF06",title:"Casa Batlló / La Pedrera",detail:"Arquitectura de Gaudí",type:"tourism"}]},
-  { date:"2026-06-17", label:"Miércoles 17", city:"Valencia", color:"#a8dadc", icon:"\uD83C\uDF4A",
-    events:[{time:"\uD83C\uDF05",title:"Viaje a Valencia",detail:"Traslado desde Barcelona",type:"transport"},
-            {time:"\uD83C\uDF06",title:"Ciudad de las Artes y las Ciencias",detail:"Oceanogràfic, Hemisfèric",type:"tourism"}]},
-  { date:"2026-06-18", label:"Jueves 18", city:"Valencia", color:"#a8dadc", icon:"\uD83C\uDF4A",
-    events:[{time:"\uD83C\uDF05",title:"Centro histórico",detail:"Catedral, Lonja de la Seda, Mercado Central",type:"tourism"},
-            {time:"\uD83C\uDF06",title:"Playa de la Malvarrosa",detail:"Paella frente al mar",type:"food"}]},
-  { date:"2026-06-19", label:"Viernes 19", city:"Madrid", color:"#e63946", icon:"\uD83C\uDFF0",
-    events:[{time:"\uD83C\uDF05",title:"Regreso a Madrid",detail:"Traslado desde Valencia",type:"transport"},
-            {time:"\uD83C\uDF06",title:"Últimas compras",detail:"Gran Vía, Malasaña, cena de despedida",type:"tourism"}]},
-  { date:"2026-06-20", label:"Sábado 20", city:"Vuelo", color:"#6366f1", icon:"\u2708\uFE0F",
-    events:[{time:"06:50",title:"Vuelo a Montevideo",detail:"IB 169 — Salida 6:50am",type:"flight"}]}
+const TRIP=[
+  {date:"2026-06-05",label:"Viernes 5",city:"Vuelo",color:"#6366f1",icon:"\u2708\uFE0F",events:[{time:"21:45",title:"Vuelo a Madrid",detail:"IB 170 — Salida 9:45pm",type:"flight"}]},
+  {date:"2026-06-06",label:"Sábado 6",city:"Madrid",color:"#e63946",icon:"\uD83C\uDFF0",events:[{time:"\uD83C\uDF05",title:"Llegada a Madrid",detail:"Check-in y descanso",type:"transport"},{time:"\uD83C\uDF06",title:"Paseo por el centro",detail:"Puerta del Sol, Plaza Mayor",type:"tourism"}]},
+  {date:"2026-06-07",label:"Domingo 7",city:"Madrid",color:"#e63946",icon:"\uD83C\uDFF0",events:[{time:"\uD83C\uDF05",title:"Museo del Prado",detail:"Reservar entrada online",type:"tourism"},{time:"\uD83C\uDF06",title:"Parque del Retiro",detail:"Paseo y Palacio de Cristal",type:"tourism"}]},
+  {date:"2026-06-08",label:"Lunes 8",city:"Madrid",color:"#e63946",icon:"\uD83C\uDFF0",events:[{time:"\uD83C\uDF05",title:"Palacio Real",detail:"Visita guiada",type:"tourism"},{time:"\uD83C\uDF06",title:"Barrio de La Latina",detail:"Tapas y paseo",type:"food"}]},
+  {date:"2026-06-09",label:"Martes 9",city:"Toledo",color:"#457b9d",icon:"\u2694\uFE0F",events:[{time:"\uD83C\uDF05",title:"Excursión a Toledo",detail:"Tren AVE (~30 min)",type:"transport"},{time:"\uD83D\uDD50",title:"Casco histórico",detail:"Catedral, Alcázar, calles medievales",type:"tourism"}]},
+  {date:"2026-06-10",label:"Miércoles 10",city:"Toledo",color:"#457b9d",icon:"\u2694\uFE0F",events:[{time:"\uD83C\uDF05",title:"Toledo día 2",detail:"Sinagoga, Museo del Greco, miradores",type:"tourism"},{time:"\uD83C\uDF06",title:"Regreso a Madrid",detail:"Tren de vuelta",type:"transport"}]},
+  {date:"2026-06-11",label:"Jueves 11",city:"Barcelona",color:"#1d3557",icon:"\uD83C\uDF0A",events:[{time:"\uD83C\uDF05",title:"Viaje a Barcelona",detail:"Traslado y check-in Airbnb",type:"transport"},{time:"\uD83C\uDF06",title:"Las Ramblas",detail:"Barrio Gótico, La Boquería",type:"tourism"}]},
+  {date:"2026-06-12",label:"Viernes 12",city:"Barcelona",color:"#1d3557",icon:"\uD83C\uDFCE\uFE0F",events:[{time:"\uD83C\uDFC1",title:"F1 — Práctica Libre",detail:"Circuit de Barcelona-Catalunya",type:"f1"}]},
+  {date:"2026-06-13",label:"Sábado 13",city:"Barcelona",color:"#1d3557",icon:"\uD83C\uDFCE\uFE0F",events:[{time:"\uD83C\uDFC1",title:"F1 — Clasificación",detail:"Circuit de Barcelona-Catalunya",type:"f1"}]},
+  {date:"2026-06-14",label:"Domingo 14",city:"Barcelona",color:"#1d3557",icon:"\uD83C\uDFCE\uFE0F",events:[{time:"\uD83C\uDFC1",title:"F1 — Carrera",detail:"Circuit de Barcelona-Catalunya",type:"f1"}]},
+  {date:"2026-06-15",label:"Lunes 15",city:"Barcelona",color:"#1d3557",icon:"\uD83C\uDF0A",events:[{time:"\uD83C\uDF05",title:"Sagrada Familia",detail:"Reservar entrada online",type:"tourism"},{time:"\uD83C\uDF06",title:"Park Güell",detail:"Zona monumental de Gaudí",type:"tourism"}]},
+  {date:"2026-06-16",label:"Martes 16",city:"Barcelona",color:"#1d3557",icon:"\uD83C\uDF0A",events:[{time:"\uD83C\uDF05",title:"Barceloneta",detail:"Playa y paseo marítimo",type:"tourism"},{time:"\uD83C\uDF06",title:"Casa Batlló / La Pedrera",detail:"Arquitectura de Gaudí",type:"tourism"}]},
+  {date:"2026-06-17",label:"Miércoles 17",city:"Valencia",color:"#2a9d8f",icon:"\uD83C\uDF4A",events:[{time:"\uD83C\uDF05",title:"Viaje a Valencia",detail:"Traslado desde Barcelona",type:"transport"},{time:"\uD83C\uDF06",title:"Ciudad de las Artes y las Ciencias",detail:"Oceanogràfic, Hemisfèric",type:"tourism"}]},
+  {date:"2026-06-18",label:"Jueves 18",city:"Valencia",color:"#2a9d8f",icon:"\uD83C\uDF4A",events:[{time:"\uD83C\uDF05",title:"Centro histórico",detail:"Catedral, Lonja de la Seda, Mercado Central",type:"tourism"},{time:"\uD83C\uDF06",title:"Playa de la Malvarrosa",detail:"Paella frente al mar",type:"food"}]},
+  {date:"2026-06-19",label:"Viernes 19",city:"Madrid",color:"#e63946",icon:"\uD83C\uDFF0",events:[{time:"\uD83C\uDF05",title:"Regreso a Madrid",detail:"Traslado desde Valencia",type:"transport"},{time:"\uD83C\uDF06",title:"Últimas compras",detail:"Gran Vía, Malasaña, cena de despedida",type:"tourism"}]},
+  {date:"2026-06-20",label:"Sábado 20",city:"Vuelo",color:"#6366f1",icon:"\u2708\uFE0F",events:[{time:"06:50",title:"Vuelo a Montevideo",detail:"IB 169 — Salida 6:50am",type:"flight"}]}
 ];
+const CC={Madrid:"#e63946",Toledo:"#457b9d",Barcelona:"#1d3557",Valencia:"#2a9d8f",Vuelo:"#6366f1"};
+const EI={flight:"\u2708\uFE0F",transport:"\uD83D\uDE8C",tourism:"\uD83D\uDCCD",food:"\uD83C\uDF7D\uFE0F",f1:"\uD83C\uDFCE\uFE0F"};
+const CTS=["Todos","Madrid","Toledo","Barcelona","Valencia"];
 
-const CITY_COLORS = { Madrid:"#e63946", Toledo:"#457b9d", Barcelona:"#1d3557", Valencia:"#a8dadc", Vuelo:"#6366f1" };
-const EVENT_ICONS = { flight:"\u2708\uFE0F", transport:"\uD83D\uDE8C", tourism:"\uD83D\uDCCD", food:"\uD83C\uDF7D\uFE0F", f1:"\uD83C\uDFCE\uFE0F" };
-const CITIES = ["Todos","Madrid","Toledo","Barcelona","Valencia"];
+let S={data:JSON.parse(JSON.stringify(TRIP)),sel:null,add:false,modal:false,on:false,filt:"Todos"};
+let db=null,ref=null;
 
-let state = { tripData:JSON.parse(JSON.stringify(TRIP_DATA)), selectedDate:null, showAddForm:false, showModal:false, isOnline:false, filter:"Todos" };
-let db=null, dbRef=null;
+const FC={apiKey:"AIzaSyDPZPk2nsOQ3oRMG7ADhS56zEFyORTE4QQ",authDomain:"flor-y-pato-trip.firebaseapp.com",databaseURL:"https://flor-y-pato-trip-default-rtdb.firebaseio.com",projectId:"flor-y-pato-trip",storageBucket:"flor-y-pato-trip.firebasestorage.app",messagingSenderId:"862498607498",appId:"1:862498607498:web:7e2ccf24cd913e6cb7c5c3"};
 
-const FIREBASE_CONFIG = {
-  apiKey:"AIzaSyDPZPk2nsOQ3oRMG7ADhS56zEFyORTE4QQ",
-  authDomain:"flor-y-pato-trip.firebaseapp.com",
-  databaseURL:"https://flor-y-pato-trip-default-rtdb.firebaseio.com",
-  projectId:"flor-y-pato-trip",
-  storageBucket:"flor-y-pato-trip.firebasestorage.app",
-  messagingSenderId:"862498607498",
-  appId:"1:862498607498:web:7e2ccf24cd913e6cb7c5c3"
-};
+function initFB(){try{firebase.initializeApp(FC);db=firebase.database();ref=db.ref('trip-espana-2026');ref.on('value',s=>{const d=s.val();if(d&&Array.isArray(d)){S.data=d;S.on=true;R()}});db.ref('.info/connected').on('value',s=>{S.on=s.val()===true;R()});ref.once('value',s=>{if(!s.val())ref.set(TRIP)});return true}catch(e){return false}}
+function save(){if(ref)ref.set(S.data)}
+function tm(){const m={};S.data.forEach(d=>{m[d.date]=d});return m}
 
-function initFirebase(c){try{firebase.initializeApp(c);db=firebase.database();dbRef=db.ref('trip-espana-2026');dbRef.on('value',s=>{const d=s.val();if(d&&Array.isArray(d)){state.tripData=d;state.isOnline=true;render()}});db.ref('.info/connected').on('value',s=>{state.isOnline=s.val()===true;render()});dbRef.once('value',s=>{if(!s.val())dbRef.set(TRIP_DATA)});return true}catch(e){return false}}
-function saveToFirebase(){if(dbRef)dbRef.set(state.tripData)}
-
-function getTripMap(){const m={};state.tripData.forEach(d=>{m[d.date]=d});return m}
-
-function renderCal(){
-  const tm=getTripMap();
-  const startOff=0; // June 2026 starts Monday
-  let c='';
-  for(let i=0;i<startOff;i++) c+='<div class="cal-day empty"></div>';
+function cal(){
+  const t=tm();let c='';
   for(let d=1;d<=30;d++){
-    const ds=`2026-06-${String(d).padStart(2,'0')}`;
-    const td=tm[ds]; const sel=state.selectedDate===ds;
-    if(td){
-      const show = state.filter==="Todos" || td.city===state.filter;
-      c+=`<div class="cal-day trip ${sel?'selected':''}" style="background:${td.color}${sel?'':'cc'}${!show?';opacity:0.25':''}" onclick="selDate('${ds}')">${d}<div class="cal-dot-row">${td.events.map(()=>'<div class="cal-ev-dot"></div>').join('')}</div></div>`;
-    } else {
-      c+=`<div class="cal-day off">${d}</div>`;
-    }
+    const ds=`2026-06-${String(d).padStart(2,'0')}`,td=t[ds],sl=S.sel===ds;
+    if(td){const sh=S.filt==="Todos"||td.city===S.filt;
+      c+=`<div class="cd t ${sl?'sel':''}" style="background:${td.color}${sl?'':'dd'}${!sh?';opacity:0.2':''}" onclick="sel('${ds}')">${d}<div class="dots">${td.events.map(()=>'<div class="dot"></div>').join('')}</div></div>`;
+    }else c+=`<div class="cd x">${d}</div>`;
   }
   return c;
 }
 
-function render(){
-  const tm=getTripMap();
-  const sd=state.selectedDate?tm[state.selectedDate]:null;
-  const cc={};state.tripData.forEach(d=>{if(d.city!=="Vuelo")cc[d.city]=(cc[d.city]||0)+1});
-
+function R(){
+  const t=tm(),sd=S.sel?t[S.sel]:null;
+  const cnt={};S.data.forEach(d=>{if(d.city!=="Vuelo")cnt[d.city]=(cnt[d.city]||0)+1});
   let h='';
 
-  if(db) h+=`<div class="sync-bar ${state.isOnline?'online':'offline'}">${state.isOnline?'\u25CF En sincro':'\u25CB Sin conexión'}</div>`;
+  if(db)h+=`<div class="sync ${S.on?'on':'off'}">${S.on?'\u25CF Sincronizado':'\u25CB Offline'}</div>`;
 
-  h+=`<div class="header" style="${db?'padding-top:calc(var(--safe-top) + 36px)':''}">
-    <div class="header-row">
-      <div><h1>España 2026</h1><div class="dates">5 — 20 de Junio</div></div>
-      ${db?'<button class="share-btn" onclick="showModal()">\uD83D\uDD17</button>':''}
+  h+=`<div class="hero">
+    <div class="hero-row">
+      <div><h1>España <span>2026</span></h1><div class="sub">5 — 20 de Junio \u00b7 16 días</div></div>
+      ${db?'<button class="share-btn" onclick="sM()">\uD83D\uDD17</button>':''}
     </div>
-    <div class="city-legend">
-      ${Object.entries(cc).map(([c,n])=>`<div class="legend-item"><div class="legend-dot" style="background:${CITY_COLORS[c]}"></div>${c} · ${n}d</div>`).join('')}
-    </div>
+    <div class="chips">${Object.entries(cnt).map(([c,n])=>`<div class="chip" style="background:${CC[c]}">${c} \u00b7 ${n}d</div>`).join('')}</div>
   </div>`;
 
-  // Tabs
-  h+=`<div class="tab-bar">${CITIES.map(c=>`<button class="tab-btn ${state.filter===c?'active':''}" onclick="setFilter('${c}')">${c}</button>`).join('')}</div>`;
+  h+=`<div class="tabs">${CTS.map(c=>`<button class="tab ${S.filt===c?'on':''}" onclick="flt('${c}')">${c}</button>`).join('')}</div>`;
 
-  // Calendar
-  h+=`<div class="cal-section"><div class="cal-card">
-    <div class="cal-title">Junio 2026</div>
-    <div class="cal-weekdays">${['L','M','X','J','V','S','D'].map(d=>`<span class="cal-wd">${d}</span>`).join('')}</div>
-    <div class="cal-grid">${renderCal()}</div>
+  h+=`<div class="cal-wrap"><div class="cal">
+    <div class="cal-month">Junio 2026</div>
+    <div class="cal-wk">${['L','M','X','J','V','S','D'].map(d=>`<span>${d}</span>`).join('')}</div>
+    <div class="cal-g">${cal()}</div>
   </div></div>`;
 
-  // Detail
-  h+='<div class="detail-section">';
+  h+='<div class="det-wrap">';
   if(sd){
-    h+=`<div class="detail-card">
-      <div class="detail-head">
-        <div class="detail-left">
-          <div class="detail-icon" style="background:${sd.color}22">${sd.icon}</div>
-          <div><div class="detail-label">${sd.label}</div><span class="detail-city" style="background:${sd.color}">${sd.city}</span></div>
-        </div>
+    h+=`<div class="det">
+      <div class="det-top">
+        <div class="det-ico">${sd.icon}</div>
+        <div><div class="det-name">${sd.label}</div><span class="det-badge" style="background:${sd.color}">${sd.city}</span></div>
       </div>
-      <div class="events">
-        ${sd.events.map((ev,j)=>`
-          ${j>0?'<div class="ev-sep"></div>':''}
-          <div class="ev-item">
-            <div class="ev-icon ${ev.type}">${EVENT_ICONS[ev.type]||'\uD83D\uDCCD'}</div>
-            <div class="ev-info">
-              <div class="ev-time">${ev.time}</div>
-              <div class="ev-title">${ev.title}</div>
-              <div class="ev-detail">${ev.detail}</div>
-            </div>
-            <button class="ev-del" onclick="delEv('${sd.date}',${j})">\u00d7</button>
-          </div>`).join('')}
-      </div>
-      ${state.showAddForm?`
-        <div class="add-form">
-          <div class="f-row"><input class="f-input time" id="nt" placeholder="Hora"><input class="f-input" id="nn" placeholder="Título"></div>
-          <div class="f-row"><input class="f-input" id="nd" placeholder="Detalle"></div>
-          <div class="f-row"><select class="f-select" id="ny"><option value="tourism">Turismo</option><option value="transport">Transporte</option><option value="food">Comida</option><option value="f1">F1</option><option value="flight">Vuelo</option></select></div>
-          <div class="f-actions"><button class="btn-r" onclick="addEv('${sd.date}')">Agregar</button><button class="btn-g" onclick="closeAdd()">Cancelar</button></div>
-        </div>`:`<button class="add-btn" onclick="openAdd()">+ Agregar actividad</button>`}
+      <div class="evs">${sd.events.map((e,j)=>`
+        ${j?'<div class="ev-sep"></div>':''}
+        <div class="ev">
+          <div class="ev-ic ${e.type}">${EI[e.type]||'\uD83D\uDCCD'}</div>
+          <div class="ev-nfo"><div class="ev-t">${e.time}</div><div class="ev-n">${e.title}</div><div class="ev-d">${e.detail}</div></div>
+          <button class="ev-x" onclick="del('${sd.date}',${j})">\u00d7</button>
+        </div>`).join('')}</div>
+      ${S.add?`<div class="add-f">
+        <div class="fr"><input class="fi tm" id="nt" placeholder="Hora"><input class="fi" id="nn" placeholder="Título"></div>
+        <div class="fr"><input class="fi" id="nd" placeholder="Detalle"></div>
+        <div class="fr"><select class="fs" id="ny"><option value="tourism">Turismo</option><option value="transport">Transporte</option><option value="food">Comida</option><option value="f1">F1</option><option value="flight">Vuelo</option></select></div>
+        <div class="fa"><button class="br" onclick="addE('${sd.date}')">Agregar</button><button class="bg" onclick="S.add=false;R()">Cancelar</button></div>
+      </div>`:`<button class="add-b" onclick="S.add=true;R()">+ Agregar actividad</button>`}
     </div>`;
-  } else {
-    h+=`<div class="hint"><span class="hint-icon">\uD83D\uDCC5</span><div class="hint-text">Tocá un día del calendario<br>para ver las actividades</div></div>`;
-  }
+  }else h+=`<div class="hint"><span class="hint-i">\uD83C\uDDEA\uD83C\uDDF8</span><div class="hint-t">Tocá un día del calendario<br>para ver las actividades</div></div>`;
   h+='</div>';
 
-  if(state.showModal){
-    const u=window.location.href;
-    h+=`<div class="modal-bg" onclick="closeM()"><div class="modal" onclick="event.stopPropagation()">
-      <h2>\uD83D\uDD17 Compartir</h2><p>Mandále este link a tu compañero de viaje. Los cambios se sincronizan en tiempo real.</p>
-      <div class="share-box"><span>${u}</span><button class="copy-btn" onclick="copyL()">Copiar</button></div>
-      <button class="close-btn" onclick="closeM()">Cerrar</button>
+  if(S.modal){const u=location.href;
+    h+=`<div class="mbg" onclick="cM()"><div class="msh" onclick="event.stopPropagation()">
+      <h2>\uD83D\uDD17 Compartir</h2><p>Mandále este link a tu compañero de viaje. Los cambios se sincronizan al instante.</p>
+      <div class="sbox"><span>${u}</span><button class="cpb" onclick="cpL()">Copiar</button></div>
+      <button class="clb" onclick="cM()">Cerrar</button>
     </div></div>`;
   }
-
   h+='<div class="spacer"></div>';
   document.getElementById('app').innerHTML=h;
 }
 
-function selDate(d){state.selectedDate=state.selectedDate===d?null:d;state.showAddForm=false;render();if(state.selectedDate)setTimeout(()=>{const e=document.querySelector('.detail-card');if(e)e.scrollIntoView({behavior:'smooth',block:'nearest'})},50)}
-function setFilter(c){state.filter=c;render()}
-function delEv(d,i){const x=state.tripData.findIndex(t=>t.date===d);if(x>=0){state.tripData[x].events.splice(i,1);saveToFirebase();render()}}
-function openAdd(){state.showAddForm=true;render()}
-function closeAdd(){state.showAddForm=false;render()}
-function addEv(d){const t=document.getElementById('nt').value||'\uD83D\uDD50',n=document.getElementById('nn').value,de=document.getElementById('nd').value||'',ty=document.getElementById('ny').value;if(!n)return;const x=state.tripData.findIndex(t=>t.date===d);if(x>=0){state.tripData[x].events.push({time:t,title:n,detail:de,type:ty});state.showAddForm=false;saveToFirebase();render()}}
-function showModal(){state.showModal=true;render()}
-function closeM(){state.showModal=false;render()}
-function copyL(){navigator.clipboard.writeText(window.location.href).then(()=>{const b=document.querySelector('.copy-btn');if(b){b.textContent='\u2713';setTimeout(()=>{b.textContent='Copiar'},1500)}})}
+function sel(d){S.sel=S.sel===d?null:d;S.add=false;R();if(S.sel)setTimeout(()=>{const e=document.querySelector('.det');if(e)e.scrollIntoView({behavior:'smooth',block:'nearest'})},60)}
+function flt(c){S.filt=c;R()}
+function del(d,i){const x=S.data.findIndex(t=>t.date===d);if(x>=0){S.data[x].events.splice(i,1);save();R()}}
+function addE(d){const t=document.getElementById('nt').value||'\uD83D\uDD50',n=document.getElementById('nn').value,de=document.getElementById('nd').value||'',ty=document.getElementById('ny').value;if(!n)return;const x=S.data.findIndex(t=>t.date===d);if(x>=0){S.data[x].events.push({time:t,title:n,detail:de,type:ty});S.add=false;save();R()}}
+function sM(){S.modal=true;R()}
+function cM(){S.modal=false;R()}
+function cpL(){navigator.clipboard.writeText(location.href).then(()=>{const b=document.querySelector('.cpb');if(b){b.textContent='\u2713';setTimeout(()=>b.textContent='Copiar',1500)}})}
 
-(function(){const ok=initFirebase(FIREBASE_CONFIG);if(!ok)state.isOnline=false;render()})();
+(function(){
+  // Build checkered flag pattern
+  const ch=document.getElementById('checkered');
+  if(ch){
+    const cols=Math.ceil(window.innerWidth/12);
+    for(let r=0;r<2;r++)for(let c=0;c<cols;c++){
+      const s=document.createElement('span');
+      s.style.background=(r+c)%2===0?'#fff':'#222';
+      ch.appendChild(s);
+    }
+  }
+
+  // Initialize app behind splash
+  initFB();R();
+
+  // Hide splash after animation completes
+  setTimeout(()=>{
+    const sp=document.getElementById('splash');
+    if(sp){sp.classList.add('hide');setTimeout(()=>sp.remove(),600);}
+  },2600);
+})();
 </script>
 </body>
 </html>
