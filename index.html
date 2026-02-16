@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="España 2026">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#0b1120">
 <title>España 2026</title>
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" type="image/png" href="icon-180.png">
@@ -21,12 +21,13 @@
   :root {
     --safe-top: env(safe-area-inset-top, 20px);
     --safe-bottom: env(safe-area-inset-bottom, 0px);
-    --red: #D71920; --red-light: #ff2d35; --red-soft: #ffe5e6;
-    --blue: #1B3C8C; --blue-light: #2952c4; --blue-soft: #e6ecfa;
+    --red: #E8364F; --red-soft: #ffeef0;
+    --blue: #1a2744; --blue-mid: #243356; --blue-light: #3b5998;
     --white: #ffffff;
-    --bg: #f2f4f8; --card: #ffffff; --text: #0d1117; --dim: #636c76;
-    --border: rgba(0,0,0,0.06);
-    --r: 20px;
+    --bg: #0b1120; --card: #131c31; --card-hover: #1a2744;
+    --text: #e8ecf4; --dim: #7b8ba5; --border: rgba(255,255,255,0.06);
+    --r: 16px;
+    --accent-gradient: linear-gradient(135deg, #E8364F, #ff6b81);
   }
 
   body {
@@ -45,207 +46,175 @@
     animation: fadeDown 0.5s cubic-bezier(0.16,1,0.3,1);
   }
   @keyframes fadeDown { from{opacity:0;transform:translateX(-50%) translateY(-12px)} to{opacity:1;transform:translateX(-50%) translateY(0)} }
-  .sync.on { background: rgba(215,25,32,0.12); color: var(--red); border: 1px solid rgba(215,25,32,0.15); }
-  .sync.off { background: rgba(27,60,140,0.1); color: var(--blue); border: 1px solid rgba(27,60,140,0.12); }
+  .sync.on { background: rgba(232,54,79,0.15); color: var(--red); border: 1px solid rgba(232,54,79,0.2); }
+  .sync.off { background: rgba(123,139,165,0.15); color: var(--dim); border: 1px solid rgba(123,139,165,0.15); }
 
-  /* ====== HEADER ====== */
-  .header {
-    padding: calc(var(--safe-top) + 48px) 20px 20px;
-    background: var(--blue);
+  /* ====== HERO HEADER ====== */
+  .hero {
+    padding: calc(var(--safe-top) + 48px) 20px 28px;
     position: relative; overflow: hidden;
+    background: linear-gradient(180deg, #111b30 0%, var(--bg) 100%);
   }
-  .header::before {
-    content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-    background:
-      radial-gradient(ellipse at 20% 50%, rgba(215,25,32,0.15) 0%, transparent 60%),
-      radial-gradient(ellipse at 80% 20%, rgba(255,255,255,0.08) 0%, transparent 50%);
+  .hero::before {
+    content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+    background: radial-gradient(circle at 30% 40%, rgba(232,54,79,0.08) 0%, transparent 50%),
+                radial-gradient(circle at 70% 60%, rgba(59,89,152,0.06) 0%, transparent 50%);
+    animation: heroPulse 8s ease-in-out infinite alternate;
   }
-  .header::after {
-    content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
-    background: linear-gradient(90deg, var(--red), var(--white) 50%, var(--red));
-  }
-  .header-inner { position: relative; z-index: 1; display: flex; align-items: center; gap: 14px; }
+  @keyframes heroPulse { 0%{transform:scale(1)} 100%{transform:scale(1.1)} }
 
-  .header-text { flex: 1; }
-  .header h1 {
-    font-size: 26px; font-weight: 900; color: #fff;
-    letter-spacing: -0.5px; line-height: 1.1;
-  }
-  .header h1 .yr { color: var(--red-light); font-weight: 900; }
-  .header .sub { font-size: 13px; color: rgba(255,255,255,0.6); font-weight: 500; margin-top: 4px; }
+  .hero-inner { position: relative; z-index: 1; display: flex; align-items: center; justify-content: space-between; }
+  .hero h1 { font-size: 28px; font-weight: 900; letter-spacing: -0.5px; color: #fff; line-height: 1.1; }
+  .hero h1 .yr { background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .hero .sub { font-size: 13px; color: var(--dim); font-weight: 500; margin-top: 6px; }
 
   .share-btn {
-    width: 40px; height: 40px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.15);
-    background: rgba(255,255,255,0.1); color: #fff; font-size: 16px; cursor: pointer;
+    width: 42px; height: 42px; border-radius: 14px;
+    border: 1px solid var(--border); background: var(--card);
+    color: var(--text); font-size: 16px; cursor: pointer;
     display: flex; align-items: center; justify-content: center;
-    backdrop-filter: blur(8px); transition: all 0.15s;
+    transition: all 0.15s;
   }
-  .share-btn:active { transform: scale(0.9); background: rgba(255,255,255,0.2); }
+  .share-btn:active { transform: scale(0.9); background: var(--card-hover); }
 
-  /* City summary strip */
-  .city-strip {
-    display: flex; gap: 2px; margin-top: 14px; border-radius: 10px; overflow: hidden;
-  }
-  .city-bar {
-    height: 32px; display: flex; align-items: center; justify-content: center;
-    font-size: 10px; font-weight: 700; color: #fff; letter-spacing: 0.3px;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-    transition: flex 0.3s ease;
-  }
+  /* Progress bar */
+  .progress-wrap { position: relative; z-index: 1; margin-top: 20px; }
+  .progress-label { display: flex; justify-content: space-between; margin-bottom: 8px; }
+  .progress-label span { font-size: 11px; font-weight: 700; color: var(--dim); text-transform: uppercase; letter-spacing: 1px; }
+  .progress-bar { display: flex; gap: 3px; border-radius: 10px; overflow: hidden; height: 6px; background: var(--card); }
+  .progress-seg { height: 100%; transition: flex 0.4s ease; border-radius: 3px; }
 
-  /* ====== FILTER TABS ====== */
-  .tabs {
-    display: flex; gap: 6px; padding: 14px 16px 6px;
-    overflow-x: auto; scrollbar-width: none;
+  /* City legend */
+  .city-legend { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 12px; position: relative; z-index: 1; }
+  .city-chip {
+    display: flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600;
+    color: var(--dim); cursor: pointer; padding: 4px 10px; border-radius: 8px;
+    transition: all 0.2s; border: 1px solid transparent;
   }
-  .tabs::-webkit-scrollbar { display: none; }
-  .tab {
-    flex-shrink: 0; padding: 7px 16px; border-radius: 10px;
-    border: none; background: var(--card);
-    color: var(--dim); font-size: 13px; font-weight: 600;
-    cursor: pointer; transition: all 0.2s; font-family: inherit;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-  }
-  .tab.on {
-    background: var(--blue); color: #fff;
-    box-shadow: 0 3px 10px rgba(27,60,140,0.25);
+  .city-chip:active { transform: scale(0.95); }
+  .city-chip.on { color: var(--text); background: var(--card); border-color: var(--border); }
+  .city-chip .cdot { width: 8px; height: 8px; border-radius: 50%; }
+
+  /* ====== TIMELINE ====== */
+  .timeline { padding: 0 16px 120px; position: relative; }
+  .timeline::before {
+    content: ''; position: absolute; left: 31px; top: 0; bottom: 120px;
+    width: 2px; background: linear-gradient(180deg, var(--border), rgba(232,54,79,0.2), var(--border));
   }
 
-  /* ====== CALENDAR ====== */
-  .cal-wrap { padding: 6px 12px; }
-  .cal {
-    background: var(--card); border-radius: var(--r); padding: 16px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  /* Day group */
+  .tl-day { position: relative; padding-left: 48px; margin-bottom: 4px; }
+  .tl-day:last-child { margin-bottom: 0; }
+
+  .tl-node {
+    position: absolute; left: 22px; top: 18px;
+    width: 20px; height: 20px; border-radius: 50%;
+    border: 2.5px solid var(--card); z-index: 2;
+    display: flex; align-items: center; justify-content: center;
   }
-  .cal-head {
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    margin-bottom: 12px;
+  .tl-node-inner {
+    width: 8px; height: 8px; border-radius: 50%;
+    transition: all 0.3s;
   }
-  .cal-month { font-size: 15px; font-weight: 800; color: var(--blue); letter-spacing: -0.2px; }
-  .cal-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--red); }
-  .cal-wk {
-    display: grid; grid-template-columns: repeat(7,1fr);
-    text-align: center; margin-bottom: 4px;
-  }
-  .cal-wk span { font-size: 10px; font-weight: 800; color: var(--dim); text-transform: uppercase; letter-spacing: 0.8px; }
-  .cal-g { display: grid; grid-template-columns: repeat(7,1fr); gap: 4px; }
-  .cd {
-    aspect-ratio: 1; display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    border-radius: 12px; font-size: 14px; font-weight: 700;
-    cursor: pointer; transition: all 0.15s ease; position: relative;
+  .tl-day.active .tl-node { border-color: var(--red); box-shadow: 0 0 12px rgba(232,54,79,0.3); }
+  .tl-day.active .tl-node-inner { width: 10px; height: 10px; }
+
+  /* Day header */
+  .tl-header {
+    padding: 14px 16px; display: flex; align-items: center; gap: 12px;
+    cursor: pointer; border-radius: var(--r); transition: background 0.2s;
     -webkit-user-select: none; user-select: none;
   }
-  .cd.x { color: #ccd0d5; cursor: default; }
-  .cd.t { color: #fff; }
-  .cd.t:active { transform: scale(0.85); }
-  .cd.sel {
-    transform: scale(1.18); z-index: 2;
-    box-shadow: 0 0 0 2.5px var(--red), 0 6px 16px rgba(215,25,32,0.3);
-  }
-  .dots { display: flex; gap: 2px; margin-top: 1px; }
-  .dot { width: 3px; height: 3px; border-radius: 50%; background: rgba(255,255,255,0.6); }
+  .tl-header:active { background: var(--card); }
+  .tl-day.active .tl-header { background: var(--card); }
 
-  /* ====== DAY DETAIL ====== */
-  .det-wrap { padding: 6px 12px 120px; }
-  .det {
-    background: var(--card); border-radius: var(--r); overflow: hidden;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
-    animation: slideUp 0.35s cubic-bezier(0.16,1,0.3,1);
-  }
-  @keyframes slideUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
-
-  .det-banner {
-    padding: 18px 18px 14px; display: flex; align-items: center; gap: 12px;
-    position: relative; overflow: hidden;
-  }
-  .det-banner::before {
-    content: ''; position: absolute; inset: 0;
-    opacity: 0.06;
-  }
-  .det-ico {
-    width: 48px; height: 48px; border-radius: 14px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 24px; background: rgba(255,255,255,0.9);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    position: relative; z-index: 1;
-  }
-  .det-info { position: relative; z-index: 1; }
-  .det-name { font-size: 18px; font-weight: 800; color: var(--text); letter-spacing: -0.3px; }
-  .det-badge {
+  .tl-emoji { font-size: 22px; }
+  .tl-date-info { flex: 1; }
+  .tl-date { font-size: 15px; font-weight: 800; color: var(--text); letter-spacing: -0.2px; }
+  .tl-city {
     display: inline-flex; align-items: center; gap: 4px;
     font-size: 11px; font-weight: 700; padding: 2px 8px;
     border-radius: 6px; color: #fff; margin-top: 3px;
   }
-
-  /* Events list */
-  .evs { padding: 4px 0; }
-  .ev {
-    display: flex; align-items: flex-start; padding: 12px 18px; gap: 12px;
-    transition: background 0.1s;
+  .tl-count {
+    font-size: 11px; font-weight: 700; color: var(--dim);
+    background: var(--card); padding: 4px 10px; border-radius: 8px;
   }
-  .ev:active { background: var(--bg); }
+  .tl-day.active .tl-count { background: var(--blue-mid); }
+
+  /* Events container */
+  .tl-events {
+    max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.16,1,0.3,1);
+    padding-left: 4px;
+  }
+  .tl-day.active .tl-events { max-height: 800px; }
+  .tl-events-inner { padding: 0 0 12px; }
+
+  .ev {
+    display: flex; align-items: flex-start; padding: 10px 16px; gap: 12px;
+    border-radius: 12px; margin-bottom: 2px; transition: background 0.15s;
+  }
+  .ev:active { background: var(--card-hover); }
   .ev-ic {
     width: 38px; height: 38px; border-radius: 11px;
     display: flex; align-items: center; justify-content: center;
     font-size: 16px; flex-shrink: 0;
   }
-  .ev-ic.flight { background: var(--blue-soft); }
-  .ev-ic.transport { background: #f0f2f5; }
-  .ev-ic.tourism { background: var(--red-soft); }
-  .ev-ic.food { background: #fef3c7; }
-  .ev-ic.f1 { background: linear-gradient(135deg, var(--red-soft), #ffd6d8); }
+  .ev-ic.flight { background: rgba(99,102,241,0.15); }
+  .ev-ic.transport { background: rgba(123,139,165,0.1); }
+  .ev-ic.tourism { background: rgba(232,54,79,0.1); }
+  .ev-ic.food { background: rgba(251,191,36,0.12); }
+  .ev-ic.f1 { background: linear-gradient(135deg, rgba(232,54,79,0.15), rgba(255,107,129,0.1)); }
   .ev-nfo { flex: 1; min-width: 0; }
   .ev-t { font-size: 10px; font-weight: 700; color: var(--red); letter-spacing: 0.5px; text-transform: uppercase; }
   .ev-n { font-size: 14px; font-weight: 700; color: var(--text); margin-top: 1px; }
-  .ev-d { font-size: 12px; color: var(--dim); margin-top: 1px; }
+  .ev-d { font-size: 12px; color: var(--dim); margin-top: 2px; }
   .ev-x {
     background: none; border: none; color: var(--dim); font-size: 16px;
-    cursor: pointer; padding: 4px 6px; border-radius: 8px; opacity: 0.3;
+    cursor: pointer; padding: 4px 6px; border-radius: 8px; opacity: 0.2;
     flex-shrink: 0; transition: all 0.15s;
   }
-  .ev-x:active { opacity: 1; color: var(--red); background: var(--red-soft); }
-  .ev-sep { height: 1px; background: var(--border); margin: 0 18px 0 68px; }
+  .ev-x:active { opacity: 1; color: var(--red); background: rgba(232,54,79,0.1); }
 
   /* Add event */
   .add-b {
     display: flex; align-items: center; justify-content: center; gap: 5px;
-    padding: 12px; color: var(--blue); font-size: 13px; font-weight: 700;
+    padding: 12px; color: var(--red); font-size: 13px; font-weight: 700;
     cursor: pointer; border: none; background: none; width: 100%;
     font-family: inherit; transition: background 0.15s;
-    border-top: 1px solid var(--border);
+    border-top: 1px solid var(--border); border-radius: 0 0 var(--r) var(--r);
   }
-  .add-b:active { background: var(--blue-soft); }
+  .add-b:active { background: rgba(232,54,79,0.05); }
   .add-f {
-    padding: 14px 18px 18px; border-top: 1px solid var(--border);
+    padding: 14px 16px 16px; border-top: 1px solid var(--border);
     animation: slideUp 0.2s ease;
   }
   .fr { display: flex; gap: 6px; margin-bottom: 6px; }
   .fi {
-    background: var(--bg); border: 1.5px solid var(--border);
+    background: var(--blue-mid); border: 1.5px solid var(--border);
     border-radius: 10px; padding: 10px 12px; font-size: 14px;
     font-family: inherit; color: var(--text); outline: none; width: 100%;
     transition: border-color 0.2s, box-shadow 0.2s;
   }
-  .fi:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(27,60,140,0.1); }
-  .fi::placeholder { color: #b0b5bf; }
+  .fi:focus { border-color: var(--red); box-shadow: 0 0 0 3px rgba(232,54,79,0.1); }
+  .fi::placeholder { color: var(--dim); }
   .fi.tm { width: 72px; flex-shrink: 0; }
   .fs {
-    background: var(--bg); border: 1.5px solid var(--border);
+    background: var(--blue-mid); border: 1.5px solid var(--border);
     border-radius: 10px; padding: 10px 12px; font-size: 14px;
     font-family: inherit; color: var(--text); outline: none;
   }
   .fa { display: flex; gap: 6px; margin-top: 4px; }
   .btn-add {
-    background: var(--red); color: #fff; border: none;
+    background: var(--accent-gradient); color: #fff; border: none;
     padding: 11px 18px; border-radius: 10px; font-size: 14px;
     font-weight: 700; cursor: pointer; flex: 1; font-family: inherit;
-    box-shadow: 0 3px 10px rgba(215,25,32,0.2);
+    box-shadow: 0 4px 14px rgba(232,54,79,0.25);
     transition: transform 0.15s;
   }
   .btn-add:active { transform: scale(0.97); }
   .btn-cancel {
-    background: var(--bg); color: var(--dim); border: 1.5px solid var(--border);
+    background: var(--card); color: var(--dim); border: 1.5px solid var(--border);
     padding: 11px 18px; border-radius: 10px; font-size: 14px;
     font-weight: 600; cursor: pointer; font-family: inherit;
   }
@@ -257,43 +226,43 @@
 
   /* Modal */
   .mbg {
-    position: fixed; inset: 0; background: rgba(0,0,0,0.5);
-    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
     z-index: 300; display: flex; align-items: flex-end;
     justify-content: center; animation: fadein .2s;
   }
   @keyframes fadein { from{opacity:0} to{opacity:1} }
   .msh {
-    background: #fff; border-radius: 24px 24px 0 0;
+    background: var(--card); border-radius: 24px 24px 0 0;
     padding: 24px 20px calc(var(--safe-bottom) + 24px);
     width: 100%; max-width: 420px;
     animation: sheetUp .3s cubic-bezier(0.16,1,0.3,1);
   }
   @keyframes sheetUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
-  .msh h2 { font-size: 20px; font-weight: 800; color: var(--blue); margin-bottom: 4px; }
+  .msh h2 { font-size: 20px; font-weight: 800; color: var(--text); margin-bottom: 4px; }
   .msh p { color: var(--dim); font-size: 13px; margin-bottom: 14px; line-height: 1.5; }
   .sbox {
-    background: var(--bg); border-radius: 12px; padding: 12px;
+    background: var(--blue-mid); border-radius: 12px; padding: 12px;
     display: flex; align-items: center; gap: 8px; margin-bottom: 14px;
   }
-  .sbox span { flex: 1; color: var(--blue); font-size: 11px; font-family: ui-monospace, monospace; word-break: break-all; }
+  .sbox span { flex: 1; color: var(--red); font-size: 11px; font-family: ui-monospace, monospace; word-break: break-all; }
   .cpb {
-    background: var(--red); color: #fff; border: none;
+    background: var(--accent-gradient); color: #fff; border: none;
     padding: 7px 14px; border-radius: 8px; font-size: 12px;
     font-weight: 700; cursor: pointer; flex-shrink: 0;
   }
   .clb {
-    background: var(--bg); color: var(--dim); border: none;
+    background: var(--blue-mid); color: var(--dim); border: none;
     padding: 12px; border-radius: 12px; width: 100%;
     font-size: 15px; font-weight: 600; cursor: pointer; font-family: inherit;
   }
 
-  .spacer { height: calc(var(--safe-bottom) + 20px); }
+  @keyframes slideUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
 
   /* ===== F1 Splash Animation ===== */
   .splash {
     position: fixed; inset: 0; z-index: 9999;
-    background: linear-gradient(135deg, var(--blue) 0%, #0f1d33 100%);
+    background: linear-gradient(135deg, #0b1120 0%, #1a2744 100%);
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     transition: opacity 0.5s ease, transform 0.5s ease;
     overflow: hidden;
@@ -301,13 +270,13 @@
   .splash.hide { opacity: 0; transform: scale(1.05); pointer-events: none; }
   .splash::before, .splash::after {
     content: ''; position: absolute; left: 0; right: 0; height: 2px;
-    background: repeating-linear-gradient(90deg, rgba(255,255,255,0.1) 0px, rgba(255,255,255,0.1) 20px, transparent 20px, transparent 40px);
+    background: repeating-linear-gradient(90deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 20px, transparent 20px, transparent 40px);
   }
   .splash::before { top: 38%; }
   .splash::after { bottom: 38%; }
   .speed-lines { position: absolute; inset: 0; overflow: hidden; }
   .speed-line {
-    position: absolute; height: 1px; background: linear-gradient(90deg, transparent, rgba(215,25,32,0.4), transparent);
+    position: absolute; height: 1px; background: linear-gradient(90deg, transparent, rgba(232,54,79,0.4), transparent);
     animation: speedLine 0.8s linear infinite;
   }
   @keyframes speedLine { 0%{transform:translateX(-100%)} 100%{transform:translateX(200vw)} }
@@ -320,12 +289,12 @@
     70%{transform:translateX(0) scale(1)} 85%{transform:translateX(10px) scale(1)}
     100%{transform:translateX(0) scale(1);opacity:1}
   }
-  .f1-car { font-size: 72px; filter: drop-shadow(0 0 30px rgba(215,25,32,0.5)); animation: carBounce 0.6s ease-in-out infinite alternate; animation-delay: 1.2s; }
+  .f1-car { font-size: 72px; filter: drop-shadow(0 0 30px rgba(232,54,79,0.5)); animation: carBounce 0.6s ease-in-out infinite alternate; animation-delay: 1.2s; }
   @keyframes carBounce { 0%{transform:translateY(0)} 100%{transform:translateY(-3px)} }
   .smoke {
     position: absolute; bottom: -10px; left: -60px;
     width: 80px; height: 30px; border-radius: 50%;
-    background: radial-gradient(ellipse, rgba(255,255,255,0.3), transparent);
+    background: radial-gradient(ellipse, rgba(255,255,255,0.2), transparent);
     animation: smokeAnim 1s ease-out forwards; animation-delay: 0.8s; opacity: 0;
   }
   @keyframes smokeAnim { 0%{opacity:0;transform:scale(0.5) translateX(0)} 50%{opacity:0.6} 100%{opacity:0;transform:scale(2) translateX(-40px)} }
@@ -337,7 +306,7 @@
   @keyframes titleReveal { to{opacity:1;transform:translateY(0)} }
   .splash-title h2 { font-size: 32px; font-weight: 900; color: #fff; letter-spacing: -1px; text-shadow: 0 2px 20px rgba(0,0,0,0.3); }
   .splash-title h2 .red { color: var(--red); }
-  .splash-title .year { font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.5); letter-spacing: 6px; margin-top: 6px; text-transform: uppercase; }
+  .splash-title .year { font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.4); letter-spacing: 6px; margin-top: 6px; text-transform: uppercase; }
   .checkered {
     position: absolute; bottom: 0; left: 0; right: 0; height: 24px;
     display: flex; flex-wrap: wrap;
@@ -380,23 +349,23 @@
 <script>
 const TRIP=[
   {date:"2026-06-05",label:"Viernes 5",city:"Vuelo",color:"#6366f1",icon:"✈️",events:[{time:"21:45",title:"Vuelo a Madrid",detail:"IB 170 — Salida 9:45pm",type:"flight"}]},
-  {date:"2026-06-06",label:"Sábado 6",city:"Madrid",color:"#D71920",icon:"🏰",events:[{time:"🌅",title:"Llegada a Madrid",detail:"Check-in y descanso",type:"transport"},{time:"🌆",title:"Paseo por el centro",detail:"Puerta del Sol, Plaza Mayor",type:"tourism"}]},
-  {date:"2026-06-07",label:"Domingo 7",city:"Madrid",color:"#D71920",icon:"🏰",events:[{time:"🌅",title:"Museo del Prado",detail:"Reservar entrada online",type:"tourism"},{time:"🌆",title:"Parque del Retiro",detail:"Paseo y Palacio de Cristal",type:"tourism"}]},
-  {date:"2026-06-08",label:"Lunes 8",city:"Madrid",color:"#D71920",icon:"🏰",events:[{time:"🌅",title:"Palacio Real",detail:"Visita guiada",type:"tourism"},{time:"🌆",title:"Barrio de La Latina",detail:"Tapas y paseo",type:"food"}]},
+  {date:"2026-06-06",label:"Sábado 6",city:"Madrid",color:"#E8364F",icon:"🏰",events:[{time:"🌅",title:"Llegada a Madrid",detail:"Check-in y descanso",type:"transport"},{time:"🌆",title:"Paseo por el centro",detail:"Puerta del Sol, Plaza Mayor",type:"tourism"}]},
+  {date:"2026-06-07",label:"Domingo 7",city:"Madrid",color:"#E8364F",icon:"🏰",events:[{time:"🌅",title:"Museo del Prado",detail:"Reservar entrada online",type:"tourism"},{time:"🌆",title:"Parque del Retiro",detail:"Paseo y Palacio de Cristal",type:"tourism"}]},
+  {date:"2026-06-08",label:"Lunes 8",city:"Madrid",color:"#E8364F",icon:"🏰",events:[{time:"🌅",title:"Palacio Real",detail:"Visita guiada",type:"tourism"},{time:"🌆",title:"Barrio de La Latina",detail:"Tapas y paseo",type:"food"}]},
   {date:"2026-06-09",label:"Martes 9",city:"Toledo",color:"#457b9d",icon:"⚔️",events:[{time:"🌅",title:"Excursión a Toledo",detail:"Tren AVE (~30 min)",type:"transport"},{time:"🕐",title:"Casco histórico",detail:"Catedral, Alcázar, calles medievales",type:"tourism"}]},
   {date:"2026-06-10",label:"Miércoles 10",city:"Toledo",color:"#457b9d",icon:"⚔️",events:[{time:"🌅",title:"Toledo día 2",detail:"Sinagoga, Museo del Greco, miradores",type:"tourism"},{time:"🌆",title:"Regreso a Madrid",detail:"Tren de vuelta",type:"transport"}]},
-  {date:"2026-06-11",label:"Jueves 11",city:"Barcelona",color:"#1B3C8C",icon:"🌊",events:[{time:"🌅",title:"Viaje a Barcelona",detail:"Traslado y check-in Airbnb",type:"transport"},{time:"🌆",title:"Las Ramblas",detail:"Barrio Gótico, La Boquería",type:"tourism"}]},
-  {date:"2026-06-12",label:"Viernes 12",city:"Barcelona",color:"#1B3C8C",icon:"🏎️",events:[{time:"🏁",title:"F1 — Práctica Libre",detail:"Circuit de Barcelona-Catalunya",type:"f1"}]},
-  {date:"2026-06-13",label:"Sábado 13",city:"Barcelona",color:"#1B3C8C",icon:"🏎️",events:[{time:"🏁",title:"F1 — Clasificación",detail:"Circuit de Barcelona-Catalunya",type:"f1"}]},
-  {date:"2026-06-14",label:"Domingo 14",city:"Barcelona",color:"#1B3C8C",icon:"🏎️",events:[{time:"🏁",title:"F1 — Carrera",detail:"Circuit de Barcelona-Catalunya",type:"f1"}]},
-  {date:"2026-06-15",label:"Lunes 15",city:"Barcelona",color:"#1B3C8C",icon:"🌊",events:[{time:"🌅",title:"Sagrada Familia",detail:"Reservar entrada online",type:"tourism"},{time:"🌆",title:"Park Güell",detail:"Zona monumental de Gaudí",type:"tourism"}]},
-  {date:"2026-06-16",label:"Martes 16",city:"Barcelona",color:"#1B3C8C",icon:"🌊",events:[{time:"🌅",title:"Barceloneta",detail:"Playa y paseo marítimo",type:"tourism"},{time:"🌆",title:"Casa Batlló / La Pedrera",detail:"Arquitectura de Gaudí",type:"tourism"}]},
+  {date:"2026-06-11",label:"Jueves 11",city:"Barcelona",color:"#3b5998",icon:"🌊",events:[{time:"🌅",title:"Viaje a Barcelona",detail:"Traslado y check-in Airbnb",type:"transport"},{time:"🌆",title:"Las Ramblas",detail:"Barrio Gótico, La Boquería",type:"tourism"}]},
+  {date:"2026-06-12",label:"Viernes 12",city:"Barcelona",color:"#3b5998",icon:"🏎️",events:[{time:"🏁",title:"F1 — Práctica Libre",detail:"Circuit de Barcelona-Catalunya",type:"f1"}]},
+  {date:"2026-06-13",label:"Sábado 13",city:"Barcelona",color:"#3b5998",icon:"🏎️",events:[{time:"🏁",title:"F1 — Clasificación",detail:"Circuit de Barcelona-Catalunya",type:"f1"}]},
+  {date:"2026-06-14",label:"Domingo 14",city:"Barcelona",color:"#3b5998",icon:"🏎️",events:[{time:"🏁",title:"F1 — Carrera",detail:"Circuit de Barcelona-Catalunya",type:"f1"}]},
+  {date:"2026-06-15",label:"Lunes 15",city:"Barcelona",color:"#3b5998",icon:"🌊",events:[{time:"🌅",title:"Sagrada Familia",detail:"Reservar entrada online",type:"tourism"},{time:"🌆",title:"Park Güell",detail:"Zona monumental de Gaudí",type:"tourism"}]},
+  {date:"2026-06-16",label:"Martes 16",city:"Barcelona",color:"#3b5998",icon:"🌊",events:[{time:"🌅",title:"Barceloneta",detail:"Playa y paseo marítimo",type:"tourism"},{time:"🌆",title:"Casa Batlló / La Pedrera",detail:"Arquitectura de Gaudí",type:"tourism"}]},
   {date:"2026-06-17",label:"Miércoles 17",city:"Valencia",color:"#2a9d8f",icon:"🍊",events:[{time:"🌅",title:"Viaje a Valencia",detail:"Traslado desde Barcelona",type:"transport"},{time:"🌆",title:"Ciudad de las Artes y las Ciencias",detail:"Oceanogràfic, Hemisfèric",type:"tourism"}]},
   {date:"2026-06-18",label:"Jueves 18",city:"Valencia",color:"#2a9d8f",icon:"🍊",events:[{time:"🌅",title:"Centro histórico",detail:"Catedral, Lonja de la Seda, Mercado Central",type:"tourism"},{time:"🌆",title:"Playa de la Malvarrosa",detail:"Paella frente al mar",type:"food"}]},
-  {date:"2026-06-19",label:"Viernes 19",city:"Madrid",color:"#D71920",icon:"🏰",events:[{time:"🌅",title:"Regreso a Madrid",detail:"Traslado desde Valencia",type:"transport"},{time:"🌆",title:"Últimas compras",detail:"Gran Vía, Malasaña, cena de despedida",type:"tourism"}]},
+  {date:"2026-06-19",label:"Viernes 19",city:"Madrid",color:"#E8364F",icon:"🏰",events:[{time:"🌅",title:"Regreso a Madrid",detail:"Traslado desde Valencia",type:"transport"},{time:"🌆",title:"Últimas compras",detail:"Gran Vía, Malasaña, cena de despedida",type:"tourism"}]},
   {date:"2026-06-20",label:"Sábado 20",city:"Vuelo",color:"#6366f1",icon:"✈️",events:[{time:"06:50",title:"Vuelo a Montevideo",detail:"IB 169 — Salida 6:50am",type:"flight"}]}
 ];
-const CC={Madrid:"#D71920",Toledo:"#457b9d",Barcelona:"#1B3C8C",Valencia:"#2a9d8f",Vuelo:"#6366f1"};
+const CC={Madrid:"#E8364F",Toledo:"#457b9d",Barcelona:"#3b5998",Valencia:"#2a9d8f",Vuelo:"#6366f1"};
 const EI={flight:"✈️",transport:"🚌",tourism:"📍",food:"🍽️",f1:"🏎️"};
 const CTS=["Todos","Madrid","Toledo","Barcelona","Valencia"];
 
@@ -409,79 +378,79 @@ function initFB(){try{firebase.initializeApp(FC);db=firebase.database();ref=db.r
 function save(){if(ref)ref.set(S.data)}
 function tm(){const m={};S.data.forEach(d=>{m[d.date]=d});return m}
 
-function cal(){
-  const t=tm();let c='';
-  for(let d=1;d<=30;d++){
-    const ds=`2026-06-${String(d).padStart(2,'0')}`,td=t[ds],sl=S.sel===ds;
-    if(td){const sh=S.filt==="Todos"||td.city===S.filt;
-      c+=`<div class="cd t ${sl?'sel':''}" style="background:${td.color}${sl?'':'cc'}${!sh?';opacity:0.15':''}" onclick="sel('${ds}')">${d}<div class="dots">${td.events.map(()=>'<div class="dot"></div>').join('')}</div></div>`;
-    }else c+=`<div class="cd x">${d}</div>`;
-  }
-  return c;
-}
-
 function R(){
-  const t=tm(),sd=S.sel?t[S.sel]:null;
+  const t=tm();
   const cnt={};S.data.forEach(d=>{if(d.city!=="Vuelo")cnt[d.city]=(cnt[d.city]||0)+1});
   const total=Object.values(cnt).reduce((a,b)=>a+b,0);
   let h='';
 
   if(db)h+=`<div class="sync ${S.on?'on':'off'}">${S.on?'● Sincronizado':'○ Offline'}</div>`;
 
-  // Header
-  h+=`<div class="header">
-    <div class="header-inner">
-      <div class="header-text">
+  // Hero header
+  h+=`<div class="hero">
+    <div class="hero-inner">
+      <div>
         <h1>España <span class="yr">2026</span></h1>
         <div class="sub">5 — 20 de Junio · 16 días</div>
       </div>
       ${db?'<button class="share-btn" onclick="sM()">🔗</button>':''}
     </div>
-    <div class="city-strip">${Object.entries(cnt).map(([c,n])=>
-      `<div class="city-bar" style="flex:${n};background:${CC[c]}">${c}</div>`
-    ).join('')}</div>
+    <div class="progress-wrap">
+      <div class="progress-label"><span>Ruta</span><span>${S.data.length} días</span></div>
+      <div class="progress-bar">${Object.entries(cnt).map(([c,n])=>
+        `<div class="progress-seg" style="flex:${n};background:${CC[c]}"></div>`
+      ).join('')}</div>
+    </div>
+    <div class="city-legend">${CTS.map(c=>{
+      const isOn=S.filt===c;
+      if(c==="Todos") return `<div class="city-chip ${isOn?'on':''}" onclick="flt('${c}')"><span style="font-size:12px">⚡</span> Todos</div>`;
+      return `<div class="city-chip ${isOn?'on':''}" onclick="flt('${c}')"><span class="cdot" style="background:${CC[c]}"></span>${c}</div>`;
+    }).join('')}</div>
   </div>`;
 
-  // Tabs
-  h+=`<div class="tabs">${CTS.map(c=>`<button class="tab ${S.filt===c?'on':''}" onclick="flt('${c}')">${c}</button>`).join('')}</div>`;
+  // Timeline
+  h+='<div class="timeline">';
 
-  // Calendar
-  h+=`<div class="cal-wrap"><div class="cal">
-    <div class="cal-head"><div class="cal-dot"></div><div class="cal-month">Junio 2026</div><div class="cal-dot"></div></div>
-    <div class="cal-wk">${['L','M','X','J','V','S','D'].map(d=>`<span>${d}</span>`).join('')}</div>
-    <div class="cal-g">${cal()}</div>
-  </div></div>`;
+  const fd=S.filt==="Todos"?S.data:S.data.filter(d=>d.city===S.filt);
 
-  // Detail or hint
-  h+='<div class="det-wrap">';
-  if(sd){
-    h+=`<div class="det">
-      <div class="det-banner" style="background:linear-gradient(135deg, ${sd.color}08, ${sd.color}04)">
-        <div class="det-ico">${sd.icon}</div>
-        <div class="det-info">
-          <div class="det-name">${sd.label}</div>
-          <span class="det-badge" style="background:${sd.color}">${sd.city}</span>
+  fd.forEach(day=>{
+    const isActive=S.sel===day.date;
+    h+=`<div class="tl-day ${isActive?'active':''}" id="day-${day.date}">
+      <div class="tl-node"><div class="tl-node-inner" style="background:${day.color}"></div></div>
+      <div class="tl-header" onclick="sel('${day.date}')">
+        <span class="tl-emoji">${day.icon}</span>
+        <div class="tl-date-info">
+          <div class="tl-date">${day.label}</div>
+          <span class="tl-city" style="background:${day.color}">${day.city}</span>
         </div>
+        <span class="tl-count">${day.events.length} ${day.events.length===1?'evento':'eventos'}</span>
       </div>
-      <div class="evs">${sd.events.map((e,j)=>`
-        ${j?'<div class="ev-sep"></div>':''}
-        <div class="ev">
-          <div class="ev-ic ${e.type}">${EI[e.type]||'📍'}</div>
-          <div class="ev-nfo"><div class="ev-t">${e.time}</div><div class="ev-n">${e.title}</div><div class="ev-d">${e.detail}</div></div>
-          <button class="ev-x" onclick="del('${sd.date}',${j})">×</button>
-        </div>`).join('')}</div>
-      ${S.add?`<div class="add-f">
+      <div class="tl-events"><div class="tl-events-inner">`;
+
+    day.events.forEach((e,j)=>{
+      h+=`<div class="ev">
+        <div class="ev-ic ${e.type}">${EI[e.type]||'📍'}</div>
+        <div class="ev-nfo"><div class="ev-t">${e.time}</div><div class="ev-n">${e.title}</div><div class="ev-d">${e.detail}</div></div>
+        <button class="ev-x" onclick="event.stopPropagation();del('${day.date}',${j})">×</button>
+      </div>`;
+    });
+
+    // Add event button/form
+    if(isActive){
+      h+=S.add?`<div class="add-f">
         <div class="fr"><input class="fi tm" id="nt" placeholder="Hora"><input class="fi" id="nn" placeholder="Título"></div>
         <div class="fr"><input class="fi" id="nd" placeholder="Detalle"></div>
         <div class="fr"><select class="fs" id="ny"><option value="tourism">Turismo</option><option value="transport">Transporte</option><option value="food">Comida</option><option value="f1">F1</option><option value="flight">Vuelo</option></select></div>
-        <div class="fa"><button class="btn-add" onclick="addE('${sd.date}')">Agregar</button><button class="btn-cancel" onclick="S.add=false;R()">Cancelar</button></div>
-      </div>`:`<button class="add-b" onclick="S.add=true;R()">+ Agregar actividad</button>`}
-    </div>`;
-  }else{
-    h+=`<div class="hint"><div class="hint-i">🇪🇸</div><div class="hint-t">Tocá un día del calendario<br>para ver las actividades</div></div>`;
-  }
+        <div class="fa"><button class="btn-add" onclick="addE('${day.date}')">Agregar</button><button class="btn-cancel" onclick="S.add=false;R()">Cancelar</button></div>
+      </div>`:`<button class="add-b" onclick="event.stopPropagation();S.add=true;R()">+ Agregar actividad</button>`;
+    }
+
+    h+=`</div></div></div>`;
+  });
+
   h+='</div>';
 
+  // Modal
   if(S.modal){const u=location.href;
     h+=`<div class="mbg" onclick="cM()"><div class="msh" onclick="event.stopPropagation()">
       <h2>🔗 Compartir</h2><p>Mandále este link a tu compañero de viaje. Los cambios se sincronizan al instante.</p>
@@ -489,12 +458,11 @@ function R(){
       <button class="clb" onclick="cM()">Cerrar</button>
     </div></div>`;
   }
-  h+='<div class="spacer"></div>';
   document.getElementById('app').innerHTML=h;
 }
 
-function sel(d){S.sel=S.sel===d?null:d;S.add=false;R();if(S.sel)setTimeout(()=>{const e=document.querySelector('.det');if(e)e.scrollIntoView({behavior:'smooth',block:'nearest'})},60)}
-function flt(c){S.filt=c;R()}
+function sel(d){S.sel=S.sel===d?null:d;S.add=false;R();if(S.sel)setTimeout(()=>{const e=document.getElementById('day-'+d);if(e)e.scrollIntoView({behavior:'smooth',block:'nearest'})},60)}
+function flt(c){S.filt=c;S.sel=null;R()}
 function del(d,i){const x=S.data.findIndex(t=>t.date===d);if(x>=0){S.data[x].events.splice(i,1);save();R()}}
 function addE(d){const t=document.getElementById('nt').value||'🕐',n=document.getElementById('nn').value,de=document.getElementById('nd').value||'',ty=document.getElementById('ny').value;if(!n)return;const x=S.data.findIndex(t=>t.date===d);if(x>=0){S.data[x].events.push({time:t,title:n,detail:de,type:ty});S.add=false;save();R()}}
 function sM(){S.modal=true;R()}
