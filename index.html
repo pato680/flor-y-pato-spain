@@ -690,7 +690,7 @@ function autoScroll(){const td=today(),dates=S.data.map(d=>d.date);let tgt=dates
 (function(){
   const ch=document.getElementById('checkered');if(ch){const c=Math.ceil(window.innerWidth/12);for(let r=0;r<2;r++)for(let i=0;i<c;i++){const s=document.createElement('span');s.style.background=(r+i)%2===0?'#fff':'#222';ch.appendChild(s)}}
   initFB();R();
-  setTimeout(()=>{const sp=document.getElementById('splash');if(sp){sp.classList.add('hide');setTimeout(()=>{sp.remove();autoScroll()},600)}},2600);
+  setTimeout(()=>{const sp=document.getElementById('splash');if(sp){sp.classList.add('hide');setTimeout(()=>{sp.remove()},600)}},2600);
 })();
 </script>
 </body>
