@@ -196,8 +196,8 @@ const TRIP=[
   {date:"2026-06-06",label:"Sábado 6",city:"Madrid",color:"#D71920",icon:"🏰",events:[{time:"",title:"Madrid",detail:"Llegada y check-in",type:"tourism"}]},
   {date:"2026-06-07",label:"Domingo 7",city:"Madrid",color:"#D71920",icon:"🏰",events:[{time:"",title:"Madrid",detail:"",type:"tourism"}]},
   {date:"2026-06-08",label:"Lunes 8",city:"Madrid",color:"#D71920",icon:"🏰",events:[{time:"",title:"Madrid",detail:"",type:"tourism"}]},
-  {date:"2026-06-09",label:"Martes 9",city:"Toledo",color:"#457b9d",icon:"⚔️",events:[{time:"",title:"Toledo",detail:"Excursión desde Madrid",type:"tourism"}]},
-  {date:"2026-06-10",label:"Miércoles 10",city:"Toledo",color:"#457b9d",icon:"⚔️",events:[{time:"",title:"Toledo",detail:"",type:"tourism"}]},
+  {date:"2026-06-09",label:"Martes 9",city:"Madrid",color:"#D71920",icon:"⚔️",events:[{time:"",title:"Toledo — Excursión",detail:"Day trip desde Madrid",type:"tourism"}]},
+  {date:"2026-06-10",label:"Miércoles 10",city:"Madrid",color:"#D71920",icon:"🏰",events:[{time:"",title:"Madrid",detail:"",type:"tourism"}]},
   {date:"2026-06-11",label:"Jueves 11",city:"Barcelona",color:"#3b5998",icon:"🌊",events:[{time:"",title:"Airbnb — Barcelona",detail:"Check-in Airbnb",type:"tourism"}]},
   {date:"2026-06-12",label:"Viernes 12",city:"Barcelona",color:"#3b5998",icon:"🏎️",events:[{time:"",title:"Airbnb — Barcelona",detail:"",type:"tourism"},{time:"🏁",title:"F1 — Práctica Libre",detail:"Circuit de Barcelona-Catalunya",type:"f1"}]},
   {date:"2026-06-13",label:"Sábado 13",city:"Barcelona",color:"#3b5998",icon:"🏎️",events:[{time:"",title:"Airbnb — Barcelona",detail:"",type:"tourism"},{time:"🏁",title:"F1 — Clasificación",detail:"Circuit de Barcelona-Catalunya",type:"f1"}]},
@@ -210,15 +210,14 @@ const TRIP=[
   {date:"2026-06-20",label:"Sábado 20",city:"Vuelo",color:"#6366f1",icon:"✈️",events:[{time:"06:50",title:"Vuelo a Montevideo",detail:"IB 169 — Salida 6:50am",type:"flight"}]}
 ];
 
-const CC={Madrid:"#D71920",Toledo:"#457b9d",Barcelona:"#3b5998",Valencia:"#2a9d8f",Vuelo:"#6366f1"};
+const CC={Madrid:"#D71920",Barcelona:"#3b5998",Valencia:"#2a9d8f",Vuelo:"#6366f1"};
 const EI={flight:"✈️",transport:"🚌",tourism:"📍",food:"🍽️",f1:"🏎️"};
-const CTS=["Todos","Madrid","Toledo","Barcelona","Valencia"];
+const CTS=["Todos","Madrid","Barcelona","Valencia"];
 
 // Route segments with date ranges
 const ROUTE=[
   {city:"Vuelo",dates:"5 Jun",days:1},
-  {city:"Madrid",dates:"6–8",days:3},
-  {city:"Toledo",dates:"9–10",days:2},
+  {city:"Madrid",dates:"6–10",days:5},
   {city:"Barcelona",dates:"11–16",days:6},
   {city:"Valencia",dates:"17–18",days:2},
   {city:"Madrid",dates:"19",days:1},
