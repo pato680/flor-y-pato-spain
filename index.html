@@ -301,72 +301,70 @@
   .tl-act.edit:active{color:var(--blue)}
   .tl-act.del:active{color:var(--red)}
 
-  /* SPLASH — RB vs FERRARI */
+  /* SPLASH — GP BARCELONA */
   .splash{position:fixed;inset:0;z-index:9999;background:#0a0a0a;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .5s ease,transform .5s ease;overflow:hidden}
   .splash.hide{opacity:0;transform:scale(1.05);pointer-events:none}
   .splash-carbon{position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 2px,rgba(255,255,255,.012) 2px,rgba(255,255,255,.012) 4px)}
-  .splash-glow-l{position:absolute;top:20%;left:-20%;width:60%;height:60%;background:radial-gradient(ellipse,rgba(30,65,175,.3),transparent 70%);animation:glowPulse 3s ease-in-out infinite alternate}
-  .splash-glow-r{position:absolute;top:20%;right:-20%;width:60%;height:60%;background:radial-gradient(ellipse,rgba(220,0,0,.3),transparent 70%);animation:glowPulse 3s ease-in-out infinite alternate;animation-delay:1.5s}
-  @keyframes glowPulse{0%{opacity:.5;transform:scale(.9)}100%{opacity:1;transform:scale(1.1)}}
+  .splash-glow{position:absolute;top:30%;left:50%;transform:translate(-50%,-50%);width:80%;height:60%;background:radial-gradient(ellipse,rgba(220,0,0,.2),transparent 70%);animation:spGlow 2s ease-in-out infinite alternate}
+  @keyframes spGlow{0%{opacity:.4;transform:translate(-50%,-50%) scale(.9)}100%{opacity:.8;transform:translate(-50%,-50%) scale(1.1)}}
 
   .speed-lines{position:absolute;inset:0;overflow:hidden}
-  .speed-line{position:absolute;height:1px;animation:speedLine .8s linear infinite}
-  .speed-line.rb{background:linear-gradient(90deg,transparent,rgba(30,65,175,.5),transparent)}
-  .speed-line.fer{background:linear-gradient(90deg,transparent,rgba(220,0,0,.5),transparent)}
+  .speed-line{position:absolute;height:1px;background:linear-gradient(90deg,transparent,rgba(220,0,0,.35),transparent);animation:speedLine .8s linear infinite}
   @keyframes speedLine{0%{transform:translateX(-100%)}100%{transform:translateX(200vw)}}
 
-  .splash-vs{position:relative;z-index:2;display:flex;align-items:center;gap:24px}
-  .splash-car{font-size:60px;filter:drop-shadow(0 0 20px rgba(0,0,0,.5))}
-  .splash-car.left{animation:carFromLeft 1s cubic-bezier(.16,1,.3,1) forwards;opacity:0;transform:scaleX(-1)}
-  .splash-car.right{animation:carFromRight 1s cubic-bezier(.16,1,.3,1) forwards;opacity:0}
-  @keyframes carFromLeft{0%{opacity:0;transform:translateX(-60vw) scaleX(-1)}60%{opacity:1}80%{transform:translateX(8px) scaleX(-1)}100%{opacity:1;transform:translateX(0) scaleX(-1)}}
-  @keyframes carFromRight{0%{opacity:0;transform:translateX(60vw)}60%{opacity:1}80%{transform:translateX(-8px)}100%{opacity:1;transform:translateX(0)}}
-  .splash-vs-text{animation:vsReveal .4s cubic-bezier(.16,1,.3,1) forwards;animation-delay:.6s;opacity:0;transform:scale(3)}
-  @keyframes vsReveal{to{opacity:1;transform:scale(1)}}
-  .splash-vs-text span{font-size:36px;font-weight:900;font-style:italic;color:#fff;text-shadow:0 0 30px rgba(255,255,255,.3)}
+  /* F1 FLAG */
+  .sp-flag{position:relative;z-index:2;font-size:48px;animation:flagWave 1s ease-in-out infinite alternate;opacity:0;animation-delay:.3s;animation-fill-mode:forwards}
+  @keyframes flagWave{0%{transform:rotate(-5deg) scale(1);opacity:1}100%{transform:rotate(5deg) scale(1.05);opacity:1}}
 
-  .splash-title{position:relative;z-index:2;margin-top:32px;text-align:center;animation:titleReveal .6s cubic-bezier(.16,1,.3,1) forwards;animation-delay:.8s;opacity:0;transform:translateY(20px)}
+  /* CAR CROSSING */
+  .sp-car-wrap{position:relative;z-index:2;margin-top:20px;width:100%;height:50px;overflow:hidden}
+  .sp-car{position:absolute;top:8px;font-size:44px;animation:carCross 1.8s cubic-bezier(.2,.8,.3,1) forwards;opacity:0;filter:drop-shadow(0 4px 16px rgba(220,0,0,.4))}
+  @keyframes carCross{0%{left:-15%;opacity:0}15%{opacity:1}50%{left:42%}65%{left:44%}100%{left:42%;opacity:1}}
+  .sp-car-trail{position:absolute;top:24px;height:3px;border-radius:2px;background:linear-gradient(90deg,transparent,rgba(220,0,0,.5));animation:trailGrow 1.8s cubic-bezier(.2,.8,.3,1) forwards;width:0;left:0}
+  @keyframes trailGrow{0%{width:0;opacity:0}15%{opacity:.6}50%{width:42%}100%{width:42%;opacity:.3}}
+
+  /* CIRCUIT NAME */
+  .sp-circuit{position:relative;z-index:2;margin-top:8px;font-size:10px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.25);animation:titleReveal .5s ease forwards;animation-delay:.6s;opacity:0}
+
+  .splash-title{position:relative;z-index:2;margin-top:20px;text-align:center;animation:titleReveal .6s cubic-bezier(.16,1,.3,1) forwards;animation-delay:.9s;opacity:0;transform:translateY(20px)}
   @keyframes titleReveal{to{opacity:1;transform:translateY(0)}}
-  .splash-title h2{font-size:28px;font-weight:900;color:#fff;letter-spacing:-1px;text-shadow:0 2px 20px rgba(0,0,0,.3)}
-  .splash-title .rb-c{color:#3b82f6}
-  .splash-title .fer-c{color:#dc0000}
-  .splash-title .year{font-size:12px;font-weight:700;color:rgba(255,255,255,.4);letter-spacing:6px;margin-top:8px;text-transform:uppercase}
+  .splash-title h2{font-size:26px;font-weight:900;color:#fff;letter-spacing:-.5px;text-shadow:0 2px 20px rgba(0,0,0,.3)}
+  .splash-title .gp{color:#dc0000}
+  .splash-title .year{font-size:11px;font-weight:700;color:rgba(255,255,255,.35);letter-spacing:5px;margin-top:6px;text-transform:uppercase}
 
-  .splash-lights{position:relative;z-index:2;display:flex;gap:8px;margin-top:24px;animation:titleReveal .5s ease forwards;animation-delay:1.1s;opacity:0}
-  .splash-light{width:14px;height:14px;border-radius:50%;background:#222;border:2px solid #444;animation:sLightSeq 2.5s ease infinite}
-  .splash-light:nth-child(1){animation-delay:1.2s}
-  .splash-light:nth-child(2){animation-delay:1.5s}
+  .splash-lights{position:relative;z-index:2;display:flex;gap:8px;margin-top:20px;animation:titleReveal .5s ease forwards;animation-delay:1.2s;opacity:0}
+  .splash-light{width:12px;height:12px;border-radius:50%;background:#222;border:2px solid #444;animation:sLightSeq 2.5s ease infinite}
+  .splash-light:nth-child(1){animation-delay:1.3s}
+  .splash-light:nth-child(2){animation-delay:1.55s}
   .splash-light:nth-child(3){animation-delay:1.8s}
-  .splash-light:nth-child(4){animation-delay:2.1s}
-  .splash-light:nth-child(5){animation-delay:2.4s}
-  @keyframes sLightSeq{0%,10%{background:#222;box-shadow:none}11%,35%{background:#dc0000;box-shadow:0 0 12px #dc0000}36%,100%{background:#222;box-shadow:none}}
+  .splash-light:nth-child(4){animation-delay:2.05s}
+  .splash-light:nth-child(5){animation-delay:2.3s}
+  @keyframes sLightSeq{0%,10%{background:#222;box-shadow:none}11%,35%{background:#dc0000;box-shadow:0 0 10px #dc0000}36%,100%{background:#222;box-shadow:none}}
 
-  .checkered{position:absolute;bottom:0;left:0;right:0;height:20px;display:flex;flex-wrap:wrap;animation:checkReveal .4s ease forwards;animation-delay:1.2s;opacity:0}
+  .checkered{position:absolute;bottom:0;left:0;right:0;height:16px;display:flex;flex-wrap:wrap;animation:checkReveal .4s ease forwards;animation-delay:1.4s;opacity:0}
   @keyframes checkReveal{to{opacity:1}}
-  .checkered span{width:10px;height:10px;display:inline-block}
+  .checkered span{width:8px;height:8px;display:inline-block}
 </style>
 </head>
 <body>
 <div id="splash" class="splash">
   <div class="splash-carbon"></div>
-  <div class="splash-glow-l"></div>
-  <div class="splash-glow-r"></div>
+  <div class="splash-glow"></div>
   <div class="speed-lines">
-    <div class="speed-line rb" style="top:18%;width:40%;animation-delay:.1s;animation-duration:.7s"></div>
-    <div class="speed-line fer" style="top:28%;width:55%;animation-delay:.25s;animation-duration:.6s"></div>
-    <div class="speed-line rb" style="top:42%;width:35%;animation-delay:0s;animation-duration:.8s"></div>
-    <div class="speed-line fer" style="top:58%;width:50%;animation-delay:.15s;animation-duration:.65s"></div>
-    <div class="speed-line rb" style="top:72%;width:45%;animation-delay:.35s;animation-duration:.75s"></div>
-    <div class="speed-line fer" style="top:82%;width:38%;animation-delay:.45s;animation-duration:.7s"></div>
+    <div class="speed-line" style="top:20%;width:45%;animation-delay:.1s;animation-duration:.7s"></div>
+    <div class="speed-line" style="top:35%;width:55%;animation-delay:.3s;animation-duration:.6s"></div>
+    <div class="speed-line" style="top:65%;width:40%;animation-delay:0s;animation-duration:.75s"></div>
+    <div class="speed-line" style="top:80%;width:50%;animation-delay:.2s;animation-duration:.65s"></div>
   </div>
-  <div class="splash-vs">
-    <div class="splash-car left">🏎️</div>
-    <div class="splash-vs-text"><span>VS</span></div>
-    <div class="splash-car right">🏎️</div>
+  <div class="sp-flag">🏁</div>
+  <div class="sp-car-wrap">
+    <div class="sp-car-trail"></div>
+    <div class="sp-car">🏎️</div>
   </div>
+  <div class="sp-circuit">Circuit de Barcelona-Catalunya</div>
   <div class="splash-title">
-    <h2>España <span class="fer-c">F1</span> 2026</h2>
-    <div class="year">GP España · Junio 12–14</div>
+    <h2>GP de <span class="gp">España</span></h2>
+    <div class="year">Junio 12 – 14 · 2026</div>
   </div>
   <div class="splash-lights"><span class="splash-light"></span><span class="splash-light"></span><span class="splash-light"></span><span class="splash-light"></span><span class="splash-light"></span></div>
   <div class="checkered" id="checkered"></div>
