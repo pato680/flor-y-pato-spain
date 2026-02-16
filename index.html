@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="España 2026">
-<meta name="theme-color" content="#0a1628">
+<meta name="theme-color" content="#ffffff">
 <title>España 2026</title>
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" type="image/png" href="icon-180.png">
@@ -26,14 +26,14 @@
     --red-dark: #c1121f;
     --blue: #1d3557;
     --blue-light: #457b9d;
-    --blue-bright: #2196f3;
-    --white: #f1faee;
-    --bg: #0a1628;
-    --card: #111d33;
-    --card-hover: #162440;
-    --text: #f1faee;
-    --text-dim: #8899b0;
-    --border: rgba(255,255,255,0.06);
+    --blue-bright: #1d3557;
+    --white: #ffffff;
+    --bg: #f5f5f7;
+    --card: #ffffff;
+    --card-hover: #f0f0f5;
+    --text: #1c1c1e;
+    --text-dim: #6b7280;
+    --border: rgba(0,0,0,0.08);
   }
 
   body {
@@ -57,26 +57,24 @@
   /* Header */
   .header {
     padding: calc(var(--safe-top) + 28px) 24px 20px;
-    background: linear-gradient(180deg, #0d1f3c 0%, var(--bg) 100%);
+    background: #fff; border-bottom: 1px solid var(--border);
   }
   .header-row { display: flex; align-items: flex-start; justify-content: space-between; }
   .header h1 {
     font-size: 32px; font-weight: 900; letter-spacing: -1px;
-    background: linear-gradient(135deg, #fff 0%, #a8dadc 100%);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--blue);
   }
   .header .dates {
     font-size: 14px; color: var(--text-dim); font-weight: 500; margin-top: 4px;
   }
   .share-btn {
     width: 40px; height: 40px; border-radius: 12px;
-    background: rgba(255,255,255,0.08); border: 1px solid var(--border);
-    color: var(--text); font-size: 18px; cursor: pointer;
+    background: var(--red); border: none;
+    color: #fff; font-size: 18px; cursor: pointer;
     display: flex; align-items: center; justify-content: center;
-    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 8px rgba(230,57,70,0.3);
   }
-  .share-btn:active { background: rgba(255,255,255,0.15); }
+  .share-btn:active { background: var(--red-dark); }
 
   /* City legend */
   .city-legend {
@@ -86,7 +84,7 @@
     display: flex; align-items: center; gap: 5px;
     font-size: 11px; font-weight: 600; color: var(--text-dim);
     padding: 4px 10px; border-radius: 8px;
-    background: rgba(255,255,255,0.04);
+    background: rgba(0,0,0,0.03);
   }
   .legend-dot {
     width: 8px; height: 8px; border-radius: 3px;
@@ -100,7 +98,7 @@
   }
   .cal-title {
     font-size: 18px; font-weight: 800; text-align: center;
-    margin-bottom: 16px; color: #fff;
+    margin-bottom: 16px; color: var(--blue);
     letter-spacing: -0.3px;
   }
   .cal-weekdays {
@@ -121,12 +119,12 @@
     cursor: pointer; transition: all 0.15s; position: relative;
   }
   .cal-day.empty { cursor: default; }
-  .cal-day.off { color: #2a3a52; cursor: default; }
+  .cal-day.off { color: #c7c7cc; cursor: default; }
   .cal-day.trip { color: #fff; }
   .cal-day.trip:active { transform: scale(0.9); }
   .cal-day.selected {
     transform: scale(1.12);
-    box-shadow: 0 0 0 2px #fff, 0 4px 20px rgba(230,57,70,0.4);
+    box-shadow: 0 0 0 2px var(--red), 0 4px 20px rgba(230,57,70,0.3);
   }
   .cal-dot-row { display: flex; gap: 2px; margin-top: 2px; }
   .cal-ev-dot {
@@ -165,7 +163,7 @@
   }
   .detail-head {
     padding: 20px 20px 16px;
-    background: linear-gradient(135deg, var(--card) 0%, #162440 100%);
+    background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
     border-bottom: 1px solid var(--border);
     display: flex; align-items: center; justify-content: space-between;
   }
@@ -175,7 +173,7 @@
     display: flex; align-items: center; justify-content: center;
     font-size: 24px;
   }
-  .detail-label { font-size: 20px; font-weight: 800; color: #fff; letter-spacing: -0.3px; }
+  .detail-label { font-size: 20px; font-weight: 800; color: var(--text); letter-spacing: -0.3px; }
   .detail-city {
     font-size: 12px; font-weight: 700; padding: 3px 10px;
     border-radius: 8px; color: #fff; margin-top: 4px; display: inline-block;
@@ -193,25 +191,25 @@
     display: flex; align-items: center; justify-content: center;
     font-size: 18px; flex-shrink: 0;
   }
-  .ev-icon.flight { background: rgba(99,102,241,0.15); }
-  .ev-icon.transport { background: rgba(148,163,184,0.12); }
-  .ev-icon.tourism { background: rgba(230,57,70,0.12); }
-  .ev-icon.food { background: rgba(249,115,22,0.12); }
-  .ev-icon.f1 { background: rgba(230,57,70,0.2); }
+  .ev-icon.flight { background: #eef2ff; }
+  .ev-icon.transport { background: #f1f5f9; }
+  .ev-icon.tourism { background: #fef2f2; }
+  .ev-icon.food { background: #fff7ed; }
+  .ev-icon.f1 { background: #fef2f2; }
 
   .ev-info { flex: 1; min-width: 0; }
   .ev-time {
     font-size: 11px; font-weight: 700; color: var(--blue-bright);
     text-transform: uppercase; letter-spacing: 0.3px;
   }
-  .ev-title { font-size: 15px; font-weight: 700; color: #fff; margin-top: 2px; }
+  .ev-title { font-size: 15px; font-weight: 700; color: var(--text); margin-top: 2px; }
   .ev-detail { font-size: 13px; color: var(--text-dim); margin-top: 2px; }
   .ev-del {
     background: none; border: none; color: var(--red);
     font-size: 18px; cursor: pointer; padding: 4px 8px;
     border-radius: 8px; opacity: 0.5; flex-shrink: 0;
   }
-  .ev-del:active { opacity: 1; background: rgba(230,57,70,0.1); }
+  .ev-del:active { opacity: 1; background: #fff0f0; }
 
   .ev-sep { height: 1px; background: var(--border); margin: 0 20px 0 74px; }
 
@@ -230,17 +228,17 @@
   }
   .f-row { display: flex; gap: 8px; margin-bottom: 8px; }
   .f-input {
-    background: rgba(255,255,255,0.06); border: 1px solid var(--border);
+    background: rgba(0,0,0,0.05); border: 1px solid var(--border);
     border-radius: 12px; padding: 11px 14px; font-size: 15px;
-    font-family: inherit; color: #fff; outline: none; width: 100%;
+    font-family: inherit; color: var(--text); outline: none; width: 100%;
   }
-  .f-input:focus { border-color: var(--red); box-shadow: 0 0 0 2px rgba(230,57,70,0.2); }
-  .f-input::placeholder { color: #4a5568; }
+  .f-input:focus { border-color: var(--red); box-shadow: 0 0 0 2px rgba(230,57,70,0.15); }
+  .f-input::placeholder { color: #9ca3af; }
   .f-input.time { width: 80px; flex-shrink: 0; }
   .f-select {
-    background: rgba(255,255,255,0.06); border: 1px solid var(--border);
+    background: rgba(0,0,0,0.05); border: 1px solid var(--border);
     border-radius: 12px; padding: 11px 14px; font-size: 15px;
-    font-family: inherit; color: #fff; outline: none;
+    font-family: inherit; color: var(--text); outline: none;
   }
   .f-actions { display: flex; gap: 8px; margin-top: 4px; }
   .btn-r {
@@ -250,7 +248,7 @@
   }
   .btn-r:active { background: var(--red-dark); }
   .btn-g {
-    background: rgba(255,255,255,0.06); color: var(--text-dim); border: 1px solid var(--border);
+    background: rgba(0,0,0,0.05); color: var(--text-dim); border: 1px solid var(--border);
     padding: 12px 20px; border-radius: 12px; font-size: 15px;
     font-weight: 600; cursor: pointer; font-family: inherit;
   }
@@ -270,16 +268,16 @@
   }
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
   .modal {
-    background: var(--card); border-radius: 24px 24px 0 0;
+    background: #fff; border-radius: 24px 24px 0 0;
     padding: 28px 24px calc(var(--safe-bottom) + 28px);
     width: 100%; max-width: 420px;
     animation: slideUp 0.3s ease; border-top: 2px solid var(--red);
   }
   @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-  .modal h2 { font-size: 22px; font-weight: 800; margin-bottom: 6px; color: #fff; }
+  .modal h2 { font-size: 22px; font-weight: 800; margin-bottom: 6px; color: var(--blue); }
   .modal p { color: var(--text-dim); font-size: 14px; margin-bottom: 16px; line-height: 1.5; }
   .share-box {
-    background: rgba(255,255,255,0.04); border-radius: 14px; padding: 14px;
+    background: rgba(0,0,0,0.03); border-radius: 14px; padding: 14px;
     display: flex; align-items: center; gap: 10px; margin-bottom: 16px;
     border: 1px solid var(--border);
   }
@@ -293,7 +291,7 @@
     font-weight: 700; cursor: pointer; flex-shrink: 0;
   }
   .close-btn {
-    background: rgba(255,255,255,0.06); color: var(--text-dim);
+    background: rgba(0,0,0,0.05); color: var(--text-dim);
     border: 1px solid var(--border); padding: 14px; border-radius: 14px;
     width: 100%; font-size: 16px; font-weight: 600; cursor: pointer;
     font-family: inherit;
