@@ -165,35 +165,40 @@
   .sec-body.closed{max-height:0!important}
 
   /* TIMELINE */
-  .tl{padding:0 12px 8px;position:relative}
-  .tl-city-hdr{display:flex;align-items:center;gap:10px;padding:16px 8px 8px;position:relative}
-  .tl-city-hdr:first-child{padding-top:8px}
-  .tl-city-line{height:3px;flex:1;border-radius:2px;opacity:.7}
-  .tl-city-label{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:800;letter-spacing:-.2px;white-space:nowrap}
-  .tl-city-icon{font-size:18px}
-  .tl-city-dates{font-size:10px;font-weight:600;color:var(--dim)}
-  .tl-city-acts{display:flex;align-items:center;gap:4px}
-  .tl-city-act{background:none;border:none;font-size:13px;cursor:pointer;padding:4px;border-radius:6px;opacity:.35;transition:all .12s}
-  .tl-city-act:active{opacity:1;transform:scale(.9)}
-  .tl-transit{display:flex;align-items:center;gap:8px;padding:10px 8px;margin:4px 0}
-  .tl-transit-line{flex:1;height:2px;border-radius:1px;background:repeating-linear-gradient(90deg,var(--dim) 0px,var(--dim) 4px,transparent 4px,transparent 8px);opacity:.2}
-  .tl-transit-label{font-size:11px;font-weight:700;color:var(--dim);display:flex;align-items:center;gap:4px}
-  .tl-item{position:relative;margin-bottom:2px;border-radius:14px}
-  .tl-item:last-child{margin-bottom:0}
-  .tl-bar{padding:12px 14px;display:flex;align-items:center;gap:12px;cursor:pointer;border-radius:14px;transition:background .12s}
+  .tl{padding:0 0 8px;position:relative}
+
+  /* City header banner */
+  .tl-city-hdr{display:flex;align-items:center;gap:10px;padding:14px 16px;margin:6px 0 2px;border-radius:14px;position:relative}
+  .tl-city-hdr:first-child{margin-top:0}
+  .tl-city-left{display:flex;align-items:center;gap:8px;flex:1;min-width:0}
+  .tl-city-icon{font-size:22px}
+  .tl-city-name{font-size:16px;font-weight:900;color:#fff;letter-spacing:-.3px}
+  .tl-city-meta{font-size:10px;font-weight:600;color:rgba(255,255,255,.6)}
+  .tl-city-add{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:11px;font-weight:700;cursor:pointer;padding:5px 12px;border-radius:8px;font-family:inherit;transition:all .12s;white-space:nowrap}
+  .tl-city-add:active{background:rgba(255,255,255,.25);transform:scale(.95)}
+
+  /* Transit divider */
+  .tl-transit{display:flex;align-items:center;gap:10px;padding:12px 16px;margin:2px 0}
+  .tl-transit-line{flex:1;height:1px;background:var(--border)}
+  .tl-transit-icon{font-size:16px}
+  .tl-transit-label{font-size:12px;font-weight:700;color:var(--dim);white-space:nowrap}
+
+  /* Day card */
+  .tl-item{position:relative;margin:2px 0;border-radius:14px;border-left:4px solid transparent}
+  .tl-bar{padding:12px 14px 12px 12px;display:flex;align-items:center;gap:10px;cursor:pointer;border-radius:12px;transition:background .12s}
   .tl-bar:active{background:var(--card-hover)}
-  .tl-item.open .tl-bar{background:var(--bg);border-radius:14px 14px 0 0}
-  .tl-em{font-size:20px}
+  .tl-item.open .tl-bar{background:var(--bg);border-radius:12px 12px 0 0}
+  .tl-day-num{width:36px;height:36px;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;font-weight:900;color:#fff;line-height:1}
+  .tl-day-num span{font-size:8px;font-weight:700;opacity:.7;text-transform:uppercase}
   .tl-info{flex:1;min-width:0}
-  .tl-name{font-size:14px;font-weight:700;color:var(--text);letter-spacing:-.2px}
-  .tl-day-sub{font-size:11px;color:var(--dim);font-weight:600;margin-top:1px}
-  .tl-tag{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:2px 8px;border-radius:6px;color:#fff;margin-top:3px}
+  .tl-name{font-size:13px;font-weight:700;color:var(--text);letter-spacing:-.2px}
+  .tl-day-sub{font-size:11px;color:var(--dim);font-weight:500;margin-top:1px;display:flex;align-items:center;gap:4px}
+  .tl-day-sub .tl-f1-badge{background:rgba(232,54,79,.1);color:#E8364F;padding:1px 6px;border-radius:4px;font-size:9px;font-weight:800}
   .tl-cnt{font-size:11px;font-weight:700;color:var(--dim)}
   .tl-expand{overflow:hidden;max-height:0;transition:max-height .35s cubic-bezier(.16,1,.3,1)}
   .tl-item.open .tl-expand{max-height:1200px}
-  .tl-expand-in{padding:8px 0 14px;background:var(--bg);border-radius:0 0 14px 14px;margin-top:-2px}
-  .tl-item.f1 .tl-bar{background:rgba(232,54,79,.04);border:1px solid rgba(232,54,79,.08)}
-  .tl-item.f1.open .tl-bar{background:rgba(232,54,79,.06);border-color:rgba(232,54,79,.12)}
+  .tl-expand-in{padding:8px 0 14px;background:var(--bg);border-radius:0 0 12px 12px;margin-top:-2px}
+  .tl-item.is-today .tl-day-num{box-shadow:0 0 0 2px var(--blue),0 0 8px rgba(27,60,140,.2)}
 
   /* EVENTS */
   .ev{display:flex;align-items:flex-start;padding:10px 14px;gap:12px;border-radius:12px;margin:0 6px 2px;transition:background .12s}
@@ -556,52 +561,66 @@ function R(){
   // CALENDAR
   h+=`<div class="section">${calHTML()}</div>`;
 
-  // TIMELINE — grouped by city with headers
+  // TIMELINE — grouped by city with visual headers
   h+=`<div class="section"><div class="sec-hdr open"><div class="sec-hdr-left"><span class="sec-hdr-ic">📅</span><h2>Timeline</h2></div><span class="badge">${S.data.length} días</span></div><div class="tl">`;
   const fd=S.filt==="Todos"?S.data:S.data.filter(d=>d.city===S.filt||d.from===S.filt);
-  // Group by city blocks
   let lastCity=null;
+  const DAYS_SHORT=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
   fd.forEach((day,idx)=>{
     const mainCity=day.city;
-    // Transit header between cities
+    const isVuelo=mainCity==='Vuelo';
+
+    // Transit divider
     if(day.from && S.filt==='Todos'){
       h+=`<div class="tl-transit">
         <div class="tl-transit-line"></div>
-        <div class="tl-transit-label">🚂 ${day.from} → ${day.city}</div>
+        <span class="tl-transit-icon">🚂</span>
+        <div class="tl-transit-label">${day.from} → ${day.city}</div>
         <div class="tl-transit-line"></div>
       </div>`;
       lastCity=null;
     }
-    // City header when city changes
-    if(mainCity!==lastCity && !day.from){
+
+    // City header banner (skip for Vuelo — flights render inline)
+    if(mainCity!==lastCity && !day.from && !isVuelo){
       const cityDays=fd.filter(d=>d.city===mainCity&&!d.from);
       const d1=cityDays[0],d2=cityDays[cityDays.length-1];
       const dateRange=d1&&d2?(d1===d2?`${parseInt(d1.date.slice(8))} Jun`:`${parseInt(d1.date.slice(8))}–${parseInt(d2.date.slice(8))} Jun`):'';
-      const totalEvts=cityDays.reduce((s,d)=>s+d.events.length,0);
-      const cityIcon=day.icon;
-      h+=`<div class="tl-city-hdr">
-        <div class="tl-city-line" style="background:${day.color}"></div>
-        <div class="tl-city-label" style="color:${day.color}"><span class="tl-city-icon">${cityIcon}</span>${mainCity}</div>
-        <div class="tl-city-dates">${dateRange} · ${cityDays.length}d · ${totalEvts} act</div>
-        <div class="tl-city-acts">
-          <button class="tl-city-act" onclick="openAddDay('${mainCity}')" title="Agregar día">➕</button>
+      h+=`<div class="tl-city-hdr" style="background:${day.color}">
+        <div class="tl-city-left">
+          <span class="tl-city-icon">${cityIconFor(mainCity)}</span>
+          <div>
+            <div class="tl-city-name">${mainCity}</div>
+            <div class="tl-city-meta">${dateRange} · ${cityDays.length} día${cityDays.length>1?'s':''}</div>
+          </div>
         </div>
+        <button class="tl-city-add" onclick="openAddDay('${mainCity}')">+ Día</button>
       </div>`;
       lastCity=mainCity;
     }
     if(day.from)lastCity=mainCity;
+    if(isVuelo)lastCity=mainCity;
 
     const isOpen=S.sel===day.date,isF1=F1_DATES.includes(day.date),isToday=day.date===td;
-    const cls=['tl-item'];if(isOpen)cls.push('open');if(isF1)cls.push('f1');if(isToday)cls.push('is-today');
+    const cls=['tl-item'];if(isOpen)cls.push('open');if(isToday)cls.push('is-today');
     const evCount=day.events.length;
     const dayNum=parseInt(day.date.slice(8));
-    const dayName=DAYS_ES[new Date(day.date+'T12:00:00').getDay()];
-    h+=`<div class="${cls.join(' ')}" id="day-${day.date}">
+    const dObj=new Date(day.date+'T12:00:00');
+    const dayShort=DAYS_SHORT[dObj.getDay()];
+
+    // Build subtitle
+    let subParts=[];
+    if(day.from)subParts.push(`${day.from} → ${day.city}`);
+    if(isVuelo&&day.events[0])subParts.push(day.events[0].title);
+    if(!isVuelo&&!day.from)subParts.push(`${evCount} actividad${evCount!==1?'es':''}`);
+    const subHTML=subParts.join(' · ')+(isF1?' <span class="tl-f1-badge">🏎️ F1</span>':'');
+
+    h+=`<div class="${cls.join(' ')}" id="day-${day.date}" style="border-left-color:${day.color}">
       <div class="tl-bar" onclick="sel('${day.date}')">
-        <span class="tl-em">${day.icon}</span>
+        <div class="tl-day-num" style="background:${isF1?'var(--f1-gradient)':day.color}"><span>${dayShort}</span>${dayNum}</div>
         <div class="tl-info">
-          <div class="tl-name">${dayName} ${dayNum}${isToday?' · <span style="color:var(--blue);font-size:11px">HOY</span>':''}</div>
-          <div class="tl-day-sub">${evCount} actividad${evCount!==1?'es':''} ${day.from?'· '+day.from+' → '+day.city:''} ${isF1?'· 🏎️ F1':''}</div>
+          <div class="tl-name">${day.label}${isToday?' · <span style="color:var(--blue);font-size:11px">HOY</span>':''}</div>
+          <div class="tl-day-sub">${subHTML}</div>
         </div>
         <div class="tl-actions">
           <button class="tl-act edit" onclick="event.stopPropagation();openEditDay('${day.date}')" title="Editar">✏️</button>
