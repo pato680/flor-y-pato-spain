@@ -420,7 +420,7 @@ function getROUTE(){const r=[];S.data.forEach(d=>{if(d.from){r.push({city:d.from
 const DEFAULT_CK=[{text:"Pasaportes",done:false,cat:"docs"},{text:"Seguro de viaje",done:false,cat:"docs"},{text:"Reserva vuelos impresas",done:false,cat:"docs"},{text:"Entradas F1",done:false,cat:"f1"},{text:"Reserva Airbnb Barcelona",done:false,cat:"aloj"},{text:"Hotel Madrid",done:false,cat:"aloj"},{text:"Adaptador enchufe",done:false,cat:"equip"},{text:"Protector solar",done:false,cat:"equip"},{text:"Cargador portátil",done:false,cat:"equip"},{text:"Tarjeta de crédito internacional",done:false,cat:"docs"}];
 const WX={"2026-06-05":{i:"✈️",t:"-"},"2026-06-06":{i:"☀️",t:"31°"},"2026-06-07":{i:"☀️",t:"32°"},"2026-06-08":{i:"🌤️",t:"30°"},"2026-06-09":{i:"☀️",t:"33°"},"2026-06-10":{i:"☀️",t:"31°"},"2026-06-11":{i:"🌤️",t:"27°"},"2026-06-12":{i:"☀️",t:"28°"},"2026-06-13":{i:"☀️",t:"29°"},"2026-06-14":{i:"🌤️",t:"28°"},"2026-06-15":{i:"☀️",t:"29°"},"2026-06-16":{i:"☀️",t:"28°"},"2026-06-17":{i:"☀️",t:"30°"},"2026-06-18":{i:"☀️",t:"31°"},"2026-06-19":{i:"☀️",t:"32°"},"2026-06-20":{i:"✈️",t:"-"}};
 
-let S={data:JSON.parse(JSON.stringify(TRIP)),sel:null,add:false,modal:false,on:false,filt:"Todos",notes:{},ck:null,exp:[],showCk:false,showExp:false,dayModal:null,dmCity:'',dmIcon:'',dmDate:'',dmColor:'',dmCustomCity:''};
+let S={data:JSON.parse(JSON.stringify(TRIP)),sel:null,add:false,modal:false,on:false,filt:"Todos",notes:{},ck:null,exp:[],showCk:false,showExp:false,dayModal:null,dmCity:'',dmIcon:'',dmDate:'',dmColor:'',dmCustomCity:'',dmDays:1};
 let db=null,ref=null,notesRef=null,ckRef=null,expRef=null;
 const FC={apiKey:"AIzaSyDPZPk2nsOQ3oRMG7ADhS56zEFyORTE4QQ",authDomain:"flor-y-pato-trip.firebaseapp.com",databaseURL:"https://flor-y-pato-trip-default-rtdb.firebaseio.com",projectId:"flor-y-pato-trip",storageBucket:"flor-y-pato-trip.firebasestorage.app",messagingSenderId:"862498607498",appId:"1:862498607498:web:7e2ccf24cd913e6cb7c5c3"};
 
@@ -436,6 +436,7 @@ function saveExp(){if(expRef)expRef.set(S.exp)}
 function tm(){const m={};S.data.forEach(d=>{m[d.date]=d});return m}
 function today(){const n=new Date(),y=n.getFullYear(),m=String(n.getMonth()+1).padStart(2,'0'),d=String(n.getDate()).padStart(2,'0');return`${y}-${m}-${d}`}
 function countdown(){const s=new Date('2026-06-05T00:00:00'),e=new Date('2026-06-20T23:59:59'),n=new Date();if(n<s){const d=Math.ceil((s-n)/864e5);return{n:d,t:`Faltan ${d} día${d===1?'':'s'}`,s:'para el viaje'}}else if(n<=e){const d=Math.floor((n-s)/864e5)+1;return{n:d,t:`Día ${d}`,s:'del viaje',live:true}}return{n:'✓',t:'Viaje completado',s:'España 2026'}}
+function cityIconFor(c){const m={Madrid:'🏰',Barcelona:'🌊',Valencia:'🍊',Vuelo:'✈️',Sevilla:'🌺',Málaga:'🏖️',Granada:'⛪',Bilbao:'🏔️',Toledo:'⚔️'};return m[c]||'🏙️'}
 
 function cityAbbr(c){const m={Madrid:'MAD',Barcelona:'BCN',Valencia:'VLC',Vuelo:'✈️',Sevilla:'SEV',Málaga:'MLG',Granada:'GRA',Bilbao:'BIO',Toledo:'TOL'};return m[c]||c.slice(0,3).toUpperCase()}
 function calHTML(){
@@ -616,7 +617,10 @@ function R(){
     }
     h+=`</div></div></div>`;
   });
-  h+=`<button class="add-day-btn" onclick="openAddDay()">+ Agregar día</button>`;
+  h+=`<div style="display:flex;gap:8px;margin:8px 0">
+    <button class="add-day-btn" onclick="openAddDay()" style="flex:1">+ Día</button>
+    <button class="add-day-btn" onclick="openAddCity()" style="flex:1;color:var(--red)">+ Ciudad</button>
+  </div>`;
   h+=`</div></div>`;
 
   // CHECKLIST
@@ -654,29 +658,75 @@ function R(){
   // Modal Share
   if(S.modal){const u=location.href;h+=`<div class="mbg" onclick="cM()"><div class="msh" onclick="event.stopPropagation()"><h2>🔗 Compartir</h2><p>Mandále este link a tu compañero de viaje. Los cambios se sincronizan al instante.</p><div class="sbox"><span>${u}</span><button class="cpb" onclick="cpL()">Copiar</button></div><button class="clb" onclick="cM()">Cerrar</button></div></div>`}
 
-  // Day Modal (add/edit)
+  // Day Modal (add/edit/addCity)
   if(S.dayModal){
     const isEdit=S.dayModal==='edit';
+    const isQuick=S.dayModal==='quick';
+    const isCity=S.dayModal==='addCity';
     const existingCities=Object.keys(CC).filter(c=>c!=='Vuelo');
     const allCities=[...new Set([...existingCities,...Object.keys(DEFAULT_CC).filter(c=>c!=='Vuelo')])];
-    h+=`<div class="mbg" onclick="closeDM()"><div class="msh" onclick="event.stopPropagation()">
-      <h2>${isEdit?'✏️ Editar día':'📅 Agregar día'}</h2>
-      <p>${isEdit?'Cambiá la ciudad o el ícono de este día':'Elegí la fecha, ciudad e ícono para el nuevo día'}</p>`;
-    if(!isEdit){
-      h+=`<div class="dm-lbl">Fecha</div>
-        <input class="fi" type="date" id="dmDate" value="${S.dmDate}" min="2026-06-01" max="2026-06-30" onchange="S.dmDate=this.value" style="width:100%">`;
+    h+=`<div class="mbg" onclick="closeDM()"><div class="msh" onclick="event.stopPropagation()">`;
+
+    if(isQuick){
+      // Quick add: city already set, just pick date
+      h+=`<h2>➕ Agregar día en ${S.dmCity}</h2>
+        <p>Elegí la fecha para el nuevo día</p>
+        <div class="dm-lbl">Fecha</div>
+        <input class="fi" type="date" id="dmDate" value="${S.dmDate}" min="2026-05-01" max="2026-07-31" onchange="S.dmDate=this.value" style="width:100%">
+        <div class="dm-actions">
+          <button class="dm-btn secondary" onclick="closeDM()">Cancelar</button>
+          <button class="dm-btn primary" onclick="saveAddDay()">Agregar</button>
+        </div>`;
+    } else if(isCity){
+      // Add new city block
+      h+=`<h2>🏙️ Agregar ciudad</h2>
+        <p>Elegí la ciudad y las fechas del bloque</p>
+        <div class="dm-lbl">Ciudad</div>
+        <div class="dm-cities">${allCities.map(c=>`<div class="dm-city ${S.dmCity===c?'sel':''}" onclick="S.dmCity='${c}';S.dmColor=DEFAULT_CC['${c}']||'#888';S.dmCustomCity='';R()"><div class="dm-city-ic">${cityIconFor(c)}</div><div class="dm-city-n">${c}</div></div>`).join('')}</div>
+        <div class="dm-custom"><input class="fi" id="dmCustom" placeholder="O ciudad personalizada..." value="${S.dmCustomCity}" oninput="S.dmCustomCity=this.value;S.dmCity='';R()" style="flex:1"></div>
+        <div class="dm-lbl">Color</div>
+        <div class="dm-color-row">${PRESET_COLORS.map(c=>`<div class="dm-color ${S.dmColor===c?'sel':''}" style="background:${c}" onclick="S.dmColor='${c}';R()"></div>`).join('')}</div>
+        <div class="dm-lbl">Ícono</div>
+        <div class="dm-icons">${ICONS.map(ic=>`<div class="dm-icon ${S.dmIcon===ic?'sel':''}" onclick="S.dmIcon='${ic}';R()">${ic}</div>`).join('')}</div>
+        <div class="dm-lbl">Desde</div>
+        <input class="fi" type="date" id="dmDate" value="${S.dmDate}" min="2026-05-01" max="2026-07-31" onchange="S.dmDate=this.value" style="width:100%">
+        <div class="dm-lbl">Cantidad de días</div>
+        <input class="fi" type="number" id="dmDays" value="${S.dmDays||1}" min="1" max="30" onchange="S.dmDays=Number(this.value)" style="width:100%">
+        <div class="dm-actions">
+          <button class="dm-btn secondary" onclick="closeDM()">Cancelar</button>
+          <button class="dm-btn primary" onclick="saveAddCity()">Agregar ciudad</button>
+        </div>`;
+    } else if(isEdit){
+      h+=`<h2>✏️ Editar día</h2>
+        <p>Cambiá la ciudad o el ícono de este día</p>
+        <div class="dm-lbl">Ciudad</div>
+        <div class="dm-cities">${allCities.map(c=>`<div class="dm-city ${S.dmCity===c?'sel':''}" onclick="S.dmCity='${c}';S.dmColor=DEFAULT_CC['${c}']||'#888';S.dmCustomCity='';R()"><div class="dm-city-ic">${cityIconFor(c)}</div><div class="dm-city-n">${c}</div></div>`).join('')}</div>
+        <div class="dm-custom"><input class="fi" id="dmCustom" placeholder="O ciudad personalizada..." value="${S.dmCustomCity}" oninput="S.dmCustomCity=this.value;S.dmCity='';R()" style="flex:1"></div>
+        <div class="dm-lbl">Ícono</div>
+        <div class="dm-icons">${ICONS.map(ic=>`<div class="dm-icon ${S.dmIcon===ic?'sel':''}" onclick="S.dmIcon='${ic}';R()">${ic}</div>`).join('')}</div>
+        <div class="dm-actions">
+          <button class="dm-btn secondary" onclick="closeDM()">Cancelar</button>
+          <button class="dm-btn primary" onclick="saveEditDay()">Guardar</button>
+        </div>`;
+    } else {
+      // Full add day
+      h+=`<h2>📅 Agregar día</h2>
+        <p>Elegí la fecha, ciudad e ícono</p>
+        <div class="dm-lbl">Fecha</div>
+        <input class="fi" type="date" id="dmDate" value="${S.dmDate}" min="2026-05-01" max="2026-07-31" onchange="S.dmDate=this.value" style="width:100%">
+        <div class="dm-lbl">Ciudad</div>
+        <div class="dm-cities">${allCities.map(c=>`<div class="dm-city ${S.dmCity===c?'sel':''}" onclick="S.dmCity='${c}';S.dmColor=DEFAULT_CC['${c}']||'#888';S.dmCustomCity='';R()"><div class="dm-city-ic">${cityIconFor(c)}</div><div class="dm-city-n">${c}</div></div>`).join('')}</div>
+        <div class="dm-custom"><input class="fi" id="dmCustom" placeholder="O ciudad personalizada..." value="${S.dmCustomCity}" oninput="S.dmCustomCity=this.value;S.dmCity='';R()" style="flex:1"></div>
+        <div class="dm-lbl">Color</div>
+        <div class="dm-color-row">${PRESET_COLORS.map(c=>`<div class="dm-color ${S.dmColor===c?'sel':''}" style="background:${c}" onclick="S.dmColor='${c}';R()"></div>`).join('')}</div>
+        <div class="dm-lbl">Ícono</div>
+        <div class="dm-icons">${ICONS.map(ic=>`<div class="dm-icon ${S.dmIcon===ic?'sel':''}" onclick="S.dmIcon='${ic}';R()">${ic}</div>`).join('')}</div>
+        <div class="dm-actions">
+          <button class="dm-btn secondary" onclick="closeDM()">Cancelar</button>
+          <button class="dm-btn primary" onclick="saveAddDay()">Agregar</button>
+        </div>`;
     }
-    h+=`<div class="dm-lbl">Ciudad</div>
-      <div class="dm-cities">${allCities.map(c=>`<div class="dm-city ${S.dmCity===c?'sel':''}" onclick="S.dmCity='${c}';S.dmColor=DEFAULT_CC['${c}']||'#888';S.dmCustomCity='';R()"><div class="dm-city-ic">${c==='Madrid'?'🏰':c==='Barcelona'?'🌊':c==='Valencia'?'🍊':c==='Sevilla'?'🌺':c==='Málaga'?'🏖️':c==='Granada'?'⛪':c==='Bilbao'?'🏔️':c==='Toledo'?'⚔️':'🏙️'}</div><div class="dm-city-n">${c}</div></div>`).join('')}</div>
-      <div class="dm-custom"><input class="fi" id="dmCustom" placeholder="O ciudad personalizada..." value="${S.dmCustomCity}" oninput="S.dmCustomCity=this.value;S.dmCity='';R()" style="flex:1"></div>`;
-    h+=`<div class="dm-lbl">Color</div>
-      <div class="dm-color-row">${PRESET_COLORS.map(c=>`<div class="dm-color ${S.dmColor===c?'sel':''}" style="background:${c}" onclick="S.dmColor='${c}';R()"></div>`).join('')}</div>`;
-    h+=`<div class="dm-lbl">Ícono</div>
-      <div class="dm-icons">${ICONS.map(ic=>`<div class="dm-icon ${S.dmIcon===ic?'sel':''}" onclick="S.dmIcon='${ic}';R()">${ic}</div>`).join('')}</div>`;
-    h+=`<div class="dm-actions">
-      <button class="dm-btn secondary" onclick="closeDM()">Cancelar</button>
-      <button class="dm-btn primary" onclick="${isEdit?'saveEditDay()':'saveAddDay()'}">${isEdit?'Guardar':'Agregar'}</button>
-    </div></div></div>`;
+    h+=`</div></div>`;
   }
 
   document.getElementById('app').innerHTML=h;
@@ -697,15 +747,27 @@ function dExp(i){S.exp.splice(i,1);saveExp();R()}
 
 // DAY MANAGEMENT
 function openAddDay(presetCity){
-  // Default to next day after last day in trip
+  if(presetCity){
+    // Quick mode: city already known, just pick date
+    const cityDays=S.data.filter(d=>d.city===presetCity&&!d.from);
+    const lastD=cityDays.length?cityDays[cityDays.length-1].date:'2026-06-05';
+    const nd=new Date(lastD+'T12:00:00');nd.setDate(nd.getDate()+1);
+    const nds=nd.toISOString().slice(0,10);
+    const color=DEFAULT_CC[presetCity]||getCC()[presetCity]||'#888';
+    S.dayModal='quick';S.dmDate=nds;S.dmCity=presetCity;S.dmIcon=cityIconFor(presetCity);S.dmColor=color;S.dmCustomCity='';R();
+  } else {
+    // Full mode
+    const lastD=S.data.length?S.data[S.data.length-1].date:'2026-06-05';
+    const nd=new Date(lastD+'T12:00:00');nd.setDate(nd.getDate()+1);
+    const nds=nd.toISOString().slice(0,10);
+    S.dayModal='add';S.dmDate=nds;S.dmCity='';S.dmIcon='🏰';S.dmColor='#888';S.dmCustomCity='';R();
+  }
+}
+function openAddCity(){
   const lastD=S.data.length?S.data[S.data.length-1].date:'2026-06-05';
   const nd=new Date(lastD+'T12:00:00');nd.setDate(nd.getDate()+1);
   const nds=nd.toISOString().slice(0,10);
-  const city=presetCity||'';
-  const color=city?DEFAULT_CC[city]||getCC()[city]||'#888':'#888';
-  const iconMap={Madrid:'🏰',Barcelona:'🌊',Valencia:'🍊',Vuelo:'✈️'};
-  const icon=city?(iconMap[city]||'🏙️'):'🏰';
-  S.dayModal='add';S.dmDate=nds;S.dmCity=city;S.dmIcon=icon;S.dmColor=color;S.dmCustomCity='';R();
+  S.dayModal='addCity';S.dmDate=nds;S.dmCity='';S.dmIcon='🏙️';S.dmColor='#888';S.dmCustomCity='';S.dmDays=2;R();
 }
 function openEditDay(date){
   const day=S.data.find(d=>d.date===date);if(!day)return;
@@ -717,14 +779,32 @@ function saveAddDay(){
   if(!date)return;
   const city=S.dmCustomCity.trim()||S.dmCity;
   if(!city){alert('Elegí una ciudad');return}
-  // Check if date already exists
   if(S.data.find(d=>d.date===date)){alert('Ya hay un día con esa fecha');return}
   const d=new Date(date+'T12:00:00');
   const dayName=DAYS_ES[d.getDay()];
   const dayNum=d.getDate();
   const color=S.dmColor||DEFAULT_CC[city]||'#888';
-  const newDay={date,label:`${dayName} ${dayNum}`,city,color,icon:S.dmIcon||'🏰',events:[{time:'',title:city,detail:'',type:'tourism'}]};
+  const newDay={date,label:`${dayName} ${dayNum}`,city,color,icon:S.dmIcon||cityIconFor(city),events:[{time:'',title:city,detail:'',type:'tourism'}]};
   S.data.push(newDay);
+  S.data.sort((a,b)=>a.date.localeCompare(b.date));
+  S.dayModal=null;save();R();
+}
+function saveAddCity(){
+  const startDate=S.dmDate||document.getElementById('dmDate')?.value;
+  const numDays=S.dmDays||Number(document.getElementById('dmDays')?.value)||1;
+  if(!startDate)return;
+  const city=S.dmCustomCity.trim()||S.dmCity;
+  if(!city){alert('Elegí una ciudad');return}
+  const color=S.dmColor||DEFAULT_CC[city]||'#888';
+  const icon=S.dmIcon||cityIconFor(city);
+  for(let i=0;i<numDays;i++){
+    const d=new Date(startDate+'T12:00:00');d.setDate(d.getDate()+i);
+    const ds=d.toISOString().slice(0,10);
+    if(S.data.find(x=>x.date===ds))continue;
+    const dayName=DAYS_ES[d.getDay()];
+    const dayNum=d.getDate();
+    S.data.push({date:ds,label:`${dayName} ${dayNum}`,city,color,icon,events:[{time:'',title:city,detail:'',type:'tourism'}]});
+  }
   S.data.sort((a,b)=>a.date.localeCompare(b.date));
   S.dayModal=null;save();R();
 }
@@ -738,7 +818,10 @@ function saveEditDay(){
   S.dayModal=null;save();R();
 }
 function delDay(date){
-  if(!confirm('¿Eliminar este día del viaje?'))return;
+  const day=S.data.find(d=>d.date===date);
+  const hasEvents=day&&day.events.length>1;
+  if(hasEvents&&!confirm('Este día tiene actividades. ¿Eliminar?'))return;
+  if(!hasEvents&&!confirm('¿Eliminar este día?'))return;
   S.data=S.data.filter(d=>d.date!==date);
   if(S.sel===date)S.sel=null;
   save();R();
