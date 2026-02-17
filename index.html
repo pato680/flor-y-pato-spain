@@ -117,36 +117,35 @@
   .f1-road::before{content:'';position:absolute;top:50%;left:0;right:0;height:2px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.5) 0px,rgba(255,255,255,.5) 20px,transparent 20px,transparent 40px);transform:translateY(-1px);animation:roadMove 6s linear infinite}
   @keyframes roadMove{0%,59%{transform:translateX(0) translateY(-1px)}60%{transform:translateX(0) translateY(-1px)}100%{transform:translateX(-160px) translateY(-1px)}}
   .f1-road::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:repeating-linear-gradient(90deg,#dc0000 0px,#dc0000 12px,#fff 12px,#fff 24px)}
-  /* Cars synced to 6s light cycle: still → lights out at 60% → zoom right → reappear left → brake to grid */
+  /* Cars synced to 6s lights: grid → lights out 60% → zoom off → hidden → return from left → brake */
   .f1-car-rb,.f1-car-fer{position:absolute;bottom:2px;font-size:24px;z-index:3;filter:drop-shadow(0 2px 8px rgba(0,0,0,.5))}
-  .f1-car-rb{left:48%;animation:carRB 6s ease infinite}
-  .f1-car-fer{left:42%;animation:carFER 6s ease infinite}
-  /* RB: grid 0-60%, launch 60-72%, offscreen 72%, reenter from left 72-90%, brake to grid 90-100% */
-  @keyframes carRB{
-    0%,59%{transform:translateX(0)}
-    60%{transform:translateX(0)}
-    72%{transform:translateX(200%)}
-    72.1%{transform:translateX(-350%)}
-    90%{transform:translateX(-10%)}
-    95%{transform:translateX(2%)}
+  .f1-car-rb{left:48%;animation:carPosRB 6s linear infinite,carVisRB 6s linear infinite}
+  .f1-car-fer{left:42%;animation:carPosFER 6s linear infinite,carVisFER 6s linear infinite}
+  @keyframes carPosRB{
+    0%,60%{transform:translateX(0)}
+    70%{transform:translateX(250%)}
+    71%{transform:translateX(-400%)}
+    88%{transform:translateX(-5%)}
+    94%{transform:translateX(2%)}
     100%{transform:translateX(0)}
   }
-  @keyframes carFER{
-    0%,59%{transform:translateX(0)}
-    61%{transform:translateX(0)}
-    73%{transform:translateX(220%)}
-    73.1%{transform:translateX(-380%)}
-    91%{transform:translateX(-8%)}
-    96%{transform:translateX(1%)}
+  @keyframes carVisRB{0%,60%{opacity:1}70%{opacity:1}70.5%{opacity:0}73%{opacity:0}73.5%{opacity:1}100%{opacity:1}}
+  @keyframes carPosFER{
+    0%,61%{transform:translateX(0)}
+    72%{transform:translateX(280%)}
+    73%{transform:translateX(-420%)}
+    90%{transform:translateX(-4%)}
+    95%{transform:translateX(1%)}
     100%{transform:translateX(0)}
   }
+  @keyframes carVisFER{0%,61%{opacity:1}72%{opacity:1}72.5%{opacity:0}75%{opacity:0}75.5%{opacity:1}100%{opacity:1}}
   .f1-sparks{position:absolute;bottom:4px;width:3px;height:3px;border-radius:50%;background:#ffd700;z-index:4;animation:spark 6s ease infinite}
-  @keyframes spark{0%,59%{opacity:0}60%,75%{opacity:1;transform:scale(1)}76%{opacity:0;transform:scale(0)}100%{opacity:0}}
+  @keyframes spark{0%,59%{opacity:0}60%{opacity:1}70%{opacity:1}71%{opacity:0}100%{opacity:0}}
   .f1-trail-rb,.f1-trail-fer{position:absolute;bottom:10px;height:4px;border-radius:2px;z-index:2}
   .f1-trail-rb{right:52%;width:0;background:linear-gradient(90deg,transparent,rgba(30,65,175,.7));animation:trailRB 6s ease infinite}
   .f1-trail-fer{right:56%;width:0;background:linear-gradient(90deg,transparent,rgba(220,0,0,.6));animation:trailFER 6s ease infinite}
-  @keyframes trailRB{0%,59%{width:0;opacity:0}60%{width:0;opacity:0}65%{width:80px;opacity:.8}72%{width:120px;opacity:.6}73%{width:0;opacity:0}100%{width:0;opacity:0}}
-  @keyframes trailFER{0%,60%{width:0;opacity:0}61%{width:0;opacity:0}66%{width:70px;opacity:.7}73%{width:110px;opacity:.5}74%{width:0;opacity:0}100%{width:0;opacity:0}}
+  @keyframes trailRB{0%,59%{width:0;opacity:0}61%{width:20px;opacity:.8}67%{width:100px;opacity:.7}70%{width:0;opacity:0}100%{width:0;opacity:0}}
+  @keyframes trailFER{0%,60%{width:0;opacity:0}62%{width:15px;opacity:.7}69%{width:90px;opacity:.6}72%{width:0;opacity:0}100%{width:0;opacity:0}}
 
   /* STARTING LIGHTS — real F1: lights on one by one, then ALL out at once */
   .f1-lights{position:absolute;top:4px;right:10px;display:flex;gap:4px;z-index:5}
