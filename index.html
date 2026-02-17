@@ -282,11 +282,11 @@
   .dm-lbl{font-size:11px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;margin:14px 0 6px}
   .dm-lbl:first-of-type{margin-top:8px}
   .dm-cities{display:flex;gap:6px;flex-wrap:wrap}
-  .dm-city{padding:8px 14px;border-radius:12px;border:2px solid var(--border);cursor:pointer;text-align:center;min-width:72px;transition:all .15s}
+  .dm-city{padding:8px 12px;border-radius:12px;border:2px solid var(--border);cursor:pointer;text-align:center;min-width:64px;transition:all .15s}
   .dm-city:active{transform:scale(.95)}
   .dm-city.sel{border-color:var(--red);background:var(--red-soft)}
-  .dm-city-ic{font-size:18px}
-  .dm-city-n{font-size:11px;font-weight:700;margin-top:2px}
+  .dm-city-ic{font-size:16px}
+  .dm-city-n{font-size:10px;font-weight:700;margin-top:1px}
   .dm-icons{display:flex;gap:6px;flex-wrap:wrap}
   .dm-icon{width:40px;height:40px;border-radius:10px;border:2px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;transition:all .15s}
   .dm-icon:active{transform:scale(.9)}
@@ -658,19 +658,18 @@ function R(){
   // Modal Share
   if(S.modal){const u=location.href;h+=`<div class="mbg" onclick="cM()"><div class="msh" onclick="event.stopPropagation()"><h2>🔗 Compartir</h2><p>Mandále este link a tu compañero de viaje. Los cambios se sincronizan al instante.</p><div class="sbox"><span>${u}</span><button class="cpb" onclick="cpL()">Copiar</button></div><button class="clb" onclick="cM()">Cerrar</button></div></div>`}
 
-  // Day Modal (add/edit/addCity)
+  // Day Modal (simplified)
   if(S.dayModal){
     const isEdit=S.dayModal==='edit';
     const isQuick=S.dayModal==='quick';
     const isCity=S.dayModal==='addCity';
-    const existingCities=Object.keys(CC).filter(c=>c!=='Vuelo');
-    const allCities=[...new Set([...existingCities,...Object.keys(DEFAULT_CC).filter(c=>c!=='Vuelo')])];
+    const tripCities=[...new Set(S.data.map(d=>d.city).filter(c=>c!=='Vuelo'))];
+    const presetCities=Object.keys(DEFAULT_CC).filter(c=>c!=='Vuelo'&&!tripCities.includes(c));
+    const allCities=[...tripCities,...presetCities];
     h+=`<div class="mbg" onclick="closeDM()"><div class="msh" onclick="event.stopPropagation()">`;
 
     if(isQuick){
-      // Quick add: city already set, just pick date
-      h+=`<h2>➕ Agregar día en ${S.dmCity}</h2>
-        <p>Elegí la fecha para el nuevo día</p>
+      h+=`<h2>➕ Día en ${S.dmCity}</h2>
         <div class="dm-lbl">Fecha</div>
         <input class="fi" type="date" id="dmDate" value="${S.dmDate}" min="2026-05-01" max="2026-07-31" onchange="S.dmDate=this.value" style="width:100%">
         <div class="dm-actions">
@@ -678,49 +677,34 @@ function R(){
           <button class="dm-btn primary" onclick="saveAddDay()">Agregar</button>
         </div>`;
     } else if(isCity){
-      // Add new city block
-      h+=`<h2>🏙️ Agregar ciudad</h2>
-        <p>Elegí la ciudad y las fechas del bloque</p>
+      h+=`<h2>🏙️ Nueva ciudad</h2>
         <div class="dm-lbl">Ciudad</div>
-        <div class="dm-cities">${allCities.map(c=>`<div class="dm-city ${S.dmCity===c?'sel':''}" onclick="S.dmCity='${c}';S.dmColor=DEFAULT_CC['${c}']||'#888';S.dmCustomCity='';R()"><div class="dm-city-ic">${cityIconFor(c)}</div><div class="dm-city-n">${c}</div></div>`).join('')}</div>
-        <div class="dm-custom"><input class="fi" id="dmCustom" placeholder="O ciudad personalizada..." value="${S.dmCustomCity}" oninput="S.dmCustomCity=this.value;S.dmCity='';R()" style="flex:1"></div>
-        <div class="dm-lbl">Color</div>
-        <div class="dm-color-row">${PRESET_COLORS.map(c=>`<div class="dm-color ${S.dmColor===c?'sel':''}" style="background:${c}" onclick="S.dmColor='${c}';R()"></div>`).join('')}</div>
-        <div class="dm-lbl">Ícono</div>
-        <div class="dm-icons">${ICONS.map(ic=>`<div class="dm-icon ${S.dmIcon===ic?'sel':''}" onclick="S.dmIcon='${ic}';R()">${ic}</div>`).join('')}</div>
-        <div class="dm-lbl">Desde</div>
-        <input class="fi" type="date" id="dmDate" value="${S.dmDate}" min="2026-05-01" max="2026-07-31" onchange="S.dmDate=this.value" style="width:100%">
-        <div class="dm-lbl">Cantidad de días</div>
-        <input class="fi" type="number" id="dmDays" value="${S.dmDays||1}" min="1" max="30" onchange="S.dmDays=Number(this.value)" style="width:100%">
+        <div class="dm-cities">${allCities.map(c=>`<div class="dm-city ${S.dmCity===c?'sel':''}" onclick="S.dmCity='${c}';S.dmColor=DEFAULT_CC['${c}']||'#888';S.dmIcon=cityIconFor('${c}');S.dmCustomCity='';R()"><div class="dm-city-ic">${cityIconFor(c)}</div><div class="dm-city-n">${c}</div></div>`).join('')}</div>
+        <div class="dm-custom"><input class="fi" id="dmCustom" placeholder="Otra ciudad..." value="${S.dmCustomCity}" oninput="S.dmCustomCity=this.value;S.dmCity='';R()" style="flex:1"></div>
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <div style="flex:1"><div class="dm-lbl">Desde</div><input class="fi" type="date" id="dmDate" value="${S.dmDate}" min="2026-05-01" max="2026-07-31" onchange="S.dmDate=this.value" style="width:100%"></div>
+          <div style="width:80px"><div class="dm-lbl">Días</div><input class="fi" type="number" id="dmDays" value="${S.dmDays||2}" min="1" max="30" onchange="S.dmDays=Number(this.value)" style="width:100%"></div>
+        </div>
         <div class="dm-actions">
           <button class="dm-btn secondary" onclick="closeDM()">Cancelar</button>
-          <button class="dm-btn primary" onclick="saveAddCity()">Agregar ciudad</button>
+          <button class="dm-btn primary" onclick="saveAddCity()">Agregar</button>
         </div>`;
     } else if(isEdit){
       h+=`<h2>✏️ Editar día</h2>
-        <p>Cambiá la ciudad o el ícono de este día</p>
         <div class="dm-lbl">Ciudad</div>
-        <div class="dm-cities">${allCities.map(c=>`<div class="dm-city ${S.dmCity===c?'sel':''}" onclick="S.dmCity='${c}';S.dmColor=DEFAULT_CC['${c}']||'#888';S.dmCustomCity='';R()"><div class="dm-city-ic">${cityIconFor(c)}</div><div class="dm-city-n">${c}</div></div>`).join('')}</div>
-        <div class="dm-custom"><input class="fi" id="dmCustom" placeholder="O ciudad personalizada..." value="${S.dmCustomCity}" oninput="S.dmCustomCity=this.value;S.dmCity='';R()" style="flex:1"></div>
-        <div class="dm-lbl">Ícono</div>
-        <div class="dm-icons">${ICONS.map(ic=>`<div class="dm-icon ${S.dmIcon===ic?'sel':''}" onclick="S.dmIcon='${ic}';R()">${ic}</div>`).join('')}</div>
+        <div class="dm-cities">${allCities.map(c=>`<div class="dm-city ${S.dmCity===c?'sel':''}" onclick="S.dmCity='${c}';S.dmColor=DEFAULT_CC['${c}']||'#888';S.dmIcon=cityIconFor('${c}');S.dmCustomCity='';R()"><div class="dm-city-ic">${cityIconFor(c)}</div><div class="dm-city-n">${c}</div></div>`).join('')}</div>
+        <div class="dm-custom"><input class="fi" id="dmCustom" placeholder="Otra ciudad..." value="${S.dmCustomCity}" oninput="S.dmCustomCity=this.value;S.dmCity='';R()" style="flex:1"></div>
         <div class="dm-actions">
           <button class="dm-btn secondary" onclick="closeDM()">Cancelar</button>
           <button class="dm-btn primary" onclick="saveEditDay()">Guardar</button>
         </div>`;
     } else {
-      // Full add day
       h+=`<h2>📅 Agregar día</h2>
-        <p>Elegí la fecha, ciudad e ícono</p>
+        <div class="dm-lbl">Ciudad</div>
+        <div class="dm-cities">${allCities.map(c=>`<div class="dm-city ${S.dmCity===c?'sel':''}" onclick="S.dmCity='${c}';S.dmColor=DEFAULT_CC['${c}']||'#888';S.dmIcon=cityIconFor('${c}');S.dmCustomCity='';R()"><div class="dm-city-ic">${cityIconFor(c)}</div><div class="dm-city-n">${c}</div></div>`).join('')}</div>
+        <div class="dm-custom"><input class="fi" id="dmCustom" placeholder="Otra ciudad..." value="${S.dmCustomCity}" oninput="S.dmCustomCity=this.value;S.dmCity='';R()" style="flex:1"></div>
         <div class="dm-lbl">Fecha</div>
         <input class="fi" type="date" id="dmDate" value="${S.dmDate}" min="2026-05-01" max="2026-07-31" onchange="S.dmDate=this.value" style="width:100%">
-        <div class="dm-lbl">Ciudad</div>
-        <div class="dm-cities">${allCities.map(c=>`<div class="dm-city ${S.dmCity===c?'sel':''}" onclick="S.dmCity='${c}';S.dmColor=DEFAULT_CC['${c}']||'#888';S.dmCustomCity='';R()"><div class="dm-city-ic">${cityIconFor(c)}</div><div class="dm-city-n">${c}</div></div>`).join('')}</div>
-        <div class="dm-custom"><input class="fi" id="dmCustom" placeholder="O ciudad personalizada..." value="${S.dmCustomCity}" oninput="S.dmCustomCity=this.value;S.dmCity='';R()" style="flex:1"></div>
-        <div class="dm-lbl">Color</div>
-        <div class="dm-color-row">${PRESET_COLORS.map(c=>`<div class="dm-color ${S.dmColor===c?'sel':''}" style="background:${c}" onclick="S.dmColor='${c}';R()"></div>`).join('')}</div>
-        <div class="dm-lbl">Ícono</div>
-        <div class="dm-icons">${ICONS.map(ic=>`<div class="dm-icon ${S.dmIcon===ic?'sel':''}" onclick="S.dmIcon='${ic}';R()">${ic}</div>`).join('')}</div>
         <div class="dm-actions">
           <button class="dm-btn secondary" onclick="closeDM()">Cancelar</button>
           <button class="dm-btn primary" onclick="saveAddDay()">Agregar</button>
