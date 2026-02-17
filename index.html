@@ -26,40 +26,50 @@
 body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'SF Pro',sans-serif;background:var(--bg);color:var(--text);-webkit-tap-highlight-color:transparent;overflow-x:hidden;-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
 
 /* ── SPLASH ── */
-#splash{position:fixed;inset:0;z-index:9999;background:linear-gradient(160deg,#0a0f1e 0%,#1a1a2e 50%,#10162a 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .8s cubic-bezier(.4,0,.2,1)}
-#splash.hide{opacity:0;pointer-events:none;transform:scale(1.05)}
-#splash::before{content:'';position:absolute;width:200%;height:200%;top:-50%;left:-50%;background:conic-gradient(from 0deg,transparent,rgba(239,0,0,.04),transparent,rgba(99,102,241,.04),transparent);animation:splashRotate 8s linear infinite}
-@keyframes splashRotate{to{transform:rotate(360deg)}}
-.splash-flag{width:72px;height:45px;border-radius:8px;overflow:hidden;margin-bottom:28px;animation:flagWave 2.5s ease-in-out infinite,flagAppear .8s cubic-bezier(.16,1,.3,1) both;box-shadow:0 8px 32px rgba(0,0,0,.3)}
-@keyframes flagAppear{from{opacity:0;transform:scale(.6) rotate(-10deg)}to{opacity:1;transform:scale(1) rotate(-2deg)}}
+#splash{position:fixed;inset:0;z-index:9999;background:#0a0e1a;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:all 1s cubic-bezier(.4,0,.2,1)}
+#splash.hide{opacity:0;pointer-events:none;transform:scale(1.08);filter:blur(8px)}
+/* Carbon fiber texture */
+#splash::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 2px,rgba(255,255,255,.015) 2px,rgba(255,255,255,.015) 4px);pointer-events:none}
+/* Rotating ambient glow */
+#splash::after{content:'';position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(239,0,0,.08),transparent 70%);animation:ambientGlow 4s ease-in-out infinite alternate;pointer-events:none}
+@keyframes ambientGlow{0%{transform:translate(-60px,-40px) scale(.8);opacity:.5}100%{transform:translate(60px,40px) scale(1.2);opacity:1}}
+.splash-flag{width:72px;height:45px;border-radius:8px;overflow:hidden;margin-bottom:28px;animation:flagWave 2.5s ease-in-out infinite,flagAppear 1s cubic-bezier(.16,1,.3,1) both;box-shadow:0 8px 32px rgba(0,0,0,.4);position:relative;z-index:1}
+@keyframes flagAppear{from{opacity:0;transform:scale(.3) rotate(-20deg);filter:blur(8px)}to{opacity:1;transform:scale(1) rotate(-2deg);filter:blur(0)}}
 .splash-flag div{height:25%}
 .splash-flag div:nth-child(1),.splash-flag div:nth-child(4){background:#c60b1e}
 .splash-flag div:nth-child(2),.splash-flag div:nth-child(3){background:#ffc400}
 @keyframes flagWave{0%,100%{transform:rotate(-2deg) scale(1)}50%{transform:rotate(2deg) scale(1.04)}}
-.splash-title{font-size:26px;font-weight:800;color:#fff;letter-spacing:-.5px;margin-bottom:4px;animation:textReveal .6s cubic-bezier(.16,1,.3,1) .3s both}
-.splash-sub{font-size:12px;color:rgba(255,255,255,.35);letter-spacing:4px;text-transform:uppercase;margin-bottom:36px;font-weight:500;animation:textReveal .6s cubic-bezier(.16,1,.3,1) .5s both}
-@keyframes textReveal{from{opacity:0;transform:translateY(12px);filter:blur(4px)}to{opacity:1;transform:translateY(0);filter:blur(0)}}
-.splash-lights{display:flex;gap:12px;margin-bottom:24px;animation:textReveal .6s cubic-bezier(.16,1,.3,1) .7s both}
-.splash-lights span{width:14px;height:14px;border-radius:50%;background:#222;border:1px solid #333;box-shadow:inset 0 1px 2px rgba(0,0,0,.5)}
-.splash-lights span:nth-child(1){animation:f1L1 6s .9s infinite}
-.splash-lights span:nth-child(2){animation:f1L2 6s .9s infinite}
-.splash-lights span:nth-child(3){animation:f1L3 6s .9s infinite}
-.splash-lights span:nth-child(4){animation:f1L4 6s .9s infinite}
-.splash-lights span:nth-child(5){animation:f1L5 6s .9s infinite}
-@keyframes f1L1{0%,9%{background:#222;box-shadow:inset 0 1px 2px rgba(0,0,0,.5)}10%,59%{background:#ef0000;box-shadow:0 0 12px #ef0000,0 0 28px rgba(239,0,0,.5),0 0 56px rgba(239,0,0,.15)}60%,100%{background:#222;box-shadow:inset 0 1px 2px rgba(0,0,0,.5)}}
-@keyframes f1L2{0%,19%{background:#222;box-shadow:inset 0 1px 2px rgba(0,0,0,.5)}20%,59%{background:#ef0000;box-shadow:0 0 12px #ef0000,0 0 28px rgba(239,0,0,.5),0 0 56px rgba(239,0,0,.15)}60%,100%{background:#222;box-shadow:inset 0 1px 2px rgba(0,0,0,.5)}}
-@keyframes f1L3{0%,29%{background:#222;box-shadow:inset 0 1px 2px rgba(0,0,0,.5)}30%,59%{background:#ef0000;box-shadow:0 0 12px #ef0000,0 0 28px rgba(239,0,0,.5),0 0 56px rgba(239,0,0,.15)}60%,100%{background:#222;box-shadow:inset 0 1px 2px rgba(0,0,0,.5)}}
-@keyframes f1L4{0%,39%{background:#222;box-shadow:inset 0 1px 2px rgba(0,0,0,.5)}40%,59%{background:#ef0000;box-shadow:0 0 12px #ef0000,0 0 28px rgba(239,0,0,.5),0 0 56px rgba(239,0,0,.15)}60%,100%{background:#222;box-shadow:inset 0 1px 2px rgba(0,0,0,.5)}}
-@keyframes f1L5{0%,49%{background:#222;box-shadow:inset 0 1px 2px rgba(0,0,0,.5)}50%,59%{background:#ef0000;box-shadow:0 0 12px #ef0000,0 0 28px rgba(239,0,0,.5),0 0 56px rgba(239,0,0,.15)}60%,100%{background:#222;box-shadow:inset 0 1px 2px rgba(0,0,0,.5)}}
-.splash-circuit{font-size:10px;color:rgba(255,255,255,.25);letter-spacing:3px;text-transform:uppercase;font-weight:500;animation:textReveal .6s cubic-bezier(.16,1,.3,1) .9s both}
-.splash-gp{font-size:14px;color:rgba(255,255,255,.7);font-weight:600;margin-bottom:6px;letter-spacing:.5px;animation:textReveal .6s cubic-bezier(.16,1,.3,1) .2s both}
-/* Splash speed lines */
-.splash-speed{position:absolute;width:100%;height:100%;pointer-events:none;overflow:hidden}
-.splash-speed span{position:absolute;height:1px;background:linear-gradient(90deg,transparent,rgba(239,0,0,.3),transparent);animation:speedLine 2s linear infinite}
-.splash-speed span:nth-child(1){top:30%;width:60px;left:-60px;animation-delay:0s}
-.splash-speed span:nth-child(2){top:50%;width:80px;left:-80px;animation-delay:.5s}
-.splash-speed span:nth-child(3){top:70%;width:50px;left:-50px;animation-delay:1s}
-@keyframes speedLine{from{transform:translateX(0)}to{transform:translateX(calc(100vw + 100px))}}
+.splash-title{font-size:28px;font-weight:900;color:#fff;letter-spacing:-.5px;margin-bottom:4px;animation:textReveal .7s cubic-bezier(.16,1,.3,1) .4s both;position:relative;z-index:1}
+.splash-sub{font-size:12px;color:rgba(255,255,255,.3);letter-spacing:5px;text-transform:uppercase;margin-bottom:40px;font-weight:500;animation:textReveal .7s cubic-bezier(.16,1,.3,1) .6s both;position:relative;z-index:1}
+@keyframes textReveal{from{opacity:0;transform:translateY(20px);filter:blur(6px)}to{opacity:1;transform:translateY(0);filter:blur(0)}}
+/* F1 Lights housing */
+.splash-lights{display:flex;gap:10px;margin-bottom:24px;animation:lightsAppear .5s cubic-bezier(.16,1,.3,1) .8s both;position:relative;z-index:1;background:rgba(0,0,0,.4);padding:8px 16px;border-radius:20px;border:1px solid rgba(255,255,255,.06)}
+@keyframes lightsAppear{from{opacity:0;transform:scaleX(.5)}to{opacity:1;transform:scaleX(1)}}
+.splash-lights span{width:16px;height:16px;border-radius:50%;background:#1a1a1a;border:1px solid #2a2a2a;box-shadow:inset 0 2px 4px rgba(0,0,0,.8),0 1px 1px rgba(255,255,255,.03)}
+.splash-lights span:nth-child(1){animation:f1L1 6s 1.2s infinite}
+.splash-lights span:nth-child(2){animation:f1L2 6s 1.2s infinite}
+.splash-lights span:nth-child(3){animation:f1L3 6s 1.2s infinite}
+.splash-lights span:nth-child(4){animation:f1L4 6s 1.2s infinite}
+.splash-lights span:nth-child(5){animation:f1L5 6s 1.2s infinite}
+@keyframes f1L1{0%,9%{background:#1a1a1a;box-shadow:inset 0 2px 4px rgba(0,0,0,.8)}10%,59%{background:radial-gradient(circle at 40% 35%,#ff3030,#cc0000);box-shadow:0 0 8px #ef0000,0 0 20px rgba(239,0,0,.6),0 0 40px rgba(239,0,0,.2),inset 0 -2px 4px rgba(0,0,0,.3)}60%,100%{background:#1a1a1a;box-shadow:inset 0 2px 4px rgba(0,0,0,.8)}}
+@keyframes f1L2{0%,19%{background:#1a1a1a;box-shadow:inset 0 2px 4px rgba(0,0,0,.8)}20%,59%{background:radial-gradient(circle at 40% 35%,#ff3030,#cc0000);box-shadow:0 0 8px #ef0000,0 0 20px rgba(239,0,0,.6),0 0 40px rgba(239,0,0,.2),inset 0 -2px 4px rgba(0,0,0,.3)}60%,100%{background:#1a1a1a;box-shadow:inset 0 2px 4px rgba(0,0,0,.8)}}
+@keyframes f1L3{0%,29%{background:#1a1a1a;box-shadow:inset 0 2px 4px rgba(0,0,0,.8)}30%,59%{background:radial-gradient(circle at 40% 35%,#ff3030,#cc0000);box-shadow:0 0 8px #ef0000,0 0 20px rgba(239,0,0,.6),0 0 40px rgba(239,0,0,.2),inset 0 -2px 4px rgba(0,0,0,.3)}60%,100%{background:#1a1a1a;box-shadow:inset 0 2px 4px rgba(0,0,0,.8)}}
+@keyframes f1L4{0%,39%{background:#1a1a1a;box-shadow:inset 0 2px 4px rgba(0,0,0,.8)}40%,59%{background:radial-gradient(circle at 40% 35%,#ff3030,#cc0000);box-shadow:0 0 8px #ef0000,0 0 20px rgba(239,0,0,.6),0 0 40px rgba(239,0,0,.2),inset 0 -2px 4px rgba(0,0,0,.3)}60%,100%{background:#1a1a1a;box-shadow:inset 0 2px 4px rgba(0,0,0,.8)}}
+@keyframes f1L5{0%,49%{background:#1a1a1a;box-shadow:inset 0 2px 4px rgba(0,0,0,.8)}50%,59%{background:radial-gradient(circle at 40% 35%,#ff3030,#cc0000);box-shadow:0 0 8px #ef0000,0 0 20px rgba(239,0,0,.6),0 0 40px rgba(239,0,0,.2),inset 0 -2px 4px rgba(0,0,0,.3)}60%,100%{background:#1a1a1a;box-shadow:inset 0 2px 4px rgba(0,0,0,.8)}}
+.splash-circuit{font-size:10px;color:rgba(255,255,255,.2);letter-spacing:3px;text-transform:uppercase;font-weight:500;animation:textReveal .7s cubic-bezier(.16,1,.3,1) 1s both;position:relative;z-index:1}
+.splash-gp{font-size:14px;color:rgba(255,255,255,.6);font-weight:700;margin-bottom:6px;letter-spacing:.5px;animation:textReveal .7s cubic-bezier(.16,1,.3,1) .25s both;position:relative;z-index:1}
+/* Splash car crossing */
+.splash-car{position:absolute;bottom:25%;left:-60px;font-size:28px;z-index:2;animation:splashCar 2.5s cubic-bezier(.2,.8,.3,1) 1.8s both;filter:drop-shadow(0 4px 12px rgba(0,0,0,.5))}
+@keyframes splashCar{0%{transform:translateX(0) scale(.8);opacity:0}5%{opacity:1;transform:translateX(10vw) scale(.9)}40%{transform:translateX(50vw) scale(1)}100%{transform:translateX(calc(100vw + 60px)) scale(1);opacity:1}}
+/* Speed lines behind car */
+.splash-speed{position:absolute;width:100%;height:100%;pointer-events:none;overflow:hidden;z-index:1}
+.splash-speed span{position:absolute;height:1px;background:linear-gradient(90deg,transparent,rgba(239,0,0,.4),rgba(255,200,0,.2),transparent);animation:speedLine 1.5s linear infinite}
+.splash-speed span:nth-child(1){top:28%;width:80px;left:-80px;animation-delay:0s;animation-duration:1.8s}
+.splash-speed span:nth-child(2){top:45%;width:120px;left:-120px;animation-delay:.3s;animation-duration:1.2s}
+.splash-speed span:nth-child(3){top:62%;width:60px;left:-60px;animation-delay:.7s;animation-duration:2s}
+.splash-speed span:nth-child(4){top:38%;width:100px;left:-100px;animation-delay:1.1s;animation-duration:1.4s}
+.splash-speed span:nth-child(5){top:72%;width:70px;left:-70px;animation-delay:.5s;animation-duration:1.7s}
+@keyframes speedLine{from{transform:translateX(0);opacity:0}10%{opacity:1}90%{opacity:1}to{transform:translateX(calc(100vw + 150px));opacity:0}}
 
 /* ── HERO CARD ── */
 .safe-top{padding-top:calc(var(--safe-top) + 56px)}
@@ -77,24 +87,32 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'SF Pro',sans-serif;ba
 .hero-countdown .lbl{font-size:10px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1.5px;font-weight:600;margin-top:2px}
 
 /* F1 mini banner in hero */
-.f1-mini{margin-top:14px;padding:14px;background:rgba(255,255,255,.06);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:16px;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.08)}
-.f1-mini-title{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:10px;font-weight:600;display:flex;align-items:center;gap:6px}
-.f1-track{height:32px;position:relative;border-radius:16px;background:rgba(255,255,255,.04);overflow:hidden;border:1px solid rgba(255,255,255,.08)}
-.f1-track::before{content:'';position:absolute;top:50%;left:0;right:0;height:1px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.06) 0px,rgba(255,255,255,.06) 8px,transparent 8px,transparent 16px);pointer-events:none}
-.f1-track::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.03),transparent);animation:trackShine 3s ease-in-out infinite;pointer-events:none}
-@keyframes trackShine{0%,100%{opacity:0;transform:translateX(-100%)}50%{opacity:1;transform:translateX(100%)}}
-.f1-car{position:absolute;top:50%;transform:translateY(-50%);font-size:15px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.3))}
-.f1-car-1{left:48%;animation:carA 4s cubic-bezier(.45,.05,.55,.95) infinite}
-.f1-car-2{left:42%;animation:carB 4s cubic-bezier(.45,.05,.55,.95) infinite}
-@keyframes carA{0%,100%{transform:translateY(-50%) translateX(0)}15%{transform:translateY(-50%) translateX(18px)}30%{transform:translateY(-50%) translateX(5px)}50%{transform:translateY(-50%) translateX(-10px)}70%{transform:translateY(-50%) translateX(12px)}85%{transform:translateY(-50%) translateX(-3px)}}
-@keyframes carB{0%,100%{transform:translateY(-50%) translateX(0)}10%{transform:translateY(-50%) translateX(-12px)}35%{transform:translateY(-50%) translateX(15px)}55%{transform:translateY(-50%) translateX(-5px)}75%{transform:translateY(-50%) translateX(10px)}90%{transform:translateY(-50%) translateX(-8px)}}
-.f1-lights{display:flex;gap:8px;justify-content:center;margin-bottom:10px}
-.f1-lights span{width:10px;height:10px;border-radius:50%;background:#222;border:1px solid #333;box-shadow:inset 0 1px 2px rgba(0,0,0,.5)}
+.f1-mini{margin-top:14px;padding:14px 14px 12px;background:rgba(0,0,0,.25);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-radius:16px;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.06)}
+/* Carbon fiber texture on F1 */
+.f1-mini::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 1px,rgba(255,255,255,.01) 1px,rgba(255,255,255,.01) 2px);pointer-events:none}
+.f1-mini-title{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:10px;font-weight:700;display:flex;align-items:center;gap:6px;position:relative;z-index:1}
+/* F1 lights housing bar */
+.f1-lights{display:flex;gap:6px;justify-content:center;margin-bottom:10px;background:rgba(0,0,0,.5);padding:6px 14px;border-radius:14px;border:1px solid rgba(255,255,255,.04);position:relative;z-index:1}
+.f1-lights span{width:11px;height:11px;border-radius:50%;background:#1a1a1a;border:1px solid #2a2a2a;box-shadow:inset 0 2px 3px rgba(0,0,0,.8),0 1px 1px rgba(255,255,255,.02)}
 .f1-lights span:nth-child(1){animation:f1L1 6s infinite}
 .f1-lights span:nth-child(2){animation:f1L2 6s infinite}
 .f1-lights span:nth-child(3){animation:f1L3 6s infinite}
 .f1-lights span:nth-child(4){animation:f1L4 6s infinite}
 .f1-lights span:nth-child(5){animation:f1L5 6s infinite}
+/* Track with lane markings */
+.f1-track{height:36px;position:relative;border-radius:18px;background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));overflow:hidden;border:1px solid rgba(255,255,255,.06)}
+/* Center dashed line */
+.f1-track::before{content:'';position:absolute;top:50%;left:0;right:0;height:1px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.08) 0px,rgba(255,255,255,.08) 6px,transparent 6px,transparent 14px);pointer-events:none;transform:translateY(-50%)}
+/* Moving shine */
+.f1-track::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.04) 30%,rgba(255,255,255,.06) 50%,rgba(255,255,255,.04) 70%,transparent 100%);animation:trackShine 2.5s ease-in-out infinite;pointer-events:none}
+@keyframes trackShine{0%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
+.f1-car{position:absolute;top:50%;transform:translateY(-50%);font-size:16px;z-index:2;filter:drop-shadow(0 2px 6px rgba(0,0,0,.4))}
+/* Car 1 — leads, defending */
+.f1-car-1{left:52%;animation:carA 5s cubic-bezier(.45,.05,.55,.95) infinite}
+/* Car 2 — chasing, trying to overtake */
+.f1-car-2{left:38%;animation:carB 5s cubic-bezier(.45,.05,.55,.95) infinite}
+@keyframes carA{0%{transform:translateY(-50%) translateX(0)}10%{transform:translateY(-50%) translateX(16px)}20%{transform:translateY(-55%) translateX(8px)}35%{transform:translateY(-50%) translateX(-8px)}50%{transform:translateY(-45%) translateX(12px)}65%{transform:translateY(-50%) translateX(-4px)}80%{transform:translateY(-50%) translateX(10px)}100%{transform:translateY(-50%) translateX(0)}}
+@keyframes carB{0%{transform:translateY(-50%) translateX(0)}12%{transform:translateY(-45%) translateX(20px)}28%{transform:translateY(-50%) translateX(6px)}42%{transform:translateY(-55%) translateX(22px)}55%{transform:translateY(-50%) translateX(8px)}70%{transform:translateY(-45%) translateX(18px)}85%{transform:translateY(-50%) translateX(4px)}100%{transform:translateY(-50%) translateX(0)}}
 
 /* Route bar */
 .route-bar{display:flex;align-items:center;margin-top:16px;gap:0;height:26px;position:relative;z-index:1}
@@ -123,7 +141,8 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'SF Pro',sans-serif;ba
 .cal-day.sel{transform:scale(1.12);box-shadow:var(--shadow-md)}
 .cal-day .bar{position:absolute;bottom:3px;left:12%;right:12%;height:3px;border-radius:2px}
 .cal-day .split-bar{position:absolute;bottom:3px;height:3px;border-radius:2px}
-.cal-day .f1-dot{position:absolute;top:3px;right:3px;width:5px;height:5px;background:#ef0000;border-radius:50%;box-shadow:0 0 4px rgba(239,0,0,.4)}
+.cal-day .f1-dot{position:absolute;top:3px;right:3px;width:5px;height:5px;background:#ef0000;border-radius:50%;box-shadow:0 0 4px rgba(239,0,0,.4);animation:dotPulse 2s ease-in-out infinite}
+@keyframes dotPulse{0%,100%{box-shadow:0 0 4px rgba(239,0,0,.4)}50%{box-shadow:0 0 8px rgba(239,0,0,.6),0 0 12px rgba(239,0,0,.2)}}
 .cal-today{box-shadow:inset 0 0 0 2px var(--text)}
 
 /* Calendar legend */
@@ -233,13 +252,14 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'SF Pro',sans-serif;ba
 
 <!-- Splash -->
 <div id="splash">
-  <div class="splash-speed"><span></span><span></span><span></span></div>
+  <div class="splash-speed"><span></span><span></span><span></span><span></span><span></span></div>
   <div class="splash-flag"><div></div><div></div><div></div><div></div></div>
   <div class="splash-gp">GP de Barcelona</div>
   <div class="splash-title">Flor & Pato</div>
   <div class="splash-sub">España 2026</div>
   <div class="splash-lights"><span></span><span></span><span></span><span></span><span></span></div>
   <div class="splash-circuit">Circuit de Barcelona-Catalunya</div>
+  <div class="splash-car">🏎️</div>
 </div>
 
 <div id="app"></div>
