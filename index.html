@@ -100,24 +100,24 @@
   .wx-i{font-size:14px}
   .wx-t{font-size:10px;font-weight:800;color:var(--text)}
 
-  /* F1 BANNER — EPIC */
-  .f1-banner{margin:16px 16px 0;background:#0d0d0d;border-radius:var(--r);color:#fff;position:relative;overflow:hidden}
+  /* F1 SECTION INSIDE HERO */
+  .f1-section{margin-top:14px;background:rgba(0,0,0,.35);border-radius:14px;position:relative;overflow:hidden}
   .f1-carbon{position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 2px,rgba(255,255,255,.015) 2px,rgba(255,255,255,.015) 4px);pointer-events:none}
-  .f1-glow-rb{position:absolute;top:-40%;left:-10%;width:50%;height:180%;background:radial-gradient(ellipse,rgba(30,65,175,.25),transparent 70%);pointer-events:none}
-  .f1-glow-fer{position:absolute;top:-40%;right:-10%;width:50%;height:180%;background:radial-gradient(ellipse,rgba(220,0,0,.25),transparent 70%);pointer-events:none}
-  .f1-top{position:relative;z-index:2;padding:22px 20px 0;display:flex;align-items:center;justify-content:space-between}
-  .f1-gp{font-size:11px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.5)}
-  .f1-title{font-size:22px;font-weight:900;letter-spacing:-.5px;margin-top:2px}
+  .f1-glow-rb{position:absolute;top:-40%;left:-10%;width:50%;height:180%;background:radial-gradient(ellipse,rgba(30,65,175,.2),transparent 70%);pointer-events:none}
+  .f1-glow-fer{position:absolute;top:-40%;right:-10%;width:50%;height:180%;background:radial-gradient(ellipse,rgba(220,0,0,.2),transparent 70%);pointer-events:none}
+  .f1-top{position:relative;z-index:2;padding:14px 14px 0;display:flex;align-items:center;justify-content:space-between}
+  .f1-gp{font-size:9px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.45)}
+  .f1-title{font-size:16px;font-weight:900;letter-spacing:-.3px;margin-top:1px}
   .f1-title .vs{color:#ff3333;font-style:italic}
-  .f1-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);padding:5px 12px;border-radius:10px;font-size:10px;font-weight:800;letter-spacing:.4px;white-space:nowrap}
+  .f1-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);padding:4px 10px;border-radius:8px;font-size:9px;font-weight:800;letter-spacing:.3px;white-space:nowrap}
 
   /* RACE TRACK ANIMATION */
-  .f1-track{position:relative;z-index:2;height:72px;margin:16px 20px 0;overflow:hidden}
-  .f1-road{position:absolute;bottom:0;left:0;right:0;height:36px;background:linear-gradient(180deg,#2a2a2a,#1a1a1a);border-radius:8px}
+  .f1-track{position:relative;z-index:2;height:56px;margin:10px 14px 0;overflow:hidden}
+  .f1-road{position:absolute;bottom:0;left:0;right:0;height:30px;background:linear-gradient(180deg,#2a2a2a,#1a1a1a);border-radius:8px}
   .f1-road::before{content:'';position:absolute;top:50%;left:0;right:0;height:2px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.5) 0px,rgba(255,255,255,.5) 20px,transparent 20px,transparent 40px);transform:translateY(-1px);animation:roadMove 1s linear infinite}
   @keyframes roadMove{0%{transform:translateX(0) translateY(-1px)}100%{transform:translateX(-40px) translateY(-1px)}}
   .f1-road::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:repeating-linear-gradient(90deg,#dc0000 0px,#dc0000 12px,#fff 12px,#fff 24px)}
-  .f1-car-rb,.f1-car-fer{position:absolute;bottom:6px;font-size:30px;z-index:3;filter:drop-shadow(0 2px 8px rgba(0,0,0,.5))}
+  .f1-car-rb,.f1-car-fer{position:absolute;bottom:2px;font-size:24px;z-index:3;filter:drop-shadow(0 2px 8px rgba(0,0,0,.5))}
   .f1-car-rb{left:48%;animation:carRB 3s ease-in-out infinite}
   .f1-car-fer{left:42%;animation:carFER 3s ease-in-out infinite}
   @keyframes carRB{0%,100%{transform:translateX(0)}25%{transform:translateX(12px)}50%{transform:translateX(-6px)}75%{transform:translateX(8px)}}
@@ -130,8 +130,8 @@
   @keyframes trailPulse{0%{opacity:.4;width:40px}100%{opacity:.8;width:65px}}
 
   /* STARTING LIGHTS */
-  .f1-lights{position:absolute;top:8px;right:20px;display:flex;gap:5px;z-index:5}
-  .f1-light{width:10px;height:10px;border-radius:50%;background:#333;border:1px solid #555;animation:lightSeq 4s ease infinite}
+  .f1-lights{position:absolute;top:4px;right:10px;display:flex;gap:4px;z-index:5}
+  .f1-light{width:8px;height:8px;border-radius:50%;background:#333;border:1px solid #555;animation:lightSeq 4s ease infinite}
   .f1-light:nth-child(1){animation-delay:0s}
   .f1-light:nth-child(2){animation-delay:.4s}
   .f1-light:nth-child(3){animation-delay:.8s}
@@ -140,13 +140,13 @@
   @keyframes lightSeq{0%,15%{background:#333;box-shadow:none}16%,45%{background:#dc0000;box-shadow:0 0 8px #dc0000}46%,100%{background:#333;box-shadow:none}}
 
   /* SCHEDULE ROW */
-  .f1-sched{position:relative;z-index:2;display:flex;gap:6px;padding:16px 20px 20px}
-  .f1-sess{flex:1;text-align:center;padding:10px 6px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06)}
+  .f1-sched{position:relative;z-index:2;display:flex;gap:4px;padding:10px 14px 14px}
+  .f1-sess{flex:1;text-align:center;padding:8px 4px;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06)}
   .f1-sess.active{background:rgba(220,0,0,.12);border-color:rgba(220,0,0,.3)}
-  .f1-sess-day{font-size:9px;font-weight:700;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.5px}
-  .f1-sess-name{font-size:12px;font-weight:800;color:#fff;margin-top:3px}
-  .f1-sess-time{font-size:10px;font-weight:600;color:rgba(255,255,255,.5);margin-top:2px}
-  .f1-sess .f1-sess-ic{font-size:16px;margin-bottom:2px}
+  .f1-sess-day{font-size:8px;font-weight:700;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.4px}
+  .f1-sess-name{font-size:11px;font-weight:800;color:#fff;margin-top:2px}
+  .f1-sess-time{font-size:9px;font-weight:600;color:rgba(255,255,255,.5);margin-top:1px}
+  .f1-sess .f1-sess-ic{font-size:14px;margin-bottom:1px}
 
   /* SECTION HEADER (collapsible) */
   .sec-hdr{padding:18px 20px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;-webkit-user-select:none;user-select:none}
@@ -502,19 +502,15 @@ function R(){
       <div class="route-lbl">Ruta</div>
       <div class="route-bar">${ROUTE.map(r=>{if(r.isTransit){return`<div class="route-seg" style="flex:${r.days};background:linear-gradient(90deg,${r.fromColor},${r.toColor});font-size:8px">→</div>`}return`<div class="route-seg" style="flex:${r.days};background:${CC[r.city]||'#888'}">${r.city==='Vuelo'?'✈️':r.city}<span class="seg-dates">${r.dates}</span></div>`}).join('')}</div>
     </div>
-    <div class="filters">${CTS.map(c=>{const on=S.filt===c;return c==="Todos"?`<div class="fil ${on?'on':''}" onclick="flt('${c}')">Todos</div>`:`<div class="fil ${on?'on':''}" onclick="flt('${c}')"><span class="fdot" style="background:${CC[c]||'#888'}"></span>${c}</div>`}).join('')}</div>
-  </div>`;
+    <div class="filters">${CTS.map(c=>{const on=S.filt===c;return c==="Todos"?`<div class="fil ${on?'on':''}" onclick="flt('${c}')">Todos</div>`:`<div class="fil ${on?'on':''}" onclick="flt('${c}')"><span class="fdot" style="background:${CC[c]||'#888'}"></span>${c}</div>`}).join('')}</div>`;
 
-  // CALENDAR
-  h+=`<div class="section">${calHTML()}</div>`;
-
-  // F1 BANNER — CLEAN
+  // F1 INSIDE HERO
   if(S.filt==='Todos'||S.filt==='Barcelona'){
     const f1d=Math.ceil((new Date('2026-06-12')-new Date())/864e5);
-    let f1s=f1d>0?`🏁 Faltan ${f1d} días`:f1d===0?'🟢 ¡LIGHTS OUT!':'🏁 Completado';
+    let f1s=f1d>0?`🏁 ${f1d}d`:f1d===0?'🟢 LIGHTS OUT':'🏁 Done';
     const td2=today();
     const sessActive=(d)=>td2===d?'active':'';
-    h+=`<div class="f1-banner">
+    h+=`<div class="f1-section">
       <div class="f1-carbon"></div>
       <div class="f1-glow-rb"></div>
       <div class="f1-glow-fer"></div>
@@ -539,6 +535,10 @@ function R(){
       </div>
     </div>`;
   }
+  h+=`</div>`;
+
+  // CALENDAR
+  h+=`<div class="section">${calHTML()}</div>`;
 
   // TIMELINE
   h+=`<div class="section"><div class="sec-hdr open"><div class="sec-hdr-left"><span class="sec-hdr-ic">📅</span><h2>Timeline</h2></div><span class="badge">${S.data.length} días</span></div><div class="tl">`;
