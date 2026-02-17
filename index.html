@@ -129,15 +129,19 @@
   .f1-trail-fer{right:56%;width:50px;background:linear-gradient(90deg,transparent,rgba(220,0,0,.5));animation-delay:.3s}
   @keyframes trailPulse{0%{opacity:.4;width:40px}100%{opacity:.8;width:65px}}
 
-  /* STARTING LIGHTS */
+  /* STARTING LIGHTS — real F1: lights on one by one, then ALL out at once */
   .f1-lights{position:absolute;top:4px;right:10px;display:flex;gap:4px;z-index:5}
-  .f1-light{width:8px;height:8px;border-radius:50%;background:#333;border:1px solid #555;animation:lightSeq 4s ease infinite}
-  .f1-light:nth-child(1){animation-delay:0s}
-  .f1-light:nth-child(2){animation-delay:.4s}
-  .f1-light:nth-child(3){animation-delay:.8s}
-  .f1-light:nth-child(4){animation-delay:1.2s}
-  .f1-light:nth-child(5){animation-delay:1.6s}
-  @keyframes lightSeq{0%,15%{background:#333;box-shadow:none}16%,45%{background:#dc0000;box-shadow:0 0 8px #dc0000}46%,100%{background:#333;box-shadow:none}}
+  .f1-light{width:8px;height:8px;border-radius:50%;background:#333;border:1px solid #555}
+  .f1-light:nth-child(1){animation:f1L1 6s ease infinite}
+  .f1-light:nth-child(2){animation:f1L2 6s ease infinite}
+  .f1-light:nth-child(3){animation:f1L3 6s ease infinite}
+  .f1-light:nth-child(4){animation:f1L4 6s ease infinite}
+  .f1-light:nth-child(5){animation:f1L5 6s ease infinite}
+  @keyframes f1L1{0%,9%{background:#333;box-shadow:none}10%,59%{background:#dc0000;box-shadow:0 0 8px #dc0000}60%,100%{background:#333;box-shadow:none}}
+  @keyframes f1L2{0%,19%{background:#333;box-shadow:none}20%,59%{background:#dc0000;box-shadow:0 0 8px #dc0000}60%,100%{background:#333;box-shadow:none}}
+  @keyframes f1L3{0%,29%{background:#333;box-shadow:none}30%,59%{background:#dc0000;box-shadow:0 0 8px #dc0000}60%,100%{background:#333;box-shadow:none}}
+  @keyframes f1L4{0%,39%{background:#333;box-shadow:none}40%,59%{background:#dc0000;box-shadow:0 0 8px #dc0000}60%,100%{background:#333;box-shadow:none}}
+  @keyframes f1L5{0%,49%{background:#333;box-shadow:none}50%,59%{background:#dc0000;box-shadow:0 0 8px #dc0000}60%,100%{background:#333;box-shadow:none}}
 
   /* SCHEDULE ROW */
   .f1-sched{position:relative;z-index:2;display:flex;gap:4px;padding:10px 14px 14px}
@@ -335,13 +339,17 @@
   .splash-title .year{font-size:11px;font-weight:700;color:rgba(255,255,255,.35);letter-spacing:5px;margin-top:6px;text-transform:uppercase}
 
   .splash-lights{position:relative;z-index:2;display:flex;gap:8px;margin-top:20px;animation:titleReveal .5s ease forwards;animation-delay:1.2s;opacity:0}
-  .splash-light{width:12px;height:12px;border-radius:50%;background:#222;border:2px solid #444;animation:sLightSeq 2.5s ease infinite}
-  .splash-light:nth-child(1){animation-delay:1.3s}
-  .splash-light:nth-child(2){animation-delay:1.55s}
-  .splash-light:nth-child(3){animation-delay:1.8s}
-  .splash-light:nth-child(4){animation-delay:2.05s}
-  .splash-light:nth-child(5){animation-delay:2.3s}
-  @keyframes sLightSeq{0%,10%{background:#222;box-shadow:none}11%,35%{background:#dc0000;box-shadow:0 0 10px #dc0000}36%,100%{background:#222;box-shadow:none}}
+  .splash-light{width:12px;height:12px;border-radius:50%;background:#222;border:2px solid #444}
+  .splash-light:nth-child(1){animation:sL1 4s ease infinite;animation-delay:1.3s}
+  .splash-light:nth-child(2){animation:sL2 4s ease infinite;animation-delay:1.3s}
+  .splash-light:nth-child(3){animation:sL3 4s ease infinite;animation-delay:1.3s}
+  .splash-light:nth-child(4){animation:sL4 4s ease infinite;animation-delay:1.3s}
+  .splash-light:nth-child(5){animation:sL5 4s ease infinite;animation-delay:1.3s}
+  @keyframes sL1{0%,9%{background:#222;box-shadow:none}10%,64%{background:#dc0000;box-shadow:0 0 12px #dc0000}65%,100%{background:#222;box-shadow:none}}
+  @keyframes sL2{0%,19%{background:#222;box-shadow:none}20%,64%{background:#dc0000;box-shadow:0 0 12px #dc0000}65%,100%{background:#222;box-shadow:none}}
+  @keyframes sL3{0%,29%{background:#222;box-shadow:none}30%,64%{background:#dc0000;box-shadow:0 0 12px #dc0000}65%,100%{background:#222;box-shadow:none}}
+  @keyframes sL4{0%,39%{background:#222;box-shadow:none}40%,64%{background:#dc0000;box-shadow:0 0 12px #dc0000}65%,100%{background:#222;box-shadow:none}}
+  @keyframes sL5{0%,49%{background:#222;box-shadow:none}50%,64%{background:#dc0000;box-shadow:0 0 12px #dc0000}65%,100%{background:#222;box-shadow:none}}
 
   .checkered{position:absolute;bottom:0;left:0;right:0;height:16px;display:flex;flex-wrap:wrap;animation:checkReveal .4s ease forwards;animation-delay:1.4s;opacity:0}
   @keyframes checkReveal{to{opacity:1}}
