@@ -165,21 +165,28 @@
   .sec-body.closed{max-height:0!important}
 
   /* TIMELINE */
-  .tl{padding:0 20px 8px;position:relative}
-  .tl::before{content:'';position:absolute;left:30px;top:0;bottom:8px;width:2px;background:linear-gradient(180deg,var(--border),rgba(215,25,32,.15),var(--border));border-radius:1px}
-  .tl-item{position:relative;padding-left:34px;margin-bottom:2px}
+  .tl{padding:0 12px 8px;position:relative}
+  .tl-city-hdr{display:flex;align-items:center;gap:10px;padding:16px 8px 8px;position:relative}
+  .tl-city-hdr:first-child{padding-top:8px}
+  .tl-city-line{height:3px;flex:1;border-radius:2px;opacity:.7}
+  .tl-city-label{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:800;letter-spacing:-.2px;white-space:nowrap}
+  .tl-city-icon{font-size:18px}
+  .tl-city-dates{font-size:10px;font-weight:600;color:var(--dim)}
+  .tl-city-acts{display:flex;align-items:center;gap:4px}
+  .tl-city-act{background:none;border:none;font-size:13px;cursor:pointer;padding:4px;border-radius:6px;opacity:.35;transition:all .12s}
+  .tl-city-act:active{opacity:1;transform:scale(.9)}
+  .tl-transit{display:flex;align-items:center;gap:8px;padding:10px 8px;margin:4px 0}
+  .tl-transit-line{flex:1;height:2px;border-radius:1px;background:repeating-linear-gradient(90deg,var(--dim) 0px,var(--dim) 4px,transparent 4px,transparent 8px);opacity:.2}
+  .tl-transit-label{font-size:11px;font-weight:700;color:var(--dim);display:flex;align-items:center;gap:4px}
+  .tl-item{position:relative;margin-bottom:2px;border-radius:14px}
   .tl-item:last-child{margin-bottom:0}
-  .tl-dot{position:absolute;left:22px;top:20px;width:18px;height:18px;border-radius:50%;border:2.5px solid var(--card);z-index:2;display:flex;align-items:center;justify-content:center}
-  .tl-dot-in{width:7px;height:7px;border-radius:50%}
-  .tl-item.open .tl-dot{border-color:var(--red);box-shadow:0 0 10px rgba(215,25,32,.2)}
-  .tl-item.open .tl-dot-in{width:9px;height:9px}
-  .tl-item.is-today .tl-dot{border-color:var(--blue);box-shadow:0 0 10px rgba(27,60,140,.25)}
-  .tl-bar{padding:14px 14px;display:flex;align-items:center;gap:12px;cursor:pointer;border-radius:14px;transition:background .12s}
+  .tl-bar{padding:12px 14px;display:flex;align-items:center;gap:12px;cursor:pointer;border-radius:14px;transition:background .12s}
   .tl-bar:active{background:var(--card-hover)}
   .tl-item.open .tl-bar{background:var(--bg);border-radius:14px 14px 0 0}
-  .tl-em{font-size:22px}
+  .tl-em{font-size:20px}
   .tl-info{flex:1;min-width:0}
-  .tl-name{font-size:15px;font-weight:800;color:var(--text);letter-spacing:-.2px}
+  .tl-name{font-size:14px;font-weight:700;color:var(--text);letter-spacing:-.2px}
+  .tl-day-sub{font-size:11px;color:var(--dim);font-weight:600;margin-top:1px}
   .tl-tag{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:2px 8px;border-radius:6px;color:#fff;margin-top:3px}
   .tl-cnt{font-size:11px;font-weight:700;color:var(--dim)}
   .tl-expand{overflow:hidden;max-height:0;transition:max-height .35s cubic-bezier(.16,1,.3,1)}
@@ -417,7 +424,7 @@ let S={data:JSON.parse(JSON.stringify(TRIP)),sel:null,add:false,modal:false,on:f
 let db=null,ref=null,notesRef=null,ckRef=null,expRef=null;
 const FC={apiKey:"AIzaSyDPZPk2nsOQ3oRMG7ADhS56zEFyORTE4QQ",authDomain:"flor-y-pato-trip.firebaseapp.com",databaseURL:"https://flor-y-pato-trip-default-rtdb.firebaseio.com",projectId:"flor-y-pato-trip",storageBucket:"flor-y-pato-trip.firebasestorage.app",messagingSenderId:"862498607498",appId:"1:862498607498:web:7e2ccf24cd913e6cb7c5c3"};
 
-const DATA_VERSION=3;
+const DATA_VERSION=4;
 function migrateData(d){if(!d||!Array.isArray(d))return null;let changed=false;d.forEach(day=>{if(day.city==='Toledo'){day.city='Madrid';day.color='#D71920';changed=true}});return changed?d:null}
 function initFB(){try{firebase.initializeApp(FC);db=firebase.database();ref=db.ref('trip-espana-2026');notesRef=db.ref('trip-notes-2026');ckRef=db.ref('trip-checklist-2026');expRef=db.ref('trip-expenses-2026');const verRef=db.ref('trip-data-version');
 verRef.once('value',sv=>{const ver=sv.val()||0;if(ver<DATA_VERSION){ref.set(TRIP);verRef.set(DATA_VERSION)}});
@@ -548,22 +555,54 @@ function R(){
   // CALENDAR
   h+=`<div class="section">${calHTML()}</div>`;
 
-  // TIMELINE
+  // TIMELINE — grouped by city with headers
   h+=`<div class="section"><div class="sec-hdr open"><div class="sec-hdr-left"><span class="sec-hdr-ic">📅</span><h2>Timeline</h2></div><span class="badge">${S.data.length} días</span></div><div class="tl">`;
   const fd=S.filt==="Todos"?S.data:S.data.filter(d=>d.city===S.filt||d.from===S.filt);
-  fd.forEach(day=>{
+  // Group by city blocks
+  let lastCity=null;
+  fd.forEach((day,idx)=>{
+    const mainCity=day.city;
+    // Transit header between cities
+    if(day.from && S.filt==='Todos'){
+      h+=`<div class="tl-transit">
+        <div class="tl-transit-line"></div>
+        <div class="tl-transit-label">🚂 ${day.from} → ${day.city}</div>
+        <div class="tl-transit-line"></div>
+      </div>`;
+      lastCity=null;
+    }
+    // City header when city changes
+    if(mainCity!==lastCity && !day.from){
+      const cityDays=fd.filter(d=>d.city===mainCity&&!d.from);
+      const d1=cityDays[0],d2=cityDays[cityDays.length-1];
+      const dateRange=d1&&d2?(d1===d2?`${parseInt(d1.date.slice(8))} Jun`:`${parseInt(d1.date.slice(8))}–${parseInt(d2.date.slice(8))} Jun`):'';
+      const totalEvts=cityDays.reduce((s,d)=>s+d.events.length,0);
+      const cityIcon=day.icon;
+      h+=`<div class="tl-city-hdr">
+        <div class="tl-city-line" style="background:${day.color}"></div>
+        <div class="tl-city-label" style="color:${day.color}"><span class="tl-city-icon">${cityIcon}</span>${mainCity}</div>
+        <div class="tl-city-dates">${dateRange} · ${cityDays.length}d · ${totalEvts} act</div>
+        <div class="tl-city-acts">
+          <button class="tl-city-act" onclick="openAddDay('${mainCity}')" title="Agregar día">➕</button>
+        </div>
+      </div>`;
+      lastCity=mainCity;
+    }
+    if(day.from)lastCity=mainCity;
+
     const isOpen=S.sel===day.date,isF1=F1_DATES.includes(day.date),isToday=day.date===td;
     const cls=['tl-item'];if(isOpen)cls.push('open');if(isF1)cls.push('f1');if(isToday)cls.push('is-today');
+    const evCount=day.events.length;
+    const dayNum=parseInt(day.date.slice(8));
+    const dayName=DAYS_ES[new Date(day.date+'T12:00:00').getDay()];
     h+=`<div class="${cls.join(' ')}" id="day-${day.date}">
-      <div class="tl-dot"><div class="tl-dot-in" style="background:${isF1?'#E8364F':day.color}"></div></div>
       <div class="tl-bar" onclick="sel('${day.date}')">
         <span class="tl-em">${day.icon}</span>
         <div class="tl-info">
-          <div class="tl-name">${day.label}${isToday?' · <span style="color:var(--blue);font-size:11px">HOY</span>':''}</div>
-          ${day.from?`<span class="tl-tag" style="background:linear-gradient(90deg,${day.fromColor},${day.color})">${day.from} → ${day.city}</span>`:`<span class="tl-tag" style="background:${isF1?'var(--f1-gradient)':day.color}">${day.city}${isF1?' · F1':''}</span>`}
+          <div class="tl-name">${dayName} ${dayNum}${isToday?' · <span style="color:var(--blue);font-size:11px">HOY</span>':''}</div>
+          <div class="tl-day-sub">${evCount} actividad${evCount!==1?'es':''} ${day.from?'· '+day.from+' → '+day.city:''} ${isF1?'· 🏎️ F1':''}</div>
         </div>
         <div class="tl-actions">
-          <span class="tl-cnt">${day.events.length}</span>
           <button class="tl-act edit" onclick="event.stopPropagation();openEditDay('${day.date}')" title="Editar">✏️</button>
           <button class="tl-act del" onclick="event.stopPropagation();delDay('${day.date}')" title="Eliminar">🗑️</button>
         </div>
@@ -657,12 +696,16 @@ function aExp(){const d=document.getElementById('eD'),a=document.getElementById(
 function dExp(i){S.exp.splice(i,1);saveExp();R()}
 
 // DAY MANAGEMENT
-function openAddDay(){
+function openAddDay(presetCity){
   // Default to next day after last day in trip
   const lastD=S.data.length?S.data[S.data.length-1].date:'2026-06-05';
   const nd=new Date(lastD+'T12:00:00');nd.setDate(nd.getDate()+1);
   const nds=nd.toISOString().slice(0,10);
-  S.dayModal='add';S.dmDate=nds;S.dmCity='';S.dmIcon='🏰';S.dmColor='#888';S.dmCustomCity='';R();
+  const city=presetCity||'';
+  const color=city?DEFAULT_CC[city]||getCC()[city]||'#888':'#888';
+  const iconMap={Madrid:'🏰',Barcelona:'🌊',Valencia:'🍊',Vuelo:'✈️'};
+  const icon=city?(iconMap[city]||'🏙️'):'🏰';
+  S.dayModal='add';S.dmDate=nds;S.dmCity=city;S.dmIcon=icon;S.dmColor=color;S.dmCustomCity='';R();
 }
 function openEditDay(date){
   const day=S.data.find(d=>d.date===date);if(!day)return;
