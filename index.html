@@ -71,6 +71,20 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'SF Pro',sans-serif;ba
 .splash-speed span:nth-child(5){top:72%;width:70px;left:-70px;animation-delay:.5s;animation-duration:1.7s}
 @keyframes speedLine{from{transform:translateX(0);opacity:0}10%{opacity:1}90%{opacity:1}to{transform:translateX(calc(100vw + 150px));opacity:0}}
 
+/* ── F1 TICKER BANNER ── */
+.f1-ticker{width:100%;height:28px;background:#0a0a0a;overflow:hidden;position:relative;margin-bottom:8px;border-bottom:1px solid rgba(239,0,0,.15)}
+.f1-ticker::before{content:'';position:absolute;left:0;top:0;bottom:0;width:40px;background:linear-gradient(90deg,#0a0a0a,transparent);z-index:2;pointer-events:none}
+.f1-ticker::after{content:'';position:absolute;right:0;top:0;bottom:0;width:40px;background:linear-gradient(270deg,#0a0a0a,transparent);z-index:2;pointer-events:none}
+.f1-ticker-track{display:flex;align-items:center;height:100%;animation:tickerScroll 20s linear infinite;width:max-content;gap:0}
+.f1-ticker-item{display:flex;align-items:center;gap:6px;padding:0 20px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;white-space:nowrap;color:rgba(255,255,255,.35);font-family:'Inter',sans-serif}
+.f1-ticker-item .dot{width:3px;height:3px;border-radius:50%;background:rgba(239,0,0,.5)}
+.f1-ticker-item .flag-mini{display:inline-block;font-size:12px;filter:grayscale(.3)}
+.f1-ticker-red{color:rgba(239,0,0,.7)}
+.f1-ticker-accent{color:rgba(255,255,255,.55)}
+@keyframes tickerScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+/* Top red racing stripe */
+.f1-stripe{height:3px;background:linear-gradient(90deg,#ef0000 0%,#ef0000 30%,transparent 30%,transparent 33%,#ef0000 33%,#ef0000 48%,transparent 48%,transparent 51%,#ef0000 51%,#ef0000 100%);opacity:.8}
+
 /* ── HERO CARD ── */
 .safe-top{padding-top:calc(var(--safe-top) + 56px)}
 .hero{margin:0 16px 16px;border-radius:24px;background:linear-gradient(160deg,#0f1b3d 0%,#1a2d5e 40%,#243b6e 100%);color:#fff;padding:22px;position:relative;overflow:hidden;box-shadow:0 8px 32px rgba(15,27,61,.3),0 2px 8px rgba(0,0,0,.1);animation:heroEntry .7s cubic-bezier(.16,1,.3,1) both}
@@ -445,8 +459,16 @@ function R() {
   let expHTML = buildExpenses();
   let notesVal = S.notes.general || '';
 
+  var tickerItems = '🏁 GP Barcelona 2026 · Round 7 · Circuit de Catalunya · 🏎️ Lights Out · 🇪🇸 España · DRS Enabled · Pit Lane Open · 🏁 GP Barcelona 2026 · Round 7 · Circuit de Catalunya · 🏎️ Lights Out · 🇪🇸 España · DRS Enabled · Pit Lane Open';
+  var tickerHTML = tickerItems.split(' · ').map(function(t){
+    var cls = t.includes('🏁')||t.includes('🏎️')||t.includes('🇪🇸') ? 'f1-ticker-item f1-ticker-accent' : (t.includes('GP')||t.includes('Lights') ? 'f1-ticker-item f1-ticker-red' : 'f1-ticker-item');
+    return '<span class="'+cls+'"><span class="dot"></span>'+t+'</span>';
+  }).join('');
+
   document.getElementById('app').innerHTML =
     '<div class="safe-top"></div>' +
+    '<div class="f1-stripe"></div>' +
+    '<div class="f1-ticker"><div class="f1-ticker-track">'+tickerHTML+tickerHTML+'</div></div>' +
     '<div class="hero">' +
       '<div class="hero-top">' +
         '<div><div class="hero-title">🇪🇸 Flor & Pato</div><div class="hero-date">5 – 20 Junio 2026</div></div>' +
