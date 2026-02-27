@@ -47,12 +47,14 @@ export function BottomNav({ active, onChange }: Props) {
       background: '#FFFFFF',
       borderTop: '1px solid #E7E2DC',
       flexShrink: 0,
+      paddingBottom: 'env(safe-area-inset-bottom, 8px)',
     }}>
       <div style={{
         display: 'flex',
         justifyContent: 'space-around',
         alignItems: 'center',
         paddingTop: '8px',
+        paddingBottom: '6px',
       }}>
         {TABS.map((tab) => {
           const isActive = active === tab.id
