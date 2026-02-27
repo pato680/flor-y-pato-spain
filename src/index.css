@@ -1,0 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bot: env(safe-area-inset-bottom, 0px);
+  }
+
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background-color: #0a0e1a;
+    color: #ffffff;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  input, textarea, button {
+    font-family: inherit;
+  }
+}
+
+@layer utilities {
+  .safe-top {
+    padding-top: var(--safe-top);
+  }
+  .safe-bot {
+    padding-bottom: var(--safe-bot);
+  }
+  .pb-nav {
+    padding-bottom: calc(64px + var(--safe-bot));
+  }
+  .pt-header {
+    padding-top: calc(56px + var(--safe-top));
+  }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Animations */
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-card-in {
+  animation: cardIn 0.25s ease both;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.2s ease both;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
