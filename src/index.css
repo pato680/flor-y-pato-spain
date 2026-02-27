@@ -1,76 +1,186 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --safe-top: env(safe-area-inset-top, 0px);
-    --safe-bot: env(safe-area-inset-bottom, 0px);
-  }
+/* ── CSS Variables ── */
+:root {
+  --color-bg: #FAF8F5;
+  --color-surface: #FFFFFF;
+  --color-accent: #C8472A;
+  --color-accent-light: #FDF0EC;
+  --color-gold: #E8A04A;
+  --color-text: #1C1917;
+  --color-text-sub: #78716C;
+  --color-border: #E7E2DC;
+  --color-inactive: #A09890;
 
-  * {
-    -webkit-tap-highlight-color: transparent;
-  }
+  --radius-card: 16px;
+  --radius-btn: 12px;
+  --radius-input: 12px;
 
-  body {
-    background-color: #0a0e1a;
-    color: #ffffff;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
-  }
-
-  input, textarea, button {
-    font-family: inherit;
-  }
+  --ease-ios: cubic-bezier(0.32, 0.72, 0, 1);
+  --duration-default: 300ms;
 }
 
-@layer utilities {
-  .safe-top {
-    padding-top: var(--safe-top);
-  }
-  .safe-bot {
-    padding-bottom: var(--safe-bot);
-  }
-  .pb-nav {
-    padding-bottom: calc(64px + var(--safe-bot));
-  }
-  .pt-header {
-    padding-top: calc(56px + var(--safe-top));
-  }
+/* ── Base ── */
+html, body, #root {
+  height: 100%;
+  background-color: #FAF8F5;
 }
 
-/* Scrollbar */
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overscroll-behavior: none;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── Tap highlight ── */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ── Scrollbar (webkit) ── */
 ::-webkit-scrollbar {
-  display: none;
+  width: 0;
+  background: transparent;
 }
 
-/* Animations */
-@keyframes cardIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
+/* ── Layer: components ── */
+@layer components {
+  /* Card */
+  .card {
+    @apply bg-surface rounded-card border border-border p-4;
+  }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
+  /* Lista tipo iOS */
+  .list-section {
+    @apply bg-surface rounded-card border border-border overflow-hidden;
+  }
 
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
+  .list-row {
+    @apply flex items-center justify-between px-4 py-3.5 gap-3
+           active:bg-accent-light transition-colors duration-150;
+  }
 
-.animate-card-in {
-  animation: cardIn 0.25s ease both;
-}
+  .list-row + .list-row {
+    border-top: 1px solid var(--color-border);
+  }
 
-.animate-fade-in {
-  animation: fadeIn 0.2s ease both;
-}
+  .list-section-header {
+    @apply text-label text-text-sub uppercase tracking-wider mb-2 px-1;
+  }
 
-.animate-slide-up {
-  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+  /* Primary button */
+  .btn-primary {
+    @apply bg-accent text-white font-semibold rounded-btn h-12 px-6
+           flex items-center justify-center gap-2
+           transition-transform duration-150 active:scale-[0.97];
+  }
+
+  /* Secondary button */
+  .btn-secondary {
+    @apply bg-accent-light text-accent font-semibold rounded-btn h-12 px-6
+           flex items-center justify-center gap-2
+           transition-transform duration-150 active:scale-[0.97];
+  }
+
+  /* Input */
+  .input {
+    @apply w-full bg-bg border-[1.5px] border-border rounded-input h-12 px-4
+           text-text placeholder:text-inactive text-[14px] outline-none
+           transition-colors duration-150 focus:border-accent;
+  }
+
+  /* Page wrapper */
+  .page {
+    @apply flex-1 overflow-y-auto px-4 pt-4 pb-4;
+  }
+
+  /* Staggered card animation helpers */
+  .card-stagger-1 { animation-delay: 0ms; }
+  .card-stagger-2 { animation-delay: 40ms; }
+  .card-stagger-3 { animation-delay: 80ms; }
+  .card-stagger-4 { animation-delay: 120ms; }
+  .card-stagger-5 { animation-delay: 160ms; }
+  .card-stagger-6 { animation-delay: 200ms; }
+
+  /* ── F1 Timing Board ── */
+  .f1-board {
+    @apply rounded-card overflow-hidden relative;
+    background: #0F0F0F;
+    border: 1px solid #1E1E1E;
+  }
+
+  .f1-board-stripe {
+    height: 4px;
+    background: linear-gradient(90deg, #E10600 60%, #FF6B2B 100%);
+  }
+
+  .f1-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #C8472A;
+  }
+
+  .f1-sublabel {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #4A4A4A;
+  }
+
+  /* Speed lines */
+  .f1-speedlines {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    opacity: 0.04;
+    background: repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 60px,
+      #FFFFFF 60px,
+      #FFFFFF 62px
+    );
+    animation: race-stripe 1.2s linear infinite;
+  }
+
+  /* Racing stripe diagonal */
+  .racing-stripe {
+    position: absolute;
+    top: 0; right: 0; bottom: 0;
+    width: 80px;
+    pointer-events: none;
+    opacity: 0.08;
+    background: repeating-linear-gradient(
+      -50deg,
+      #FFFFFF 0px,
+      #FFFFFF 3px,
+      transparent 3px,
+      transparent 12px
+    );
+  }
+
+  /* Sector badge */
+  .sector-badge {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-white;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
 }
