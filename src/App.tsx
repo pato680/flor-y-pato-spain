@@ -43,7 +43,7 @@ export default function App() {
           transition: 'opacity 400ms ease',
         }}
       >
-        <main key={pageKey} style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }} className="animate-page-enter">
+        <main key={pageKey} style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }} className="animate-page-enter">
           {PAGES[active]}
         </main>
         <BottomNav active={active} onChange={handleTabChange} />
