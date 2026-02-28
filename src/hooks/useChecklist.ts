@@ -2,10 +2,7 @@ import { useState, useEffect } from 'react'
 import { ref, onValue, set, remove } from 'firebase/database'
 import { db, PATHS } from '../lib/firebase'
 import type { ChecklistItem } from '../lib/types'
-
-function generateId() {
-  return Date.now().toString(36) + Math.random().toString(36).slice(2)
-}
+import { generateId } from '../lib/utils'
 
 export function useChecklist() {
   const [items, setItems] = useState<ChecklistItem[]>([])

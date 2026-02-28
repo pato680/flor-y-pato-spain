@@ -1,31 +1,49 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
-import { ref, onValue, set } from 'firebase/database'
+import { useState, useEffect } from 'react'
+import { ref, onValue, set, remove, update } from 'firebase/database'
 import { db, PATHS } from '../lib/firebase'
+import type { Note } from '../lib/types'
+import { generateId } from '../lib/utils'
 
 export function useNotes() {
-  const [notes, setNotes] = useState('')
+  const [notes, setNotes] = useState<Note[]>([])
   const [loading, setLoading] = useState(true)
-  const [saving, setSaving] = useState(false)
-  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
     const notesRef = ref(db, PATHS.notes)
     const unsubscribe = onValue(notesRef, (snap) => {
-      setNotes(snap.val() ?? '')
+      const data = snap.val()
+      if (data && typeof data === 'object' && !Array.isArray(data)) {
+        const list = Object.entries(data).map(([id, val]) => ({
+          id,
+          ...(val as Omit<Note, 'id'>),
+        }))
+        list.sort((a, b) => b.creadoEn - a.creadoEn)
+        setNotes(list)
+      } else {
+        setNotes([])
+      }
       setLoading(false)
     })
     return unsubscribe
   }, [])
 
-  const saveNotes = useCallback((value: string) => {
-    setNotes(value)
-    if (debounceRef.current) clearTimeout(debounceRef.current)
-    debounceRef.current = setTimeout(async () => {
-      setSaving(true)
-      await set(ref(db, PATHS.notes), value)
-      setSaving(false)
-    }, 800)
-  }, [])
+  const addNote = async (texto: string, titulo?: string) => {
+    const id = generateId()
+    const data: Record<string, unknown> = { texto, creadoEn: Date.now() }
+    if (titulo?.trim()) data.titulo = titulo.trim()
+    await set(ref(db, `${PATHS.notes}/${id}`), data)
+  }
 
-  return { notes, loading, saving, saveNotes }
+  const updateNote = async (id: string, texto: string, titulo?: string) => {
+    await update(ref(db, `${PATHS.notes}/${id}`), {
+      texto,
+      titulo: titulo?.trim() || null,
+    })
+  }
+
+  const deleteNote = async (id: string) => {
+    await remove(ref(db, `${PATHS.notes}/${id}`))
+  }
+
+  return { notes, loading, addNote, updateNote, deleteNote }
 }

@@ -2,10 +2,7 @@ import { useState, useEffect } from 'react'
 import { ref, onValue, set, remove } from 'firebase/database'
 import { db, PATHS } from '../lib/firebase'
 import type { Expense, ExpenseCategory } from '../lib/types'
-
-function generateId() {
-  return Date.now().toString(36) + Math.random().toString(36).slice(2)
-}
+import { generateId } from '../lib/utils'
 
 export function useExpenses() {
   const [expenses, setExpenses] = useState<Expense[]>([])
@@ -39,6 +36,10 @@ export function useExpenses() {
     await remove(ref(db, `${PATHS.expenses}/${id}`))
   }
 
+  const updateExpense = async (id: string, data: Omit<Expense, 'id'>) => {
+    await set(ref(db, `${PATHS.expenses}/${id}`), data)
+  }
+
   const total = expenses.reduce((sum, e) => sum + e.monto, 0)
 
   const byCategory = expenses.reduce<Record<string, number>>((acc, e) => {
@@ -46,7 +47,7 @@ export function useExpenses() {
     return acc
   }, {})
 
-  return { expenses, loading, addExpense, deleteExpense, total, byCategory }
+  return { expenses, loading, addExpense, deleteExpense, updateExpense, total, byCategory }
 }
 
 export const CATEGORY_LABELS: Record<ExpenseCategory, string> = {

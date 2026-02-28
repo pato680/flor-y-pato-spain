@@ -1,7 +1,8 @@
-export type EventType = 'vuelo' | 'hotel' | 'actividad' | 'comida' | 'transporte' | 'otro'
+export type EventType = 'vuelo' | 'hotel' | 'actividad' | 'comida' | 'transporte' | 'otro' | 'gp'
 
 export interface TripEvent {
   id: string
+  fecha?: string   // ISO date string — en qué día ocurre el evento
   hora: string
   titulo: string
   detalle?: string
@@ -10,10 +11,18 @@ export interface TripEvent {
 
 export interface Day {
   id: string
-  fecha: string     // ISO date string, e.g. "2026-06-10"
+  fechaInicio: string   // ISO date string, e.g. "2026-06-06"
+  fechaFin: string      // ISO date string, e.g. "2026-06-09"
   ciudad: string
   color: string
   eventos: TripEvent[]
+}
+
+export interface Note {
+  id: string
+  titulo?: string
+  texto: string
+  creadoEn: number
 }
 
 export interface ChecklistItem {
@@ -30,6 +39,7 @@ export interface Expense {
   categoria: ExpenseCategory
   fecha: string
   persona?: 'flor' | 'pato' | 'ambos'
+  moneda?: 'EUR' | 'USD'
 }
 
 export type ExpenseCategory =
