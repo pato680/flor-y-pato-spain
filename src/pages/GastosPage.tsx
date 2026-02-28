@@ -105,10 +105,15 @@ function ResumenCard({ eurData, usdData }: { eurData: CurrencyData | null; usdDa
       border: '1px solid #1E1E26',
       borderRadius: 16,
       overflow: 'hidden',
+      position: 'relative',
     }}>
+      <div className="f1-speedlines" />
+      <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 75% 50%, rgba(225,6,0,0.10), transparent 60%)', pointerEvents: 'none' }} />
+      <div className="racing-stripe" />
+
       <div style={{ height: 5, background: '#E10600' }} />
 
-      <div style={{ padding: '14px 18px 16px' }}>
+      <div style={{ padding: '14px 18px 16px', position: 'relative' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
           <span style={{
             background: '#E10600', color: '#fff',
@@ -164,8 +169,11 @@ function CategoryBreakdown({ byCatEUR, byCatUSD }: {
             <span className="text-[13px] font-medium text-text flex-1 min-w-0 truncate">
               {CATEGORY_LABELS[cat]}
             </span>
-            <div style={{ width: 64, height: 5, borderRadius: 3, background: `${color}25`, flexShrink: 0 }}>
-              <div style={{ width: `${pct}%`, height: '100%', borderRadius: 3, background: color }} />
+            <span style={{ fontSize: 11, fontWeight: 700, color, flexShrink: 0, minWidth: 30, textAlign: 'right' }}>
+              {Math.round(pct)}%
+            </span>
+            <div style={{ width: 64, height: 6, borderRadius: 3, background: `${color}25`, flexShrink: 0 }}>
+              <div style={{ width: `${pct}%`, height: '100%', borderRadius: 3, background: `linear-gradient(90deg, ${color} 0%, ${color}99 100%)` }} />
             </div>
             <span className="text-[13px] font-semibold text-text tabular-nums" style={{ textAlign: 'right' }}>
               {amtLabel}
@@ -519,9 +527,9 @@ export function GastosPage() {
                   onClick={() => setFilterPersona(value)}
                   className="px-3 h-8 rounded-full text-[12px] font-semibold transition-all duration-150"
                   style={{
-                    background: active ? '#FDF0EC' : 'transparent',
-                    color: active ? color : '#A09890',
-                    border: `1.5px solid ${active ? color + '50' : 'transparent'}`,
+                    background: active ? color : 'transparent',
+                    color: active ? '#FFFFFF' : '#78716C',
+                    border: active ? 'none' : '1px solid #E7E2DC',
                   }}
                 >
                   {label}

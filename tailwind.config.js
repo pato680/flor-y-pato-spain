@@ -29,6 +29,7 @@ export default {
       boxShadow: {
         card: '0 2px 12px rgba(28,25,23,0.06)',
         'card-hover': '0 4px 20px rgba(28,25,23,0.10)',
+        'elevated': '0 2px 8px rgba(28,25,23,0.05), 0 8px 32px rgba(28,25,23,0.09)',
       },
       fontSize: {
         'screen-title': ['22px', { fontWeight: '700', lineHeight: '1.2' }],

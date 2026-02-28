@@ -124,12 +124,13 @@ function ChecklistSection({
     <div style={{
       background: '#FFFFFF',
       border: '1px solid #E7E2DC',
+      borderLeft: `3px solid ${section.color}`,
       borderRadius: 16,
       overflow: 'hidden',
     }}>
       {/* Header: bandera a cuadros que se difumina en negro */}
       <div style={{
-        background: '#0D0D10',
+        background: `linear-gradient(135deg, #0D0D10 0%, ${section.color}28 100%)`,
         display: 'flex',
         alignItems: 'center',
         height: 48,
@@ -155,7 +156,7 @@ function ChecklistSection({
           paddingRight: 16,
         }}>
           <span style={{
-            fontSize: 12, fontWeight: 800, letterSpacing: 1.5,
+            fontSize: 14, fontWeight: 900, letterSpacing: 2,
             textTransform: 'uppercase', color: '#FFFFFF',
           }}>
             {section.label}
@@ -175,6 +176,7 @@ function ChecklistSection({
               fontSize: 10, fontWeight: 700, letterSpacing: 1,
               textTransform: 'uppercase', color: section.color,
               background: `${section.color}1A`,
+              border: `1px solid ${section.color}40`,
               padding: '3px 8px', borderRadius: 4,
             }}>
               {pending} pend.
@@ -182,6 +184,8 @@ function ChecklistSection({
           ) : null}
         </div>
       </div>
+      {/* Color stripe below header */}
+      <div style={{ height: 3, background: section.color }} />
 
       {/* Items */}
       {items.map((item) => (

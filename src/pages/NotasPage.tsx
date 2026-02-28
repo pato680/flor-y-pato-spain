@@ -15,43 +15,56 @@ function formatDate(ts: number): string {
 
 // ── NoteCard ──────────────────────────────────────────────────────────────────
 
-function NoteCard({ note, onEdit, onDelete }: {
+const NOTE_ACCENT_PALETTE = ['#C8472A', '#E8A04A', '#004D98', '#10b981', '#6366f1']
+
+function NoteCard({ note, onEdit, onDelete, index }: {
   note: Note
   onEdit: () => void
   onDelete: () => void
+  index: number
 }) {
+  const accentColor = NOTE_ACCENT_PALETTE[index % NOTE_ACCENT_PALETTE.length]
+
   return (
     <div
-      className="card p-3 flex flex-col gap-2 cursor-pointer active:scale-[0.98] transition-transform duration-150"
+      className="card p-0 overflow-hidden flex flex-col cursor-pointer active:scale-[0.98] transition-transform duration-150"
+      style={{ background: 'linear-gradient(145deg, #FFFFFF 0%, #FDF8F5 100%)' }}
       onClick={onEdit}
     >
-      {note.titulo && (
-        <p className="text-[13px] font-bold text-text leading-snug">
-          {note.titulo}
-        </p>
-      )}
-      <p
-        className="text-[13px] leading-snug text-text flex-1"
-        style={{
-          display: '-webkit-box',
-          WebkitLineClamp: note.titulo ? 6 : 8,
-          WebkitBoxOrient: 'vertical',
-          overflow: 'hidden',
-          whiteSpace: 'pre-wrap',
-          wordBreak: 'break-word',
-        }}
-      >
-        {note.texto}
-      </p>
-      <div className="flex items-center justify-between mt-1">
-        <span className="text-[10px] text-inactive">{formatDate(note.creadoEn)}</span>
-        <button
-          onClick={e => { e.stopPropagation(); onDelete() }}
-          className="text-inactive hover:text-accent w-5 h-5 flex items-center justify-center rounded-full text-[11px] transition-colors duration-150 shrink-0"
-          aria-label="Eliminar nota"
+      {/* Accent bar */}
+      <div style={{ height: 3, background: accentColor, flexShrink: 0 }} />
+
+      {/* Content */}
+      <div className="p-3 flex flex-col gap-2 flex-1">
+        {note.titulo && (
+          <p className="text-[14px] font-extrabold text-text leading-snug">
+            {note.titulo}
+          </p>
+        )}
+        <p
+          className="text-[13px] leading-snug text-text flex-1"
+          style={{
+            display: '-webkit-box',
+            WebkitLineClamp: note.titulo ? 6 : 8,
+            WebkitBoxOrient: 'vertical',
+            overflow: 'hidden',
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word',
+            opacity: 0.85,
+          }}
         >
-          ✕
-        </button>
+          {note.texto}
+        </p>
+        <div className="flex items-center justify-between mt-1">
+          <span style={{ fontSize: 10, fontWeight: 600, color: accentColor }}>{formatDate(note.creadoEn)}</span>
+          <button
+            onClick={e => { e.stopPropagation(); onDelete() }}
+            className="text-inactive hover:text-accent w-5 h-5 flex items-center justify-center rounded-full text-[11px] transition-colors duration-150 shrink-0"
+            aria-label="Eliminar nota"
+          >
+            ✕
+          </button>
+        </div>
       </div>
     </div>
   )
@@ -170,10 +183,11 @@ export function NotasPage() {
       {/* Grid de cards */}
       {!loading && notes.length > 0 && (
         <div className="animate-card-enter card-stagger-2 grid grid-cols-2 gap-3">
-          {notes.map(note => (
+          {notes.map((note, idx) => (
             <NoteCard
               key={note.id}
               note={note}
+              index={idx}
               onEdit={() => setEditNote(note)}
               onDelete={() => setConfirmDeleteId(note.id)}
             />

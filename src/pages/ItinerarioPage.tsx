@@ -115,7 +115,10 @@ function HeroCard() {
       border: '1px solid #1E1E26',
       borderRadius: 16,
       overflow: 'hidden',
+      position: 'relative',
     }}>
+
+      <div className="f1-speedlines" />
 
       {/* Franja roja superior */}
       <div style={{ height: 8, background: '#E10600' }} />
@@ -215,7 +218,7 @@ function HeroCard() {
       </div>
 
       {/* Franja roja inferior */}
-      <div style={{ height: 8, background: '#E10600' }} />
+      <div style={{ height: 8, background: '#E10600', boxShadow: '0 4px 16px rgba(225,6,0,0.5)' }} />
 
     </div>
   )
@@ -299,8 +302,16 @@ function EventRowGP({ event, onDelete, onEdit, noBorderTop = false }: EventRowPr
 function EventRow({ event, onDelete, onEdit, noBorderTop = false }: EventRowProps) {
   if (event.tipo === 'gp') return <EventRowGP event={event} onDelete={onDelete} onEdit={onEdit} noBorderTop={noBorderTop} />
   return (
-    <div className={`flex items-start gap-3 py-3 px-4 ${noBorderTop ? '' : 'border-t border-border'}`}>
-      <span className="shrink-0 mt-0.5"><EventIcon tipo={event.tipo} /></span>
+    <div
+      className={`flex items-start gap-3 py-3 px-4 ${noBorderTop ? '' : 'border-t border-border'}`}
+      style={{ borderLeft: `3px solid ${EVENT_COLORS[event.tipo]}` }}
+    >
+      <span
+        className="shrink-0 mt-0.5 event-type-pill"
+        style={{ background: `${EVENT_COLORS[event.tipo]}18` }}
+      >
+        <EventIcon tipo={event.tipo} />
+      </span>
       <span className="text-[12px] font-medium text-text-sub tabular-nums w-10 shrink-0 mt-0.5">
         {event.hora || '—'}
       </span>
@@ -420,15 +431,15 @@ function DayCard({ day, onAddEvent, onDeleteEvent, onEditEvent, onEdit }: DayCar
   return (
     <div className="card p-0 overflow-hidden">
       {/* Header */}
-      <div className="flex items-center gap-2.5 px-4 py-3">
-        <div
-          className="w-2.5 h-2.5 rounded-full shrink-0"
-          style={{ backgroundColor: day.color }}
-        />
+      <div
+        className="flex items-center gap-2.5 px-4 py-3"
+        style={{ background: `${day.color}0A`, borderLeft: `4px solid ${day.color}` }}
+      >
         <div className="flex-1 min-w-0">
           {day.ciudad && (
-            <p className="text-[15px] font-bold text-text leading-tight">{day.ciudad}</p>
+            <p className="text-[17px] font-extrabold tracking-tight text-text leading-tight">{day.ciudad}</p>
           )}
+          <div style={{ height: 1, background: `linear-gradient(90deg, ${day.color}60, transparent)`, margin: '3px 0' }} />
           <p className="text-[12px] font-medium text-text-sub leading-tight">
             {formatRango(day.fechaInicio, day.fechaFin)}
           </p>
