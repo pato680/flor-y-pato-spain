@@ -21,22 +21,28 @@ export function Modal({ open, onClose, title, children }: Props) {
 
   return (
     <div
-      className="fixed inset-0 z-[200] flex items-end justify-center animate-fade-in"
+      className="fixed inset-0 z-[200] flex items-end justify-center animate-overlay-enter"
       onClick={onClose}
     >
-      <div className="absolute inset-0 bg-black/60" />
+      <div className="absolute inset-0 bg-black/50" />
       <div
-        className="relative w-full max-w-lg bg-gray-900 border border-gray-800 rounded-t-2xl p-5 animate-slide-up"
+        className="relative w-full max-w-lg bg-surface border border-border rounded-t-2xl p-5 animate-modal-enter"
         style={{ paddingBottom: 'calc(20px + env(safe-area-inset-bottom, 0px))' }}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-base font-bold text-white">{title}</h2>
+        {/* Handle bar */}
+        <div className="absolute top-3 left-1/2 -translate-x-1/2 w-9 h-1 rounded-full bg-border" />
+
+        <div className="flex items-center justify-between mb-5 mt-1">
+          <h2 className="text-[17px] font-bold text-text">{title}</h2>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-white w-7 h-7 flex items-center justify-center rounded-full bg-gray-800"
+            className="text-inactive hover:text-text w-7 h-7 flex items-center justify-center rounded-full transition-colors duration-150"
+            style={{ background: '#F0EDE9' }}
           >
-            ✕
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+              <path d="M1 1L9 9M9 1L1 9" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+            </svg>
           </button>
         </div>
         {children}

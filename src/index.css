@@ -176,6 +176,17 @@ body {
     );
   }
 
+  /* Racing lane car-pass */
+  @keyframes car-pass {
+    from { transform: translateX(calc(100vw + 150px)); }
+    to   { transform: translateX(-150px); }
+  }
+
+  @keyframes ticker-scroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
   /* Sector badge */
   .sector-badge {
     @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-white;

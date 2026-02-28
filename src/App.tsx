@@ -16,7 +16,7 @@ const PAGES: Record<Tab, JSX.Element> = {
 }
 
 export default function App() {
-  const [splash, setSplash] = useState(true)
+  const [splash, setSplash] = useState(false) // TODO: re-enable splash screen
   const [active, setActive] = useState<Tab>('itinerario')
   const [pageKey, setPageKey] = useState(0)
 
@@ -43,7 +43,7 @@ export default function App() {
           transition: 'opacity 400ms ease',
         }}
       >
-        <main key={pageKey} style={{ flex: 1, minHeight: 0 }} className="animate-page-enter">
+        <main key={pageKey} style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }} className="animate-page-enter">
           {PAGES[active]}
         </main>
         <BottomNav active={active} onChange={handleTabChange} />

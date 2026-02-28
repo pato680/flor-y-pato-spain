@@ -81,6 +81,27 @@ export default {
           '60%': { transform: 'translateY(2px) rotate(1deg)' },
           '100%': { opacity: '1', transform: 'translateY(0) rotate(0deg)' },
         },
+        'stripe-shimmer': {
+          '0%, 25%': { transform: 'translateX(-120%)', opacity: '0' },
+          '40%': { opacity: '1' },
+          '75%, 100%': { transform: 'translateX(400%)', opacity: '0' },
+        },
+        'pulse-dot': {
+          '0%, 100%': { opacity: '1', transform: 'scale(1)' },
+          '50%': { opacity: '0.4', transform: 'scale(0.75)' },
+        },
+        'badge-glow': {
+          '0%, 100%': { boxShadow: '0 0 0px rgba(200,71,42,0)' },
+          '50%': { boxShadow: '0 0 8px rgba(200,71,42,0.55), 0 0 18px rgba(200,71,42,0.2)' },
+        },
+        'flag-wave': {
+          '0%, 100%': { transform: 'rotate(-7deg)' },
+          '50%':       { transform: 'rotate(7deg)' },
+        },
+        'tire-spin': {
+          '0%':   { transform: 'rotate(0deg)' },
+          '100%': { transform: 'rotate(360deg)' },
+        },
       },
       animation: {
         'page-enter': 'page-enter 300ms cubic-bezier(0.32,0.72,0,1) both',
@@ -93,6 +114,11 @@ export default {
         'race-stripe': 'race-stripe 1.2s linear infinite',
         'sector-in': 'sector-in 300ms cubic-bezier(0.32,0.72,0,1) both',
         'flag-drop': 'flag-drop 500ms cubic-bezier(0.32,0.72,0,1) both',
+        'stripe-shimmer': 'stripe-shimmer 3.5s ease-in-out 0.8s infinite',
+        'pulse-dot': 'pulse-dot 1.8s ease-in-out infinite',
+        'badge-glow': 'badge-glow 2.2s ease-in-out 1s infinite',
+        'flag-wave':  'flag-wave 1.4s ease-in-out infinite',
+        'tire-spin':  'tire-spin 14s linear infinite',
       },
       transitionTimingFunction: {
         ios: 'cubic-bezier(0.32,0.72,0,1)',
