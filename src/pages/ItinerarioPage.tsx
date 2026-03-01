@@ -844,9 +844,13 @@ export function ItinerarioPage({ fabTrigger }: { fabTrigger?: number }) {
   const [confirmDeleteEvent, setConfirmDeleteEvent] = useState<{ dayId: string; eventId: string } | null>(null)
   const [confirmDeleteCityId, setConfirmDeleteCityId] = useState<string | null>(null)
 
-  // FAB trigger → open AddDayModal
+  // FAB trigger → open AddDayModal (ignore mount value)
+  const fabRef = useRef(fabTrigger)
   useEffect(() => {
-    if (fabTrigger && fabTrigger > 0) setShowAddDay(true)
+    if (fabTrigger !== fabRef.current) {
+      fabRef.current = fabTrigger
+      setShowAddDay(true)
+    }
   }, [fabTrigger])
 
   const editDay = editDayId ? days.find(d => d.id === editDayId) : null

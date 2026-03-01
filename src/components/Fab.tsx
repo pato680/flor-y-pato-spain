@@ -1,3 +1,5 @@
+import { useState, useEffect } from 'react'
+
 interface Props {
   onClick: () => void
   /** Changing this key re-triggers the entrance animation */
@@ -5,6 +7,18 @@ interface Props {
 }
 
 export function Fab({ onClick, animKey }: Props) {
+  const [hidden, setHidden] = useState(false)
+
+  // Hide FAB when a modal is open (Modal.tsx sets body overflow to 'hidden')
+  useEffect(() => {
+    const check = () => setHidden(document.body.style.overflow === 'hidden')
+    const observer = new MutationObserver(check)
+    observer.observe(document.body, { attributes: true, attributeFilter: ['style'] })
+    return () => observer.disconnect()
+  }, [])
+
+  if (hidden) return null
+
   return (
     <button
       key={animKey}

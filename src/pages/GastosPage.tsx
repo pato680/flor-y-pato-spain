@@ -440,9 +440,13 @@ export function GastosPage({ fabTrigger }: { fabTrigger?: number }) {
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null)
   const [filterPersona, setFilterPersona] = useState<'todos' | 'flor' | 'pato' | 'ambos'>('todos')
 
-  // FAB trigger → open AddExpenseModal
+  // FAB trigger → open AddExpenseModal (ignore mount value)
+  const fabRef = useRef(fabTrigger)
   useEffect(() => {
-    if (fabTrigger && fabTrigger > 0) setShowAdd(true)
+    if (fabTrigger !== fabRef.current) {
+      fabRef.current = fabTrigger
+      setShowAdd(true)
+    }
   }, [fabTrigger])
 
   const eurExpenses = expenses.filter(e => (e.moneda ?? 'EUR') === 'EUR')

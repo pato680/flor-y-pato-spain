@@ -144,9 +144,13 @@ export function NotasPage({ fabTrigger }: { fabTrigger?: number }) {
   const [editNote, setEditNote] = useState<Note | null>(null)
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null)
 
-  // FAB trigger → open NoteModal
+  // FAB trigger → open NoteModal (ignore mount value)
+  const fabRef = useRef(fabTrigger)
   useEffect(() => {
-    if (fabTrigger && fabTrigger > 0) setShowAdd(true)
+    if (fabTrigger !== fabRef.current) {
+      fabRef.current = fabTrigger
+      setShowAdd(true)
+    }
   }, [fabTrigger])
 
   return (
