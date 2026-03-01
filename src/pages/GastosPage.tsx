@@ -394,7 +394,7 @@ function AddExpenseModal({ open, onClose, onSave, initialValues, mode = 'add' }:
               <button
                 key={p}
                 onClick={() => setForm(f => ({ ...f, persona: p }))}
-                className="flex-1 h-9 rounded-[9px] text-[13px] font-semibold transition-all duration-200 active:scale-[0.97]"
+                className="flex-1 h-11 rounded-[9px] text-[13px] font-semibold transition-all duration-200 active:scale-[0.97]"
                 style={{
                   background: form.persona === p ? PERSONA_COLOR[p] : 'transparent',
                   color: form.persona === p ? '#fff' : '#A09890',
@@ -433,12 +433,17 @@ function AddExpenseModal({ open, onClose, onSave, initialValues, mode = 'add' }:
 
 // ── GastosPage ────────────────────────────────────────────────────────────────
 
-export function GastosPage() {
+export function GastosPage({ fabTrigger }: { fabTrigger?: number }) {
   const { expenses, loading, addExpense, deleteExpense, updateExpense } = useExpenses()
   const [showAdd, setShowAdd] = useState(false)
   const [editExpense, setEditExpense] = useState<Expense | null>(null)
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null)
   const [filterPersona, setFilterPersona] = useState<'todos' | 'flor' | 'pato' | 'ambos'>('todos')
+
+  // FAB trigger → open AddExpenseModal
+  useEffect(() => {
+    if (fabTrigger && fabTrigger > 0) setShowAdd(true)
+  }, [fabTrigger])
 
   const eurExpenses = expenses.filter(e => (e.moneda ?? 'EUR') === 'EUR')
   const usdExpenses = expenses.filter(e => e.moneda === 'USD')
@@ -508,12 +513,6 @@ export function GastosPage() {
 
         <div className="page-title-row">
           <h2 className="page-title">Gastos</h2>
-          <button
-            onClick={() => setShowAdd(true)}
-            className="btn-secondary h-8 px-3 text-[13px]"
-          >
-            + Gasto
-          </button>
         </div>
 
         {/* Filter chips */}
@@ -525,7 +524,7 @@ export function GastosPage() {
                 <button
                   key={value}
                   onClick={() => setFilterPersona(value)}
-                  className="px-3 h-8 rounded-full text-[12px] font-semibold transition-all duration-150"
+                  className="px-4 h-10 rounded-full text-[13px] font-semibold transition-all duration-150"
                   style={{
                     background: active ? color : 'transparent',
                     color: active ? '#FFFFFF' : '#78716C',
@@ -547,7 +546,7 @@ export function GastosPage() {
             </p>
             <button
               onClick={() => setShowAdd(true)}
-              className="btn-primary h-9 px-5 text-[13px]"
+              className="btn-primary h-12 px-6 text-[15px] w-full"
             >
               + Gasto
             </button>

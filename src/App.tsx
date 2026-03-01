@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { BottomNav } from './components/BottomNav'
 import { AppHeader } from './components/Header'
 import { SplashScreen } from './components/SplashScreen'
+import { Fab } from './components/Fab'
 import { ItinerarioPage } from './pages/ItinerarioPage'
 import { ChecklistPage } from './pages/ChecklistPage'
 import { GastosPage } from './pages/GastosPage'
@@ -9,23 +10,25 @@ import { NotasPage } from './pages/NotasPage'
 
 export type Tab = 'itinerario' | 'checklist' | 'gastos' | 'notas'
 
-const PAGES: Record<Tab, JSX.Element> = {
-  itinerario: <ItinerarioPage />,
-  checklist: <ChecklistPage />,
-  gastos: <GastosPage />,
-  notas: <NotasPage />,
-}
+const FAB_TABS: Tab[] = ['itinerario', 'gastos', 'notas']
 
 export default function App() {
   const [splash, setSplash] = useState(false) // TODO: re-enable splash screen
   const [active, setActive] = useState<Tab>('itinerario')
   const [pageKey, setPageKey] = useState(0)
+  const [fabTrigger, setFabTrigger] = useState(0)
 
   function handleTabChange(tab: Tab) {
     if (tab === active) return
     setActive(tab)
     setPageKey((k) => k + 1)
   }
+
+  function handleFabPress() {
+    setFabTrigger((t) => t + 1)
+  }
+
+  const showFab = FAB_TABS.includes(active)
 
   return (
     <>
@@ -46,8 +49,12 @@ export default function App() {
       >
         <AppHeader active={active} />
         <main key={pageKey} style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }} className="animate-page-enter">
-          {PAGES[active]}
+          {active === 'itinerario' && <ItinerarioPage fabTrigger={fabTrigger} />}
+          {active === 'checklist' && <ChecklistPage />}
+          {active === 'gastos' && <GastosPage fabTrigger={fabTrigger} />}
+          {active === 'notas' && <NotasPage fabTrigger={fabTrigger} />}
         </main>
+        {showFab && <Fab onClick={handleFabPress} animKey={pageKey} />}
         <BottomNav active={active} onChange={handleTabChange} />
       </div>
     </>

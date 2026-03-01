@@ -138,11 +138,16 @@ function NoteModal({ open, onClose, onSave, initialText = '', initialTitulo = ''
 
 // ── NotasPage ─────────────────────────────────────────────────────────────────
 
-export function NotasPage() {
+export function NotasPage({ fabTrigger }: { fabTrigger?: number }) {
   const { notes, loading, addNote, updateNote, deleteNote } = useNotes()
   const [showAdd, setShowAdd] = useState(false)
   const [editNote, setEditNote] = useState<Note | null>(null)
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null)
+
+  // FAB trigger → open NoteModal
+  useEffect(() => {
+    if (fabTrigger && fabTrigger > 0) setShowAdd(true)
+  }, [fabTrigger])
 
   return (
     <div className="page flex flex-col gap-4">
@@ -150,12 +155,6 @@ export function NotasPage() {
       {/* Header row */}
       <div className="animate-card-enter card-stagger-1 page-title-row">
         <h2 className="page-title">Notas</h2>
-        <button
-          onClick={() => setShowAdd(true)}
-          className="btn-secondary h-8 px-3 text-[13px]"
-        >
-          + Nota
-        </button>
       </div>
 
       {/* Loading */}
@@ -173,7 +172,7 @@ export function NotasPage() {
           </p>
           <button
             onClick={() => setShowAdd(true)}
-            className="btn-primary h-9 px-5 text-[13px] mt-1"
+            className="btn-primary h-12 px-6 text-[15px] w-full mt-1"
           >
             + Primera nota
           </button>

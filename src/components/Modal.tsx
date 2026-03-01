@@ -37,7 +37,7 @@ export function Modal({ open, onClose, title, children }: Props) {
           <h2 className="text-[17px] font-bold text-text">{title}</h2>
           <button
             onClick={onClose}
-            className="text-inactive hover:text-text w-7 h-7 flex items-center justify-center rounded-full transition-colors duration-150"
+            className="touch-target text-inactive hover:text-text w-9 h-9 flex items-center justify-center rounded-full transition-colors duration-150"
             style={{ background: '#F0EDE9' }}
           >
             <svg width="10" height="10" viewBox="0 0 10 10" fill="none">

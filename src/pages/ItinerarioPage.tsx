@@ -449,7 +449,7 @@ function DayCard({ day, onAddEvent, onDeleteEvent, onEditEvent, onEdit }: DayCar
         </span>
         <button
           onClick={onEdit}
-          className="text-inactive hover:text-accent w-7 h-7 flex items-center justify-center rounded-full shrink-0 transition-colors duration-150"
+          className="touch-target text-inactive hover:text-accent rounded-full shrink-0 transition-colors duration-150"
           aria-label="Editar ciudad"
         >
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -499,10 +499,10 @@ function DayCard({ day, onAddEvent, onDeleteEvent, onEditEvent, onEdit }: DayCar
       }
 
       {/* Add event button */}
-      <div className="border-t border-border px-4 py-2.5">
+      <div className="border-t border-border px-4">
         <button
           onClick={onAddEvent}
-          className="flex items-center gap-1.5 text-[13px] font-semibold text-accent py-1 transition-opacity duration-150 active:opacity-60"
+          className="flex items-center gap-1.5 text-[14px] font-semibold text-accent py-2.5 min-h-[44px] transition-opacity duration-150 active:opacity-60"
         >
           <span className="text-base leading-none">+</span> Agregar evento
         </button>
@@ -602,7 +602,7 @@ function AddDayModal({ open, onClose, onSave, onDelete, initialValues, mode = 'a
                 <button
                   key={nombre}
                   onClick={() => setForm(f => ({ ...f, ciudad: nombre, color }))}
-                  className="flex items-center gap-2 px-3 h-10 rounded-btn transition-all duration-150"
+                  className="flex items-center gap-2 px-3 h-11 rounded-btn transition-all duration-150"
                   style={{
                     backgroundColor: selected ? color : '#F5F3F0',
                     color: selected ? '#fff' : '#1C1917',
@@ -742,7 +742,7 @@ function AddEventModal({ open, onClose, onSave, fechaInicio, fechaFin, initialVa
           <div className="flex p-1 gap-1 rounded-input" style={{ background: '#EDEAE6' }}>
             <button
               onClick={() => setForm(f => ({ ...f, allDay: false }))}
-              className="flex-1 h-9 rounded-[9px] text-[13px] font-semibold transition-all duration-200 active:scale-[0.97]"
+              className="flex-1 h-11 rounded-[9px] text-[13px] font-semibold transition-all duration-200 active:scale-[0.97]"
               style={{
                 background: !form.allDay ? '#FFFFFF' : 'transparent',
                 color: !form.allDay ? '#1C1917' : '#A09890',
@@ -753,7 +753,7 @@ function AddEventModal({ open, onClose, onSave, fechaInicio, fechaFin, initialVa
             </button>
             <button
               onClick={() => setForm(f => ({ ...f, allDay: true, hora: '' }))}
-              className="flex-1 h-9 rounded-[9px] text-[13px] font-semibold transition-all duration-200 active:scale-[0.97]"
+              className="flex-1 h-11 rounded-[9px] text-[13px] font-semibold transition-all duration-200 active:scale-[0.97]"
               style={{
                 background: form.allDay ? '#FFFFFF' : 'transparent',
                 color: form.allDay ? '#1C1917' : '#A09890',
@@ -835,7 +835,7 @@ function AddEventModal({ open, onClose, onSave, fechaInicio, fechaFin, initialVa
 
 // ── ItinerarioPage ────────────────────────────────────────────────────────────
 
-export function ItinerarioPage() {
+export function ItinerarioPage({ fabTrigger }: { fabTrigger?: number }) {
   const { days, loading, addDay, updateDay, addEvent, deleteEvent, updateEvent, deleteDay } = useTrip()
   const [showAddDay, setShowAddDay] = useState(false)
   const [addEventFor, setAddEventFor] = useState<{ dayId: string; fechaInicio: string; fechaFin: string } | null>(null)
@@ -843,6 +843,11 @@ export function ItinerarioPage() {
   const [editEventFor, setEditEventFor] = useState<{ dayId: string; event: TripEvent } | null>(null)
   const [confirmDeleteEvent, setConfirmDeleteEvent] = useState<{ dayId: string; eventId: string } | null>(null)
   const [confirmDeleteCityId, setConfirmDeleteCityId] = useState<string | null>(null)
+
+  // FAB trigger → open AddDayModal
+  useEffect(() => {
+    if (fabTrigger && fabTrigger > 0) setShowAddDay(true)
+  }, [fabTrigger])
 
   const editDay = editDayId ? days.find(d => d.id === editDayId) : null
   const editEventDay = editEventFor ? days.find(d => d.id === editEventFor.dayId) : null
@@ -861,12 +866,6 @@ export function ItinerarioPage() {
         {/* Header row */}
         <div className="page-title-row mb-3">
           <h2 className="page-title">Viaje</h2>
-          <button
-            onClick={() => setShowAddDay(true)}
-            className="btn-secondary h-8 px-3 text-[13px]"
-          >
-            + Ciudad
-          </button>
         </div>
 
         {/* ── Timeline ── */}
@@ -900,7 +899,7 @@ export function ItinerarioPage() {
                   <p className="text-[13px] text-text-sub text-center px-4">
                     Agrega las ciudades que vas a visitar
                   </p>
-                  <button onClick={() => setShowAddDay(true)} className="btn-primary h-9 px-5 text-[13px]">
+                  <button onClick={() => setShowAddDay(true)} className="btn-primary h-12 px-6 text-[15px] w-full">
                     + Ciudad
                   </button>
                 </div>

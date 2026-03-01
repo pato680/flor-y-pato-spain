@@ -217,6 +217,7 @@ function ChecklistSection({
           />
           <button
             onMouseDown={(e) => { e.preventDefault(); handleConfirm() }}
+            className="touch-target"
             style={{ color: section.color, fontWeight: 700, fontSize: 14 }}
           >
             ✓

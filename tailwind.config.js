@@ -95,6 +95,10 @@ export default {
           '0%, 100%': { boxShadow: '0 0 0px rgba(200,71,42,0)' },
           '50%': { boxShadow: '0 0 8px rgba(200,71,42,0.55), 0 0 18px rgba(200,71,42,0.2)' },
         },
+        'fab-enter': {
+          '0%': { opacity: '0', transform: 'scale(0.5)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
         'flag-wave': {
           '0%, 100%': { transform: 'rotate(-7deg)' },
           '50%':       { transform: 'rotate(7deg)' },
@@ -118,6 +122,7 @@ export default {
         'stripe-shimmer': 'stripe-shimmer 3.5s ease-in-out 0.8s infinite',
         'pulse-dot': 'pulse-dot 1.8s ease-in-out infinite',
         'badge-glow': 'badge-glow 2.2s ease-in-out 1s infinite',
+        'fab-enter': 'fab-enter 250ms cubic-bezier(0.32,0.72,0,1) both',
         'flag-wave':  'flag-wave 1.4s ease-in-out infinite',
         'tire-spin':  'tire-spin 14s linear infinite',
       },
