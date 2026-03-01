@@ -277,7 +277,7 @@ function EventRowGP({ event, onDelete, onEdit, noBorderTop = false }: EventRowPr
         </div>
         <button
           onClick={onEdit}
-          className="w-6 h-6 flex items-center justify-center rounded-full shrink-0 mt-0.5 transition-colors duration-150"
+          className="touch-target shrink-0 -mr-1 transition-colors duration-150"
           style={{ color: '#7A7A8A' }}
           aria-label="Editar evento"
         >
@@ -287,7 +287,7 @@ function EventRowGP({ event, onDelete, onEdit, noBorderTop = false }: EventRowPr
         </button>
         <button
           onClick={onDelete}
-          className="w-6 h-6 flex items-center justify-center rounded-full shrink-0 mt-0.5 text-[12px] transition-colors duration-150"
+          className="touch-target shrink-0 -mr-1 text-[12px] transition-colors duration-150"
           style={{ color: '#7A7A8A' }}
           aria-label="Eliminar evento"
         >
@@ -303,7 +303,7 @@ function EventRow({ event, onDelete, onEdit, noBorderTop = false }: EventRowProp
   if (event.tipo === 'gp') return <EventRowGP event={event} onDelete={onDelete} onEdit={onEdit} noBorderTop={noBorderTop} />
   return (
     <div
-      className={`flex items-start gap-3 py-3 px-4 ${noBorderTop ? '' : 'border-t border-border'}`}
+      className={`tappable flex items-start gap-3 py-3 px-4 ${noBorderTop ? '' : 'border-t border-border'}`}
       style={{ borderLeft: `3px solid ${EVENT_COLORS[event.tipo]}` }}
     >
       <span
@@ -323,7 +323,7 @@ function EventRow({ event, onDelete, onEdit, noBorderTop = false }: EventRowProp
       </div>
       <button
         onClick={onEdit}
-        className="text-inactive hover:text-accent w-6 h-6 flex items-center justify-center rounded-full shrink-0 mt-0.5 transition-colors duration-150"
+        className="touch-target shrink-0 text-inactive hover:text-accent -mr-1 transition-colors duration-150"
         aria-label="Editar evento"
       >
         <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
@@ -332,7 +332,7 @@ function EventRow({ event, onDelete, onEdit, noBorderTop = false }: EventRowProp
       </button>
       <button
         onClick={onDelete}
-        className="text-inactive hover:text-accent w-6 h-6 flex items-center justify-center rounded-full shrink-0 mt-0.5 text-[12px] transition-colors duration-150"
+        className="touch-target shrink-0 text-inactive hover:text-accent -mr-1 text-[12px] transition-colors duration-150"
         aria-label="Eliminar evento"
       >
         ✕
@@ -859,8 +859,8 @@ export function ItinerarioPage() {
       <div className="animate-card-enter card-stagger-2 flex flex-col gap-0">
 
         {/* Header row */}
-        <div className="flex items-center justify-between px-1 mb-3">
-          <p className="text-label text-text-sub uppercase tracking-wider">Itinerario</p>
+        <div className="page-title-row mb-3">
+          <h2 className="page-title">Viaje</h2>
           <button
             onClick={() => setShowAddDay(true)}
             className="btn-secondary h-8 px-3 text-[13px]"

@@ -1,20 +1,34 @@
-interface Props {
-  title: string
-  subtitle?: string
-  right?: React.ReactNode
+import type { Tab } from '../App'
+
+const TAB_TITLE: Record<Tab, string> = {
+  itinerario: 'Flor & Pato',
+  checklist:  'Lista',
+  gastos:     'Gastos',
+  notas:      'Notas',
 }
 
-export function Header({ title, subtitle, right }: Props) {
+export function AppHeader({ active }: { active: Tab }) {
   return (
-    <header
-      className="fixed top-0 left-0 right-0 z-50 bg-gray-950/95 backdrop-blur border-b border-gray-800 flex items-center justify-between px-4"
-      style={{ paddingTop: 'calc(10px + env(safe-area-inset-top, 0px))', paddingBottom: '10px' }}
-    >
-      <div>
-        <h1 className="text-base font-bold text-white">{title}</h1>
-        {subtitle && <p className="text-xs text-gray-500 mt-0.5">{subtitle}</p>}
-      </div>
-      {right && <div>{right}</div>}
+    <header style={{
+      flexShrink: 0,
+      background: 'rgba(250,248,245,0.88)',
+      backdropFilter: 'blur(20px) saturate(180%)',
+      WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+      borderBottom: '1px solid rgba(231,226,220,0.7)',
+      display: 'flex',
+      alignItems: 'center',
+      gap: 10,
+      paddingLeft: 20,
+      paddingRight: 20,
+      paddingTop: 10,
+      paddingBottom: 10,
+      minHeight: 52,
+    }}>
+      <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#C8472A', flexShrink: 0 }} />
+      <p style={{ flex: 1, fontSize: 17, fontWeight: 800, letterSpacing: '-0.4px', color: '#1C1917', lineHeight: 1.1 }}>
+        {TAB_TITLE[active]}
+      </p>
+      <span style={{ fontSize: 20, lineHeight: 1, userSelect: 'none' }}>🇪🇸</span>
     </header>
   )
 }

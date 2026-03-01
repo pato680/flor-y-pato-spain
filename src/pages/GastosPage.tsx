@@ -218,7 +218,7 @@ function ExpenseRow({ expense, onDelete, onEdit }: { expense: Expense; onDelete:
       </div>
       <button
         onClick={onDelete}
-        className="text-inactive hover:text-accent w-10 flex items-center justify-center shrink-0 text-[12px] transition-colors duration-150 border-l border-border"
+        className="touch-target text-inactive hover:text-accent flex items-center justify-center shrink-0 text-[12px] transition-colors duration-150 border-l border-border"
         aria-label="Eliminar gasto"
       >
         ✕
@@ -506,8 +506,8 @@ export function GastosPage() {
       {/* Header + list */}
       <div className="animate-card-enter card-stagger-3 flex flex-col gap-3">
 
-        <div className="flex items-center justify-between px-1">
-          <p className="text-label text-text-sub uppercase tracking-wider">Gastos</p>
+        <div className="page-title-row">
+          <h2 className="page-title">Gastos</h2>
           <button
             onClick={() => setShowAdd(true)}
             className="btn-secondary h-8 px-3 text-[13px]"

@@ -59,7 +59,7 @@ function NoteCard({ note, onEdit, onDelete, index }: {
           <span style={{ fontSize: 10, fontWeight: 600, color: accentColor }}>{formatDate(note.creadoEn)}</span>
           <button
             onClick={e => { e.stopPropagation(); onDelete() }}
-            className="text-inactive hover:text-accent w-5 h-5 flex items-center justify-center rounded-full text-[11px] transition-colors duration-150 shrink-0"
+            className="touch-target shrink-0 -mr-1 text-inactive hover:text-accent text-[11px] transition-colors duration-150"
             aria-label="Eliminar nota"
           >
             ✕
@@ -148,8 +148,8 @@ export function NotasPage() {
     <div className="page flex flex-col gap-4">
 
       {/* Header row */}
-      <div className="animate-card-enter card-stagger-1 flex items-center justify-between px-1">
-        <p className="text-label text-text-sub uppercase tracking-wider">Notas</p>
+      <div className="animate-card-enter card-stagger-1 page-title-row">
+        <h2 className="page-title">Notas</h2>
         <button
           onClick={() => setShowAdd(true)}
           className="btn-secondary h-8 px-3 text-[13px]"

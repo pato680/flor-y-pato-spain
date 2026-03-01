@@ -44,8 +44,11 @@ const TABS: { id: Tab; label: string }[] = [
 export function BottomNav({ active, onChange }: Props) {
   return (
     <div style={{
-      background: '#FFFFFF',
-      borderTop: '1px solid #E7E2DC',
+      background: 'rgba(250,248,245,0.85)',
+      backdropFilter: 'blur(24px) saturate(180%)',
+      WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+      borderTop: '1px solid rgba(231,226,220,0.5)',
+      boxShadow: '0 -1px 0 rgba(0,0,0,0.04)',
       flexShrink: 0,
       paddingBottom: 'env(safe-area-inset-bottom, 8px)',
     }}>
@@ -62,6 +65,7 @@ export function BottomNav({ active, onChange }: Props) {
             <button
               key={tab.id}
               onClick={() => onChange(tab.id)}
+              className="active:scale-[0.88]"
               style={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -73,6 +77,7 @@ export function BottomNav({ active, onChange }: Props) {
                 border: 'none',
                 cursor: 'pointer',
                 WebkitTapHighlightColor: 'transparent',
+                transition: 'transform 150ms cubic-bezier(0.32,0.72,0,1)',
               }}
             >
               {isActive && (
@@ -81,6 +86,7 @@ export function BottomNav({ active, onChange }: Props) {
                   inset: '0 4px',
                   borderRadius: '999px',
                   background: '#FDF0EC',
+                  boxShadow: '0 1px 4px rgba(200,71,42,0.15)',
                   zIndex: 0,
                 }} />
               )}
@@ -94,7 +100,7 @@ export function BottomNav({ active, onChange }: Props) {
               </span>
               <span style={{
                 fontSize: '11px',
-                fontWeight: 500,
+                fontWeight: isActive ? 700 : 500,
                 color: isActive ? '#C8472A' : '#A09890',
                 position: 'relative',
                 zIndex: 1,

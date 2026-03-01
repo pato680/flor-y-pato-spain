@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { BottomNav } from './components/BottomNav'
+import { AppHeader } from './components/Header'
 import { SplashScreen } from './components/SplashScreen'
 import { ItinerarioPage } from './pages/ItinerarioPage'
 import { ChecklistPage } from './pages/ChecklistPage'
@@ -43,6 +44,7 @@ export default function App() {
           transition: 'opacity 400ms ease',
         }}
       >
+        <AppHeader active={active} />
         <main key={pageKey} style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }} className="animate-page-enter">
           {PAGES[active]}
         </main>

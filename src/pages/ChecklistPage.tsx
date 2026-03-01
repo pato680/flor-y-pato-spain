@@ -30,23 +30,28 @@ function ChecklistItemRow({
     >
       <button
         onClick={() => onToggle(item.id, !item.completado)}
-        className="w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-all duration-200"
-        style={{
-          borderColor: item.completado ? accentColor : '#E7E2DC',
-          background: item.completado ? accentColor : 'transparent',
-        }}
+        className="touch-target shrink-0 -ml-2 transition-all duration-200"
+        aria-label="Marcar ítem"
       >
-        {item.completado && (
-          <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
-            <path
-              d="M1 4L3.5 6.5L9 1"
-              stroke="white"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        )}
+        <span
+          className="w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all duration-200"
+          style={{
+            borderColor: item.completado ? accentColor : '#E7E2DC',
+            background: item.completado ? accentColor : 'transparent',
+          }}
+        >
+          {item.completado && (
+            <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+              <path
+                d="M1 4L3.5 6.5L9 1"
+                stroke="white"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          )}
+        </span>
       </button>
 
       <span
@@ -59,7 +64,7 @@ function ChecklistItemRow({
 
       <button
         onClick={() => onDelete(item.id)}
-        className="text-inactive hover:text-accent transition-colors duration-150 p-0.5 shrink-0"
+        className="touch-target shrink-0 -mr-2 text-inactive hover:text-accent transition-colors duration-150"
         aria-label="Eliminar"
       >
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -258,8 +263,11 @@ export function ChecklistPage() {
 
   return (
     <div className="page flex flex-col gap-4">
+      <div className="animate-card-enter card-stagger-1 page-title-row mb-1">
+        <h2 className="page-title">Lista</h2>
+      </div>
       {SECTIONS.map((section, i) => (
-        <div key={section.id} className={`animate-card-enter card-stagger-${i + 1}`}>
+        <div key={section.id} className={`animate-card-enter card-stagger-${i + 2}`}>
           <ChecklistSection
             section={section}
             items={items.filter((it) => it.categoria === section.id)}

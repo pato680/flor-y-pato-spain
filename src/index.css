@@ -223,4 +223,37 @@ body::before {
     font-weight: 700;
     letter-spacing: 0.5px;
   }
+
+  /* Large native page title */
+  .page-title {
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: -0.6px;
+    line-height: 1.1;
+    color: var(--color-text);
+  }
+
+  /* Title + action button row */
+  .page-title-row {
+    @apply flex items-end justify-between px-1;
+  }
+
+  /* Universal tap press */
+  .tappable {
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 150ms var(--ease-ios), opacity 150ms ease;
+  }
+  .tappable:active {
+    transform: scale(0.96);
+    opacity: 0.82;
+  }
+
+  /* 44px touch target */
+  .touch-target {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+  }
 }
