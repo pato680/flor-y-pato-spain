@@ -27,19 +27,19 @@ export function Fab({ onClick, animKey }: Props) {
       style={{
         position: 'fixed',
         right: 20,
-        bottom: `calc(80px + env(safe-area-inset-bottom, 0px))`,
+        bottom: `calc(100px + env(safe-area-inset-bottom, 0px))`,
         zIndex: 100,
         width: 56,
         height: 56,
         borderRadius: '50%',
-        background: '#C8472A',
+        background: 'var(--color-accent)',
         color: '#FFFFFF',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         border: 'none',
         cursor: 'pointer',
-        boxShadow: '0 4px 14px rgba(200,71,42,0.35), 0 1px 3px rgba(0,0,0,0.12)',
+        boxShadow: '0 6px 20px rgba(219,107,72,0.4), 0 2px 6px rgba(0,0,0,0.08)',
         WebkitTapHighlightColor: 'transparent',
       }}
       aria-label="Crear nuevo"

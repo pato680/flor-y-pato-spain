@@ -8,8 +8,8 @@ import { formatFecha } from '../lib/utils'
 // ── Constants ─────────────────────────────────────────────────────────────────
 
 const PERSONA_COLOR: Record<string, string> = {
-  flor:  '#C8472A',
-  pato:  '#004D98',
+  flor: '#C8472A',
+  pato: '#004D98',
   ambos: '#78716C',
 }
 const PERSONA_LABEL: Record<string, string> = {
@@ -80,58 +80,46 @@ function CategoryIcon({ categoria, size = 16, color: colorProp }: {
 
 type CurrencyData = { total: number; florTotal: number; patoTotal: number; ambosTotal: number }
 
-function CurrencySection({ sym, data, compact }: { sym: string; data: CurrencyData; compact?: boolean }) {
-  return (
-    <div>
-      <p style={{
-        fontSize: compact ? 22 : 28, fontWeight: 900, color: '#fff',
-        lineHeight: 1, marginBottom: 4, letterSpacing: '-1px',
-      }}>
-        {sym}{data.total.toFixed(2)}
-      </p>
-      <p style={{ fontSize: 11, color: '#7A7A8A' }}>
-        Flor {sym}{data.florTotal.toFixed(2)} · Pato {sym}{data.patoTotal.toFixed(2)}
-      </p>
-    </div>
-  )
-}
-
 function ResumenCard({ eurData, usdData }: { eurData: CurrencyData | null; usdData: CurrencyData | null }) {
-  const both = eurData !== null && usdData !== null
+  const mainData = eurData || usdData
+  if (!mainData) return null
+  const mainSym = eurData ? '€' : '$'
+
+  // Dummy logic for a dynamic looking circular dash
+  const strokeDasharray = 440
+  const randomOffset = 440 * 0.35 // fixed visual representing spent budget
 
   return (
-    <div style={{
-      background: '#0D0D10',
-      border: '1px solid #1E1E26',
-      borderRadius: 16,
-      overflow: 'hidden',
-      position: 'relative',
-    }}>
-      <div className="f1-speedlines" />
-      <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 75% 50%, rgba(225,6,0,0.10), transparent 60%)', pointerEvents: 'none' }} />
-      <div className="racing-stripe" />
+    <div className="card border border-border bg-surface shadow-md py-6 px-5 flex flex-col items-center mb-0">
+      <h3 className="text-[18px] font-bold text-text mb-6 tracking-wide">Presupuesto Viaje</h3>
 
-      <div style={{ height: 5, background: '#E10600' }} />
-
-      <div style={{ padding: '14px 18px 16px', position: 'relative' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
-          <span style={{
-            background: '#E10600', color: '#fff',
-            fontSize: 9, fontWeight: 800, letterSpacing: 2.5,
-            textTransform: 'uppercase', padding: '3px 9px', borderRadius: 4,
-          }}>
-            GP España
-          </span>
-          <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: '#7A7A8A' }}>
-            · Gastos
-          </span>
+      {/* Circular Progress using SVG */}
+      <div className="relative w-40 h-40 flex items-center justify-center mb-6">
+        <svg className="absolute inset-0 w-full h-full transform -rotate-90">
+          <circle cx="80" cy="80" r="70" fill="none" stroke="var(--color-bg)" strokeWidth="12" />
+          <circle cx="80" cy="80" r="70" fill="none" stroke="var(--color-accent)" strokeWidth="12" strokeDasharray={strokeDasharray} strokeDashoffset={randomOffset} strokeLinecap="round" className="transition-all duration-1000 ease-out" />
+        </svg>
+        <div className="text-center">
+          <p className="text-[11px] font-bold text-text-sub uppercase tracking-wide mb-1">Total Gastado</p>
+          <p className="text-[26px] font-black text-text leading-none mb-1">{mainSym}{mainData.total.toFixed(2)}</p>
+          {eurData && usdData && <p className="text-[15px] font-bold text-text-sub leading-none">${usdData.total.toFixed(2)}</p>}
         </div>
-        {eurData && <CurrencySection sym="€" data={eurData} compact={both} />}
-        {both && <div style={{ height: 1, background: '#1E1E26', margin: '8px 0' }} />}
-        {usdData && <CurrencySection sym="$" data={usdData} compact={both} />}
       </div>
 
-      <div style={{ height: 5, background: '#E10600' }} />
+      <div className="w-full flex justify-between px-2">
+        <div className="text-center">
+          <p className="text-[11px] text-text-sub font-medium mb-1">Flor</p>
+          <p className="text-[14px] font-bold text-text">{mainSym}{mainData.florTotal.toFixed(2)}</p>
+        </div>
+        <div className="text-center">
+          <p className="text-[11px] text-text-sub font-medium mb-1">Ambos</p>
+          <p className="text-[14px] font-bold text-text">{mainSym}{mainData.ambosTotal.toFixed(2)}</p>
+        </div>
+        <div className="text-center">
+          <p className="text-[11px] text-text-sub font-medium mb-1">Pato</p>
+          <p className="text-[14px] font-bold text-text">{mainSym}{mainData.patoTotal.toFixed(2)}</p>
+        </div>
+      </div>
     </div>
   )
 }
@@ -149,7 +137,7 @@ function CategoryBreakdown({ byCatEUR, byCatUSD }: {
   const totalRaw = categories.reduce((s, c) => s + (byCatEUR[c] ?? 0) + (byCatUSD[c] ?? 0), 0)
 
   return (
-    <div className="card p-0 overflow-hidden">
+    <div className="card px-4 py-2 border border-border bg-surface shadow-sm mb-0">
       {categories.map((cat, i) => {
         const eur = byCatEUR[cat] ?? 0
         const usd = byCatUSD[cat] ?? 0
@@ -158,24 +146,23 @@ function CategoryBreakdown({ byCatEUR, byCatUSD }: {
         const color = CATEGORY_COLORS[cat]
         const amtLabel =
           eur > 0 && usd > 0 ? `€${eur.toFixed(2)} · $${usd.toFixed(2)}` :
-          eur > 0 ? `€${eur.toFixed(2)}` :
-          `$${usd.toFixed(2)}`
+            eur > 0 ? `€${eur.toFixed(2)}` :
+              `$${usd.toFixed(2)}`
         return (
           <div
             key={cat}
-            className={`flex items-center gap-3 px-4 py-3${i > 0 ? ' border-t border-border' : ''}`}
+            className={`flex items-center gap-3 py-3${i > 0 ? ' border-t border-border' : ''}`}
           >
-            <CategoryIcon categoria={cat} size={14} color={color} />
-            <span className="text-[13px] font-medium text-text flex-1 min-w-0 truncate">
+            <span className="flex items-center justify-center w-8 h-8 rounded-full" style={{ background: `${color}15` }}>
+              <CategoryIcon categoria={cat} size={16} color={color} />
+            </span>
+            <span className="text-[13px] font-semibold text-text flex-1 min-w-0 truncate">
               {CATEGORY_LABELS[cat]}
             </span>
-            <span style={{ fontSize: 11, fontWeight: 700, color, flexShrink: 0, minWidth: 30, textAlign: 'right' }}>
-              {Math.round(pct)}%
-            </span>
-            <div style={{ width: 64, height: 6, borderRadius: 3, background: `${color}25`, flexShrink: 0 }}>
-              <div style={{ width: `${pct}%`, height: '100%', borderRadius: 3, background: `linear-gradient(90deg, ${color} 0%, ${color}99 100%)` }} />
+            <div style={{ width: 60, height: 6, borderRadius: 3, background: `${color}20`, flexShrink: 0, overflow: 'hidden' }}>
+              <div style={{ width: `${pct}%`, height: '100%', borderRadius: 3, background: color }} />
             </div>
-            <span className="text-[13px] font-semibold text-text tabular-nums" style={{ textAlign: 'right' }}>
+            <span className="text-[13px] font-bold text-text tabular-nums text-right min-w-[60px]">
               {amtLabel}
             </span>
           </div>
@@ -192,37 +179,36 @@ function ExpenseRow({ expense, onDelete, onEdit }: { expense: Expense; onDelete:
   const catColor = CATEGORY_COLORS[expense.categoria]
   const sym = CURRENCY_SYMBOL[expense.moneda ?? 'EUR']
   return (
-    <div className="flex items-stretch border-t border-border">
-      <div style={{ width: 3, background: catColor, flexShrink: 0 }} />
-      <div
-        className="flex items-center gap-2.5 py-3 pl-3 pr-4 flex-1 min-w-0 cursor-pointer active:opacity-70"
-        onClick={onEdit}
-      >
-        <div className="flex-1 min-w-0">
-          <p className="text-[14px] font-semibold text-text leading-snug truncate">
-            {expense.descripcion}
-          </p>
+    <div className="card flex items-center mb-2 px-3 py-3 gap-3 border border-border bg-surface shadow-sm hover:shadow-md transition-shadow">
+      <span className="shrink-0 flex items-center justify-center w-10 h-10 rounded-xl" style={{ background: `${catColor}15` }}>
+        <CategoryIcon categoria={expense.categoria} color={catColor} size={20} />
+      </span>
+      <div className="flex-1 min-w-0" onClick={onEdit}>
+        <p className="text-[14px] font-semibold text-text leading-snug truncate">
+          {expense.descripcion}
+        </p>
+        <div className="flex items-center gap-2 mt-0.5">
+          <span className="text-[11px] font-medium text-text-sub">{formatFecha(expense.fecha)}</span>
         </div>
+      </div>
+      <div className="flex flex-col items-end gap-1">
+        <span className="text-[15px] font-bold text-text tabular-nums">{sym}{expense.monto.toFixed(2)}</span>
         <span style={{
-          background: PERSONA_COLOR[persona],
-          color: '#fff',
-          fontSize: 9, fontWeight: 700, letterSpacing: 1,
-          textTransform: 'uppercase', padding: '2px 7px', borderRadius: 3,
-          flexShrink: 0,
+          background: PERSONA_COLOR[persona], color: '#fff',
+          fontSize: 9, fontWeight: 700, letterSpacing: 0.5,
+          textTransform: 'uppercase', padding: '2px 6px', borderRadius: 4,
         }}>
           {PERSONA_LABEL[persona]}
         </span>
-        <span className="text-[14px] font-semibold text-text tabular-nums shrink-0">
-          {sym}{expense.monto.toFixed(2)}
-        </span>
       </div>
-      <button
-        onClick={onDelete}
-        className="touch-target text-inactive hover:text-accent flex items-center justify-center shrink-0 text-[12px] transition-colors duration-150 border-l border-border"
-        aria-label="Eliminar gasto"
-      >
-        ✕
-      </button>
+      <div className="border-l border-border pl-2 border-opacity-60 overflow-hidden flex flex-col items-center">
+        <button
+          onClick={onDelete}
+          className="text-text-sub hover:text-accent opacity-50 block p-1 transition-opacity active:scale-90"
+        >
+          <svg width="12" height="12" viewBox="0 0 12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 2l8 8M10 2l-8 8" /></svg>
+        </button>
+      </div>
     </div>
   )
 }
@@ -454,9 +440,9 @@ export function GastosPage({ fabTrigger }: { fabTrigger?: number }) {
 
   function currencyData(exps: Expense[]): CurrencyData {
     return {
-      total:      exps.reduce((s, e) => s + e.monto, 0),
-      florTotal:  exps.filter(e => e.persona === 'flor').reduce((s, e) => s + e.monto, 0),
-      patoTotal:  exps.filter(e => e.persona === 'pato').reduce((s, e) => s + e.monto, 0),
+      total: exps.reduce((s, e) => s + e.monto, 0),
+      florTotal: exps.filter(e => e.persona === 'flor').reduce((s, e) => s + e.monto, 0),
+      patoTotal: exps.filter(e => e.persona === 'pato').reduce((s, e) => s + e.monto, 0),
       ambosTotal: exps.filter(e => !e.persona || e.persona === 'ambos').reduce((s, e) => s + e.monto, 0),
     }
   }
@@ -489,10 +475,10 @@ export function GastosPage({ fabTrigger }: { fabTrigger?: number }) {
   const hasExpenses = expenses.length > 0
 
   const FILTER_OPTIONS = [
-    { value: 'todos' as const,  label: 'Todos',       color: '#C8472A' },
-    { value: 'flor' as const,   label: 'Flor',        color: '#C8472A' },
-    { value: 'pato' as const,   label: 'Pato',        color: '#004D98' },
-    { value: 'ambos' as const,  label: 'Compartido',  color: '#78716C' },
+    { value: 'todos' as const, label: 'Todos', color: '#C8472A' },
+    { value: 'flor' as const, label: 'Flor', color: '#C8472A' },
+    { value: 'pato' as const, label: 'Pato', color: '#004D98' },
+    { value: 'ambos' as const, label: 'Compartido', color: '#78716C' },
   ]
 
   return (
@@ -566,11 +552,11 @@ export function GastosPage({ fabTrigger }: { fabTrigger?: number }) {
 
         {/* Expense rows grouped by date */}
         {groupedDates.length > 0 && (
-          <div className="card p-0 overflow-hidden">
-            {groupedDates.map(([fecha, exps], idx) => (
+          <div className="flex flex-col gap-4">
+            {groupedDates.map(([fecha, exps]) => (
               <div key={fecha}>
-                <div className={`flex items-center px-4 pt-2.5 pb-1.5${idx > 0 ? ' border-t border-border' : ''}`}>
-                  <span className="text-[11px] font-bold text-text-sub uppercase tracking-wide">
+                <div className="flex items-center gap-3 mb-2 ml-1">
+                  <span className="text-[12px] font-bold text-text bg-accent-light text-accent px-2.5 py-1 rounded-md">
                     {formatFecha(fecha)}
                   </span>
                 </div>

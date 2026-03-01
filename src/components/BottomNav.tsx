@@ -44,20 +44,24 @@ const TABS: { id: Tab; label: string }[] = [
 export function BottomNav({ active, onChange }: Props) {
   return (
     <div style={{
-      background: 'rgba(250,248,245,0.85)',
-      backdropFilter: 'blur(24px) saturate(180%)',
-      WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-      borderTop: '1px solid rgba(231,226,220,0.5)',
-      boxShadow: '0 -1px 0 rgba(0,0,0,0.04)',
+      padding: '0 16px',
+      paddingBottom: 'calc(env(safe-area-inset-bottom, 16px) + 16px)',
+      background: 'transparent',
       flexShrink: 0,
-      paddingBottom: 'env(safe-area-inset-bottom, 8px)',
+      position: 'relative',
+      zIndex: 40,
     }}>
       <div style={{
+        background: 'rgba(253,252,248,0.85)',
+        backdropFilter: 'blur(32px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(32px) saturate(180%)',
+        border: '1px solid rgba(234,229,224,0.6)',
+        boxShadow: '0 8px 32px rgba(44,39,36,0.08)',
+        borderRadius: '999px',
         display: 'flex',
         justifyContent: 'space-around',
         alignItems: 'center',
-        paddingTop: '8px',
-        paddingBottom: '6px',
+        padding: '8px 4px',
       }}>
         {TABS.map((tab) => {
           const isActive = active === tab.id

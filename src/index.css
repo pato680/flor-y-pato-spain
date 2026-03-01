@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,15 +6,15 @@
 
 /* ── CSS Variables ── */
 :root {
-  --color-bg: #FAF8F5;
+  --color-bg: #FDFCF8;
   --color-surface: #FFFFFF;
-  --color-accent: #C8472A;
-  --color-accent-light: #FDF0EC;
+  --color-accent: #DB6B48;
+  --color-accent-light: #FCEEEA;
   --color-gold: #E8A04A;
-  --color-text: #1C1917;
-  --color-text-sub: #78716C;
-  --color-border: #E7E2DC;
-  --color-inactive: #A09890;
+  --color-text: #2C2724;
+  --color-text-sub: #807A75;
+  --color-border: #EAE5E0;
+  --color-inactive: #A39B94;
 
   --radius-card: 16px;
   --radius-btn: 12px;
@@ -25,7 +25,9 @@
 }
 
 /* ── Base ── */
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
   background-color: #FAF8F5;
 }
@@ -33,7 +35,7 @@ html, body, #root {
 body {
   background-color: var(--color-bg);
   color: var(--color-text);
-  font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+  font-family: 'Outfit', ui-sans-serif, system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overscroll-behavior: none;
@@ -69,10 +71,11 @@ body::before {
 
 /* ── Layer: components ── */
 @layer components {
+
   /* Card */
   .card {
     @apply bg-surface rounded-card border border-border p-4;
-    box-shadow: 0 1px 3px rgba(28,25,23,0.03), 0 4px 20px rgba(28,25,23,0.06);
+    box-shadow: 0 1px 3px rgba(28, 25, 23, 0.03), 0 4px 20px rgba(28, 25, 23, 0.06);
   }
 
   /* Lista tipo iOS */
@@ -81,11 +84,10 @@ body::before {
   }
 
   .list-row {
-    @apply flex items-center justify-between px-4 py-3.5 gap-3
-           active:bg-accent-light transition-colors duration-150;
+    @apply flex items-center justify-between px-4 py-3.5 gap-3 active:bg-accent-light transition-colors duration-150;
   }
 
-  .list-row + .list-row {
+  .list-row+.list-row {
     border-top: 1px solid var(--color-border);
   }
 
@@ -95,37 +97,48 @@ body::before {
 
   /* Primary button */
   .btn-primary {
-    @apply bg-accent text-white font-semibold rounded-btn h-12 px-6
-           flex items-center justify-center gap-2
-           transition-transform duration-150 active:scale-[0.97];
+    @apply bg-accent text-white font-semibold rounded-btn h-12 px-6 flex items-center justify-center gap-2 transition-transform duration-150 active:scale-[0.97];
   }
 
   /* Secondary button */
   .btn-secondary {
-    @apply bg-accent-light text-accent font-semibold rounded-btn h-12 px-6
-           flex items-center justify-center gap-2
-           transition-transform duration-150 active:scale-[0.97];
+    @apply bg-accent-light text-accent font-semibold rounded-btn h-12 px-6 flex items-center justify-center gap-2 transition-transform duration-150 active:scale-[0.97];
   }
 
   /* Input */
   .input {
-    @apply w-full bg-bg border-[1.5px] border-border rounded-input h-12 px-4
-           text-text placeholder:text-inactive text-[14px] outline-none
-           transition-colors duration-150 focus:border-accent;
+    @apply w-full bg-bg border-[1.5px] border-border rounded-input h-12 px-4 text-text placeholder:text-inactive text-[14px] outline-none transition-colors duration-150 focus:border-accent;
   }
 
   /* Page wrapper */
   .page {
-    @apply flex-1 min-h-0 overflow-y-auto px-4 pt-4 pb-4;
+    @apply flex-1 min-h-0 overflow-y-auto px-4 pt-4 pb-[110px];
   }
 
   /* Staggered card animation helpers */
-  .card-stagger-1 { animation-delay: 0ms; }
-  .card-stagger-2 { animation-delay: 40ms; }
-  .card-stagger-3 { animation-delay: 80ms; }
-  .card-stagger-4 { animation-delay: 120ms; }
-  .card-stagger-5 { animation-delay: 160ms; }
-  .card-stagger-6 { animation-delay: 200ms; }
+  .card-stagger-1 {
+    animation-delay: 0ms;
+  }
+
+  .card-stagger-2 {
+    animation-delay: 40ms;
+  }
+
+  .card-stagger-3 {
+    animation-delay: 80ms;
+  }
+
+  .card-stagger-4 {
+    animation-delay: 120ms;
+  }
+
+  .card-stagger-5 {
+    animation-delay: 160ms;
+  }
+
+  .card-stagger-6 {
+    animation-delay: 200ms;
+  }
 
   /* ── F1 Timing Board ── */
   .f1-board {
@@ -162,41 +175,49 @@ body::before {
     pointer-events: none;
     overflow: hidden;
     opacity: 0.04;
-    background: repeating-linear-gradient(
-      90deg,
-      transparent,
-      transparent 60px,
-      #FFFFFF 60px,
-      #FFFFFF 62px
-    );
+    background: repeating-linear-gradient(90deg,
+        transparent,
+        transparent 60px,
+        #FFFFFF 60px,
+        #FFFFFF 62px);
     animation: race-stripe 1.2s linear infinite;
   }
 
   /* Racing stripe diagonal */
   .racing-stripe {
     position: absolute;
-    top: 0; right: 0; bottom: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
     width: 80px;
     pointer-events: none;
     opacity: 0.08;
-    background: repeating-linear-gradient(
-      -50deg,
-      #FFFFFF 0px,
-      #FFFFFF 3px,
-      transparent 3px,
-      transparent 12px
-    );
+    background: repeating-linear-gradient(-50deg,
+        #FFFFFF 0px,
+        #FFFFFF 3px,
+        transparent 3px,
+        transparent 12px);
   }
 
   /* Racing lane car-pass */
   @keyframes car-pass {
-    from { transform: translateX(calc(100vw + 150px)); }
-    to   { transform: translateX(-150px); }
+    from {
+      transform: translateX(calc(100vw + 150px));
+    }
+
+    to {
+      transform: translateX(-150px);
+    }
   }
 
   @keyframes ticker-scroll {
-    from { transform: translateX(0); }
-    to   { transform: translateX(-50%); }
+    from {
+      transform: translateX(0);
+    }
+
+    to {
+      transform: translateX(-50%);
+    }
   }
 
   /* Event type icon wrapper */
@@ -243,6 +264,7 @@ body::before {
     -webkit-tap-highlight-color: transparent;
     transition: transform 150ms var(--ease-ios), opacity 150ms ease;
   }
+
   .tappable:active {
     transform: scale(0.96);
     opacity: 0.82;

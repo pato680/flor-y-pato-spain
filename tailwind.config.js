@@ -4,18 +4,18 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['"DM Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        sans: ['"Outfit"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
       colors: {
-        bg: '#FAF8F5',
+        bg: '#FDFCF8',
         surface: '#FFFFFF',
-        accent: '#C8472A',
-        'accent-light': '#FDF0EC',
+        accent: '#DB6B48',
+        'accent-light': '#FCEEEA',
         gold: '#E8A04A',
-        text: '#1C1917',
-        'text-sub': '#78716C',
-        border: '#E7E2DC',
-        inactive: '#A09890',
+        text: '#2C2724',
+        'text-sub': '#807A75',
+        border: '#EAE5E0',
+        inactive: '#A39B94',
         // F1
         'f1-red': '#E10600',
         'f1-dark': '#0F0F0F',
@@ -101,10 +101,10 @@ export default {
         },
         'flag-wave': {
           '0%, 100%': { transform: 'rotate(-7deg)' },
-          '50%':       { transform: 'rotate(7deg)' },
+          '50%': { transform: 'rotate(7deg)' },
         },
         'tire-spin': {
-          '0%':   { transform: 'rotate(0deg)' },
+          '0%': { transform: 'rotate(0deg)' },
           '100%': { transform: 'rotate(360deg)' },
         },
       },
@@ -123,8 +123,8 @@ export default {
         'pulse-dot': 'pulse-dot 1.8s ease-in-out infinite',
         'badge-glow': 'badge-glow 2.2s ease-in-out 1s infinite',
         'fab-enter': 'fab-enter 250ms cubic-bezier(0.32,0.72,0,1) both',
-        'flag-wave':  'flag-wave 1.4s ease-in-out infinite',
-        'tire-spin':  'tire-spin 14s linear infinite',
+        'flag-wave': 'flag-wave 1.4s ease-in-out infinite',
+        'tire-spin': 'tire-spin 14s linear infinite',
       },
       transitionTimingFunction: {
         ios: 'cubic-bezier(0.32,0.72,0,1)',

@@ -54,7 +54,7 @@ function EventIcon({ tipo, size = 16, color: colorProp }: {
         <path {...sp} d="M3.5 2v12" />
         <path {...sp} d="M3.5 2H12L10.5 6H14L12 10H3.5" fill={`${color}15`} />
         <rect x="3.5" y="2" width="2.25" height="2.25" fill={color} />
-        <rect x="8"   y="2" width="2.25" height="2.25" fill={color} />
+        <rect x="8" y="2" width="2.25" height="2.25" fill={color} />
         <rect x="5.75" y="4.25" width="2.25" height="2.25" fill={color} />
       </>}
     </svg>
@@ -63,7 +63,7 @@ function EventIcon({ tipo, size = 16, color: colorProp }: {
 
 // ── Countdown logic ──────────────────────────────────────────────────────────
 const TRIP_START = new Date('2026-06-05T00:00:00')
-const TRIP_END   = new Date('2026-06-20T00:00:00')
+const TRIP_END = new Date('2026-06-20T00:00:00')
 
 function getDiff() {
   const now = new Date()
@@ -104,9 +104,9 @@ function HeroCard() {
   }, [])
 
   const countdownLabel =
-    diff.state === 'past'   ? 'COMPLETADO' :
-    diff.state === 'during' ? 'EN RUTA' :
-                              'DÍAS'
+    diff.state === 'past' ? 'COMPLETADO' :
+      diff.state === 'during' ? 'EN RUTA' :
+        'DÍAS'
   const countdownValue = diff.state === 'past' ? '—' : String(diff.days).padStart(2, '0')
 
   return (
@@ -248,96 +248,62 @@ interface EventRowProps {
   event: TripEvent
   onDelete: () => void
   onEdit: () => void
-  noBorderTop?: boolean
+  isFirst?: boolean
+  isLast?: boolean
 }
 
-function EventRowGP({ event, onDelete, onEdit, noBorderTop = false }: EventRowProps) {
+function EventRowGP({ event, onDelete, onEdit, isFirst, isLast }: EventRowProps) {
   return (
-    <div style={{ background: '#0D0D10', borderTop: noBorderTop ? 'none' : '1px solid #E7E2DC' }}>
-      <div style={{ height: 4, background: 'linear-gradient(90deg, #E10600, #FF4422)' }} />
-      <div className="flex items-start gap-3 py-3 px-4">
-        <span className="shrink-0 mt-0.5"><EventIcon tipo="gp" /></span>
-        <span className="text-[12px] font-medium tabular-nums w-10 shrink-0 mt-0.5" style={{ color: '#7A7A8A' }}>
-          {event.hora || '—'}
-        </span>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-1">
-            <span style={{
-              background: '#E10600', color: '#fff',
-              fontSize: 9, fontWeight: 800, letterSpacing: 2,
-              textTransform: 'uppercase', padding: '2px 7px', borderRadius: 3,
-            }}>
+    <TimelineItem color="#E10600" isFirst={isFirst} isLast={isLast}>
+      <div className="card p-3 flex gap-3 bg-[#0D0D10] border border-[#1E1E26] shadow-md relative overflow-hidden mb-2">
+        <div className="absolute top-0 left-0 right-0 h-1" style={{ background: 'linear-gradient(90deg, #E10600, #FF4422)' }} />
+        <span className="shrink-0 mt-1"><EventIcon tipo="gp" /></span>
+        <div className="flex-1 min-w-0 pr-1">
+          <div className="flex items-center justify-between mb-1">
+            <span style={{ background: '#E10600', color: '#fff', fontSize: 9, fontWeight: 800, padding: '2px 7px', borderRadius: 3 }}>
               GP F1
             </span>
+            <span className="text-[12px] font-medium text-[#7A7A8A] tabular-nums">{event.hora || '—'}</span>
           </div>
-          <p className="text-[14px] font-bold leading-snug" style={{ color: '#FFFFFF' }}>{event.titulo}</p>
-          {event.detalle && (
-            <p className="text-[12px] mt-0.5 leading-snug" style={{ color: '#7A7A8A' }}>{event.detalle}</p>
-          )}
+          <p className="text-[14px] font-bold text-white leading-snug">{event.titulo}</p>
+          {event.detalle && <p className="text-[12px] mt-0.5 leading-snug text-[#7A7A8A]">{event.detalle}</p>}
         </div>
-        <button
-          onClick={onEdit}
-          className="touch-target shrink-0 -mr-1 transition-colors duration-150"
-          style={{ color: '#7A7A8A' }}
-          aria-label="Editar evento"
-        >
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-            <path d="M8.5 1.5L10.5 3.5M1 11H3L9.5 4.5L7.5 2.5L1 9V11Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </button>
-        <button
-          onClick={onDelete}
-          className="touch-target shrink-0 -mr-1 text-[12px] transition-colors duration-150"
-          style={{ color: '#7A7A8A' }}
-          aria-label="Eliminar evento"
-        >
-          ✕
-        </button>
+        <div className="flex flex-col gap-3 opacity-70">
+          <button onClick={onEdit} className="text-[#7A7A8A]"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M8.5 1.5L10.5 3.5M1 11H3L9.5 4.5L7.5 2.5L1 9V11Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg></button>
+          <button onClick={onDelete} className="text-[12px] text-[#7A7A8A]">✕</button>
+        </div>
       </div>
-      <div style={{ height: 4, background: 'linear-gradient(90deg, #E10600, #FF4422)' }} />
-    </div>
+    </TimelineItem>
   )
 }
 
-function EventRow({ event, onDelete, onEdit, noBorderTop = false }: EventRowProps) {
-  if (event.tipo === 'gp') return <EventRowGP event={event} onDelete={onDelete} onEdit={onEdit} noBorderTop={noBorderTop} />
+function EventRow({ event, onDelete, onEdit, isFirst, isLast }: EventRowProps) {
+  if (event.tipo === 'gp') return <EventRowGP event={event} onDelete={onDelete} onEdit={onEdit} isFirst={isFirst} isLast={isLast} />
+  const color = EVENT_COLORS[event.tipo] || '#A39B94'
+
   return (
-    <div
-      className={`tappable flex items-start gap-3 py-3 px-4 ${noBorderTop ? '' : 'border-t border-border'}`}
-      style={{ borderLeft: `3px solid ${EVENT_COLORS[event.tipo]}` }}
-    >
-      <span
-        className="shrink-0 mt-0.5 event-type-pill"
-        style={{ background: `${EVENT_COLORS[event.tipo]}18` }}
-      >
-        <EventIcon tipo={event.tipo} />
-      </span>
-      <span className="text-[12px] font-medium text-text-sub tabular-nums w-10 shrink-0 mt-0.5">
-        {event.hora || '—'}
-      </span>
-      <div className="flex-1 min-w-0">
-        <p className="text-[14px] font-semibold text-text leading-snug">{event.titulo}</p>
-        {event.detalle && (
-          <p className="text-[12px] text-text-sub mt-0.5 leading-snug">{event.detalle}</p>
-        )}
+    <TimelineItem color={color} dotStyle="solid" isFirst={isFirst} isLast={isLast}>
+      <div className="card p-3 flex items-center gap-3 bg-surface border border-border shadow-sm mb-2 hover:shadow-md transition-shadow">
+        <span
+          className="shrink-0 flex items-center justify-center w-9 h-9 rounded-full"
+          style={{ background: `${color}15` }}
+        >
+          <EventIcon tipo={event.tipo} color={color} />
+        </span>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center justify-between mb-0.5">
+            <p className="text-[14px] font-semibold text-text leading-snug truncate pr-2">{event.titulo}</p>
+            <span className="text-[11px] font-semibold text-text-sub tabular-nums shrink-0">{event.hora || '—'}</span>
+          </div>
+          {event.detalle && (
+            <p className="text-[12px] text-text-sub leading-snug truncate">{event.detalle}</p>
+          )}
+        </div>
+        <div className="flex flex-col items-center gap-3 border-l border-border pl-3 ml-1 opacity-50">
+          <button onClick={onEdit} className="text-inactive hover:text-accent"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M8.5 1.5L10.5 3.5M1 11H3L9.5 4.5L7.5 2.5L1 9V11Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg></button>
+        </div>
       </div>
-      <button
-        onClick={onEdit}
-        className="touch-target shrink-0 text-inactive hover:text-accent -mr-1 transition-colors duration-150"
-        aria-label="Editar evento"
-      >
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-          <path d="M8.5 1.5L10.5 3.5M1 11H3L9.5 4.5L7.5 2.5L1 9V11Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-      </button>
-      <button
-        onClick={onDelete}
-        className="touch-target shrink-0 text-inactive hover:text-accent -mr-1 text-[12px] transition-colors duration-150"
-        aria-label="Eliminar evento"
-      >
-        ✕
-      </button>
-    </div>
+    </TimelineItem>
   )
 }
 
@@ -373,21 +339,18 @@ function TimelineItem({
 }) {
   return (
     <div className="flex gap-3 items-stretch">
-      {/* Columna izquierda: línea + dot */}
-      <div className="flex flex-col items-center w-5 shrink-0">
-        {!isFirst && <div className="w-px flex-none h-4 bg-border" />}
+      <div className="flex flex-col items-center w-5 shrink-0 pt-4">
+        <div className={`w-[2px] flex-none h-3 ${isFirst ? 'bg-transparent' : 'bg-border'}`} />
         <div
           className="w-3 h-3 rounded-full shrink-0 z-10"
-          style={
-            dotStyle === 'outline'
-              ? { border: `2px solid ${color}`, backgroundColor: '#FAF8F5' }
-              : { backgroundColor: color, border: '2px solid #FAF8F5' }
-          }
+          style={{
+            backgroundColor: dotStyle === 'solid' ? color : 'var(--color-bg)',
+            border: `2px solid ${color}`,
+          }}
         />
-        {!isLast && <div className="w-px flex-1 bg-border mt-1" />}
+        <div className={`w-[2px] flex-1 mt-1 ${isLast ? 'bg-transparent' : 'bg-border'}`} />
       </div>
-      {/* Columna derecha: card */}
-      <div className="flex-1 min-w-0" style={{ paddingBottom: isLast ? 0 : 16 }}>
+      <div className="flex-1 min-w-0" style={{ paddingBottom: isLast ? 0 : 4 }}>
         {children}
       </div>
     </div>
@@ -412,10 +375,8 @@ function DayCard({ day, onAddEvent, onDeleteEvent, onEditEvent, onEdit }: DayCar
   const noches = Math.round(
     (parseDate(day.fechaFin).getTime() - parseDate(day.fechaInicio).getTime()) / 86400000
   )
-  const nochesBadge = noches === 0 ? '1 día' : noches === 1 ? '1 noche' : `${noches} noches`
-  const showDayHeaders = noches > 0
+  const nochesBadge = noches === 0 ? '1 día/s' : `${noches} noches`
 
-  // Agrupar por fecha
   const byDate = new Map<string, TripEvent[]>()
   const noDateEvents: TripEvent[] = []
   for (const ev of sortedEvents) {
@@ -429,83 +390,73 @@ function DayCard({ day, onAddEvent, onDeleteEvent, onEditEvent, onEdit }: DayCar
   const groupedDates = [...byDate.entries()].sort(([a], [b]) => a.localeCompare(b))
 
   return (
-    <div className="card p-0 overflow-hidden">
-      {/* Header */}
-      <div
-        className="flex items-center gap-2.5 px-4 py-3"
-        style={{ background: `${day.color}0A`, borderLeft: `4px solid ${day.color}` }}
-      >
-        <div className="flex-1 min-w-0">
+    <div className="mb-10 block">
+      {/* Header Minimalista */}
+      <div className="flex items-start justify-between mb-4">
+        <div>
           {day.ciudad && (
-            <p className="text-[17px] font-extrabold tracking-tight text-text leading-tight">{day.ciudad}</p>
+            <h2 className="text-[18px] font-bold text-text uppercase tracking-wide flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full" style={{ background: day.color }}></span>
+              {day.ciudad}
+            </h2>
           )}
-          <div style={{ height: 1, background: `linear-gradient(90deg, ${day.color}60, transparent)`, margin: '3px 0' }} />
-          <p className="text-[12px] font-medium text-text-sub leading-tight">
-            {formatRango(day.fechaInicio, day.fechaFin)}
+          <p className="text-[13px] font-medium text-text-sub mt-0.5 ml-4.5 pl-1.5">
+            {formatRango(day.fechaInicio, day.fechaFin)} • <span className="text-accent">{nochesBadge}</span>
           </p>
         </div>
-        <span className="bg-border text-text-sub text-[11px] font-semibold px-2 py-0.5 rounded-full shrink-0">
-          {nochesBadge}
-        </span>
         <button
           onClick={onEdit}
-          className="touch-target text-inactive hover:text-accent rounded-full shrink-0 transition-colors duration-150"
+          className="flex items-center justify-center w-8 h-8 rounded-full bg-surface border border-border shadow-sm text-text-sub hover:text-accent transition-colors active:scale-95"
           aria-label="Editar ciudad"
         >
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M9.5 2.5L11.5 4.5M2 12H4L10.5 5.5L8.5 3.5L2 10V12Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9.5 2.5L11.5 4.5M2 12H4L10.5 5.5L8.5 3.5L2 10V12Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
         </button>
       </div>
 
-      {/* Eventos sin fecha (backward compat) */}
-      {noDateEvents.map(ev => (
-        <EventRow
-          key={ev.id}
-          event={ev}
-          onDelete={() => onDeleteEvent(ev.id)}
-          onEdit={() => onEditEvent(ev)}
-        />
-      ))}
+      <div className="ml-1.5">
+        {/* Eventos sin fecha */}
+        {noDateEvents.map((ev, i) => (
+          <EventRow
+            key={ev.id} event={ev} onDelete={() => onDeleteEvent(ev.id)} onEdit={() => onEditEvent(ev)}
+            isFirst={i === 0 && groupedDates.length === 0}
+            isLast={i === noDateEvents.length - 1 && groupedDates.length === 0}
+          />
+        ))}
 
-      {/* Eventos agrupados por día */}
-      {showDayHeaders
-        ? groupedDates.map(([fecha, events]) => (
-            <div key={fecha}>
-              <div className="flex items-center px-4 pt-2.5 pb-1.5 border-t border-border">
-                <span className="text-[11px] font-bold text-text-sub uppercase tracking-wide">
+        {/* Eventos por día */}
+        {groupedDates.map(([fecha, events], gIndex) => {
+          const isLastGroup = gIndex === groupedDates.length - 1
+          return (
+            <div key={fecha} className="mb-2">
+              <div className="flex items-center gap-3 ml-2 mb-3 mt-4">
+                <span className="text-[12px] font-bold text-text bg-accent-light text-accent px-2 py-0.5 rounded-md">
                   {formatFecha(fecha)}
                 </span>
               </div>
               {events.map((ev, i) => (
                 <EventRow
-                  key={ev.id}
-                  event={ev}
-                  onDelete={() => onDeleteEvent(ev.id)}
-                  onEdit={() => onEditEvent(ev)}
-                  noBorderTop={i === 0}
+                  key={ev.id} event={ev} onDelete={() => onDeleteEvent(ev.id)} onEdit={() => onEditEvent(ev)}
+                  isFirst={i === 0 && gIndex === 0 && noDateEvents.length === 0}
+                  isLast={i === events.length - 1 && isLastGroup}
                 />
               ))}
             </div>
-          ))
-        : sortedEvents.map(ev => (
-            <EventRow
-              key={ev.id}
-              event={ev}
-              onDelete={() => onDeleteEvent(ev.id)}
-              onEdit={() => onEditEvent(ev)}
-            />
-          ))
-      }
+          )
+        })}
 
-      {/* Add event button */}
-      <div className="border-t border-border px-4">
-        <button
-          onClick={onAddEvent}
-          className="flex items-center gap-1.5 text-[14px] font-semibold text-accent py-2.5 min-h-[44px] transition-opacity duration-150 active:opacity-60"
-        >
-          <span className="text-base leading-none">+</span> Agregar evento
-        </button>
+        {/* Botón Flotante para agregar evento al final del timeline */}
+        <div className="flex gap-3 items-center ml-1 mt-3 pb-2">
+          <div className="w-7 flex justify-center">
+            <button
+              onClick={onAddEvent}
+              className="w-6 h-6 rounded-full bg-surface border-[1.5px] border-dashed border-accent flex items-center justify-center text-accent transition-transform active:scale-90"
+              aria-label="Agregar evento"
+            >
+              <svg width="10" height="10" viewBox="0 0 10 10" stroke="currentColor" strokeWidth="2"><path d="M5 2v6M2 5h6" /></svg>
+            </button>
+          </div>
+          <span className="text-[13px] font-semibold text-text-sub cursor-pointer hover:text-accent" onClick={onAddEvent}>Añadir plan</span>
+        </div>
       </div>
     </div>
   )
@@ -514,18 +465,18 @@ function DayCard({ day, onAddEvent, onDeleteEvent, onEditEvent, onEdit }: DayCar
 // ── AddDayModal ───────────────────────────────────────────────────────────────
 
 const SPAIN_CITIES = [
-  { nombre: 'Madrid',        color: '#D71920' },
-  { nombre: 'Barcelona',     color: '#004D98' },
-  { nombre: 'Valencia',      color: '#FF6B2B' },
-  { nombre: 'Sevilla',       color: '#C8972A' },
-  { nombre: 'Granada',       color: '#8B6914' },
-  { nombre: 'Toledo',        color: '#7C6F5B' },
-  { nombre: 'Córdoba',       color: '#A93226' },
-  { nombre: 'Málaga',        color: '#E67E22' },
-  { nombre: 'Bilbao',        color: '#006B3C' },
+  { nombre: 'Madrid', color: '#D71920' },
+  { nombre: 'Barcelona', color: '#004D98' },
+  { nombre: 'Valencia', color: '#FF6B2B' },
+  { nombre: 'Sevilla', color: '#C8972A' },
+  { nombre: 'Granada', color: '#8B6914' },
+  { nombre: 'Toledo', color: '#7C6F5B' },
+  { nombre: 'Córdoba', color: '#A93226' },
+  { nombre: 'Málaga', color: '#E67E22' },
+  { nombre: 'Bilbao', color: '#006B3C' },
   { nombre: 'San Sebastián', color: '#1A5276' },
-  { nombre: 'Zaragoza',      color: '#7D3C98' },
-  { nombre: 'Salamanca',     color: '#B7950B' },
+  { nombre: 'Zaragoza', color: '#7D3C98' },
+  { nombre: 'Salamanca', color: '#B7950B' },
 ]
 
 type DayFormData = { fechaInicio: string; fechaFin: string; ciudad: string; color: string }
@@ -645,13 +596,13 @@ function AddDayModal({ open, onClose, onSave, onDelete, initialValues, mode = 'a
 // ── AddEventModal ─────────────────────────────────────────────────────────────
 
 const EVENT_TYPES: { tipo: EventType; label: string }[] = [
-  { tipo: 'gp',         label: 'GP F1' },
-  { tipo: 'vuelo',      label: 'Vuelo' },
-  { tipo: 'hotel',      label: 'Hotel' },
-  { tipo: 'actividad',  label: 'Actividad' },
-  { tipo: 'comida',     label: 'Comida' },
+  { tipo: 'gp', label: 'GP F1' },
+  { tipo: 'vuelo', label: 'Vuelo' },
+  { tipo: 'hotel', label: 'Hotel' },
+  { tipo: 'actividad', label: 'Actividad' },
+  { tipo: 'comida', label: 'Comida' },
   { tipo: 'transporte', label: 'Transporte' },
-  { tipo: 'otro',       label: 'Otro' },
+  { tipo: 'otro', label: 'Otro' },
 ]
 
 type EventFormValues = {

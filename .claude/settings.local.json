@@ -1,0 +1,38 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls /Users/patriciojaimes/Development/flor-y-pato-spain && git -C /Users/patriciojaimes/Development/flor-y-pato-spain remote -v)",
+      "Bash(gh api repos/pato680/flor-y-pato-spain --jq '{has_pages: .has_pages, homepage: .homepage, default_branch: .default_branch}')",
+      "Bash(gh api repos/pato680/flor-y-pato-spain/pages --jq '{url: .html_url, source: .source, status: .status}' 2>/dev/null || echo \"no pages config\")",
+      "Bash(npm install 2>&1 | tail -5)",
+      "Bash(npm run build 2>&1)",
+      "Bash(npx tsc --noEmit 2>&1)",
+      "Bash(curl -s -X DELETE \"https://flor-y-pato-trip-default-rtdb.firebaseio.com/trip-espana-2026.json\" && \\\\\ncurl -s -X DELETE \"https://flor-y-pato-trip-default-rtdb.firebaseio.com/trip-checklist-2026.json\" && \\\\\ncurl -s -X DELETE \"https://flor-y-pato-trip-default-rtdb.firebaseio.com/trip-notes-2026.json\" && \\\\\ncurl -s -X DELETE \"https://flor-y-pato-trip-default-rtdb.firebaseio.com/trip-expenses-2026.json\" && \\\\\necho \"DONE\")",
+      "Bash(git add index.html .github/ .gitignore package-lock.json package.json postcss.config.js src/ tailwind.config.js tsconfig.app.json tsconfig.json tsconfig.node.json vite.config.ts && git commit -m \"$\\(cat <<'EOF'\nReescritura completa: React + Vite + TypeScript + Tailwind + Firebase v10\n\n- Migra de single-file HTML a app React modular\n- Stack: Vite 5 + React 18 + TypeScript + Tailwind CSS + Firebase SDK v10\n- PWA con vite-plugin-pwa \\(manifest + service worker\\)\n- 4 tabs: Itinerario, Checklist, Gastos, Notas\n- Hooks reactivos con Firebase Realtime Database\n- Countdown hasta el viaje\n- GitHub Actions CI/CD deploy a GitHub Pages\n\nCo-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git push origin main 2>&1)",
+      "Bash(gh run list --limit 3 2>&1)",
+      "Bash(gh api repos/pato680/flor-y-pato-spain/pages 2>&1)",
+      "Bash(gh api --method PUT repos/pato680/flor-y-pato-spain/pages \\\\\n  --field build_type=workflow 2>&1)",
+      "Bash(gh workflow run deploy.yml --ref main 2>&1)",
+      "Bash(gh run watch 22472390181 2>&1)",
+      "Bash(git add src/hooks/useTrip.ts && git commit -m \"Remove seed data: itinerario starts empty\" && git push origin main 2>&1)",
+      "Bash(git add index.html src/App.tsx src/components/BottomNav.tsx src/components/Countdown.tsx src/components/SplashScreen.tsx src/index.css src/pages/ChecklistPage.tsx src/pages/GastosPage.tsx src/pages/ItinerarioPage.tsx src/pages/NotasPage.tsx tailwind.config.js && git commit -m \"$\\(cat <<'EOF'\nRediseño visual completo: tema claro mediterráneo + identidad F1\n\n- Paleta de colores: crema/blanco, terra cotta, ocre mediterráneo\n- Fuente DM Sans, layout tipo iOS con list sections\n- Splash screen con semáforo F1 animado \\(5 luces secuenciales\\)\n- Countdown F1 timing board para el GP de Barcelona\n- Hero del itinerario con racing stripe y label GP Barcelona\n- BottomNav con íconos SVG, pill activa terra cotta\n- Safe area top para notch de iPhone\n- App shell con position fixed + animaciones page-enter\n\nCo-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git push)",
+      "Bash(git restore src/App.tsx src/components/BottomNav.tsx src/index.css && git status)",
+      "Bash(git add src/components/BottomNav.tsx && git commit -m \"$\\(cat <<'EOF'\nAdd bottom padding to BottomNav for safe area and visual breathing room\n\nCo-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git push origin main)",
+      "WebSearch",
+      "WebFetch(domain:freesvg.org)",
+      "Bash(curl -s -X DELETE \"https://flor-y-pato-trip-default-rtdb.firebaseio.com/trip-espana-2026.json\")",
+      "Bash(git add src/hooks/useChecklist.ts src/hooks/useExpenses.ts src/hooks/useNotes.ts src/hooks/useTrip.ts src/lib/types.ts src/pages/ChecklistPage.tsx src/pages/GastosPage.tsx src/pages/ItinerarioPage.tsx src/pages/NotasPage.tsx src/components/ConfirmSheet.tsx src/lib/utils.ts)",
+      "Bash(git commit -m \"$\\(cat <<'EOF'\n7 mejoras: editar eventos/gastos, eliminar ciudades, confirm delete, título en notas, filtro por persona\n\n- C1: helpers compartidos \\(generateId, parseDate, formatFecha\\) en src/lib/utils.ts\n- D1: campo título opcional en notas \\(NoteModal + NoteCard\\)\n- A1: editar eventos del itinerario \\(botón ✏ + modal pre-cargado\\)\n- A2: eliminar ciudades desde modal de edición + confirmación\n- A3: editar gastos \\(fila tappable + modal pre-cargado\\)\n- B1: ConfirmSheet reutilizable en todos los borrados \\(eventos, ciudades, gastos, notas, checklist\\)\n- D2: filtro de gastos por persona \\(Todos/Flor/Pato/Compartido\\)\n- Eliminar cálculo de deudas del ResumenCard\n\nCo-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git add src/App.tsx src/components/Countdown.tsx src/components/Modal.tsx src/index.css tailwind.config.js && git commit -m \"$\\(cat <<'EOF'\nSubir cambios pendientes del rediseño visual anterior\n\nCo-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>\nEOF\n\\)\" && git push origin main)",
+      "Bash(git add src/App.tsx src/index.css && git commit -m \"$\\(cat <<'EOF'\nFix layout: quitar overflow:hidden de main, agregar min-h-0 a .page\n\nCo-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>\nEOF\n\\)\" && git push origin main)",
+      "Bash(git add tailwind.config.js src/index.css src/pages/ItinerarioPage.tsx src/pages/ChecklistPage.tsx src/pages/GastosPage.tsx src/pages/NotasPage.tsx && git commit -m \"$\\(cat <<'EOF'\nUI upgrade: editorial magazine aesthetic\n\n- Noise/grain overlay global \\(body::before, 2.8% opacity\\)\n- .card con sombra expresiva, nuevas clases .event-type-pill y .city-header\n- Tailwind: nueva sombra 'elevated'\n- ItinerarioPage: HeroCard speedlines + glow en stripe; DayCard header editorial con border-left de ciudad y línea gradiente; EventRow con border-left y icon pill coloreado\n- ChecklistPage: header gradient + stripe de color + título 900 + badge con borde + border-left en sección\n- GastosPage: ResumenCard con speedlines + glow radial + racing-stripe; barras de categoría con gradiente y porcentaje; filter chips filled\n- NotasPage: NoteCard con accent bar rotatoria, gradiente cálido, tipografía extrabold, fecha en color acento\n\nCo-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git add src/App.tsx src/components/BottomNav.tsx src/components/Header.tsx src/index.css src/pages/ChecklistPage.tsx src/pages/GastosPage.tsx src/pages/ItinerarioPage.tsx src/pages/NotasPage.tsx)",
+      "Bash(git commit:*)",
+      "Bash(git add src/components/Fab.tsx src/App.tsx src/components/Modal.tsx src/pages/ChecklistPage.tsx src/pages/GastosPage.tsx src/pages/ItinerarioPage.tsx src/pages/NotasPage.tsx tailwind.config.js)",
+      "Bash(gh run list --limit 3)"
+    ]
+  }
+}
