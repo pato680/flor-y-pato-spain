@@ -60,10 +60,10 @@ export const CATEGORY_LABELS: Record<ExpenseCategory, string> = {
 }
 
 export const CATEGORY_COLORS: Record<ExpenseCategory, string> = {
-  alojamiento: '#6366f1',
-  comida: '#f59e0b',
-  transporte: '#3b82f6',
-  actividades: '#10b981',
-  compras: '#ec4899',
-  otro: '#6b7280',
+  alojamiento: '#0070C8',
+  comida: '#F09000',
+  transporte: '#00965E',
+  actividades: '#7838C8',
+  compras: '#E10600',
+  otro: '#9A9A94',
 }

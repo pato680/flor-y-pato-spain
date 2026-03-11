@@ -5,9 +5,9 @@ import { ConfirmSheet } from '../components/ConfirmSheet'
 
 // Cada sección tiene su propio color de identidad
 const SECTIONS = [
-  { id: 'llevar',      label: 'Qué llevar',        color: '#C8472A' },
-  { id: 'cuenta',      label: 'A tener en cuenta', color: '#E8A04A' },
-  { id: 'actividades', label: 'Actividades',        color: '#004D98' },
+  { id: 'llevar',      label: 'Qué llevar',        color: '#E10600' },
+  { id: 'cuenta',      label: 'A tener en cuenta', color: '#F09000' },
+  { id: 'actividades', label: 'Actividades',        color: '#0070C8' },
 ] as const
 
 // ── ChecklistItemRow ──────────────────────────────────────────────────────────
@@ -34,9 +34,12 @@ function ChecklistItemRow({
         aria-label="Marcar ítem"
       >
         <span
-          className="w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all duration-200"
+          className="flex items-center justify-center transition-all duration-200"
           style={{
-            borderColor: item.completado ? accentColor : '#E7E2DC',
+            width: 20,
+            height: 20,
+            borderRadius: 6,
+            border: item.completado ? 'none' : '2px solid #DDDDD8',
             background: item.completado ? accentColor : 'transparent',
           }}
         >
@@ -55,16 +58,23 @@ function ChecklistItemRow({
       </button>
 
       <span
-        className={`flex-1 text-[14px] leading-snug transition-all duration-200 ${
-          item.completado ? 'line-through text-inactive' : 'text-text'
-        }`}
+        style={{
+          fontFamily: '"DM Sans", sans-serif',
+          fontSize: 14,
+          fontWeight: 500,
+          color: item.completado ? '#9A9A94' : '#0F0F0F',
+          textDecoration: item.completado ? 'line-through' : 'none',
+          flex: 1,
+          lineHeight: 1.4,
+          transition: 'all 200ms',
+        }}
       >
         {item.texto}
       </span>
 
       <button
         onClick={() => onDelete(item.id)}
-        className="touch-target shrink-0 -mr-2 text-inactive hover:text-accent transition-colors duration-150"
+        className="touch-target shrink-0 -mr-2 text-text-muted hover:text-accent transition-colors duration-150"
         aria-label="Eliminar"
       >
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -128,69 +138,55 @@ function ChecklistSection({
   return (
     <div style={{
       background: '#FFFFFF',
-      border: '1px solid #E7E2DC',
-      borderLeft: `3px solid ${section.color}`,
-      borderRadius: 16,
+      border: '1px solid #DDDDD8',
+      borderRadius: 8,
       overflow: 'hidden',
     }}>
-      {/* Header: bandera a cuadros que se difumina en negro */}
+      {/* Header */}
       <div style={{
-        background: `linear-gradient(135deg, #0D0D10 0%, ${section.color}28 100%)`,
         display: 'flex',
         alignItems: 'center',
-        height: 48,
-        overflow: 'hidden',
+        justifyContent: 'space-between',
+        padding: '10px 16px',
       }}>
-        {/* Checkered flag strip — fades right into the dark */}
-        <div style={{
-          width: 68,
-          height: '100%',
-          flexShrink: 0,
-          backgroundImage: 'repeating-conic-gradient(rgba(255,255,255,0.22) 0% 25%, rgba(0,0,0,0) 0% 50%)',
-          backgroundSize: '10px 10px',
-          maskImage: 'linear-gradient(to right, black 20%, transparent 100%)',
-          WebkitMaskImage: 'linear-gradient(to right, black 20%, transparent 100%)',
-        }} />
-
-        {/* Título + badge */}
-        <div style={{
-          flex: 1,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          paddingRight: 16,
+        <span style={{
+          fontFamily: '"Azeret Mono", monospace',
+          fontSize: 9,
+          fontWeight: 600,
+          color: '#9A9A94',
+          textTransform: 'uppercase',
+          letterSpacing: '0.08em',
         }}>
-          <span style={{
-            fontSize: 14, fontWeight: 900, letterSpacing: 2,
-            textTransform: 'uppercase', color: '#FFFFFF',
-          }}>
-            {section.label}
-          </span>
+          {section.label}
+        </span>
 
-          {allDone ? (
-            <span style={{
-              fontSize: 10, fontWeight: 700, letterSpacing: 1,
-              textTransform: 'uppercase', color: '#10b981',
-              background: 'rgba(16,185,129,0.12)',
-              padding: '3px 8px', borderRadius: 4,
-            }}>
-              ✓ Listo
-            </span>
-          ) : pending > 0 ? (
-            <span style={{
-              fontSize: 10, fontWeight: 700, letterSpacing: 1,
-              textTransform: 'uppercase', color: section.color,
-              background: `${section.color}1A`,
-              border: `1px solid ${section.color}40`,
-              padding: '3px 8px', borderRadius: 4,
-            }}>
-              {pending} pend.
-            </span>
-          ) : null}
-        </div>
+        {allDone ? (
+          <span style={{
+            fontFamily: '"Azeret Mono", monospace',
+            fontSize: 9,
+            fontWeight: 700,
+            color: '#00965E',
+            background: 'rgba(0,150,94,0.1)',
+            padding: '3px 8px',
+            borderRadius: 4,
+          }}>
+            LISTO
+          </span>
+        ) : pending > 0 ? (
+          <span style={{
+            fontFamily: '"Azeret Mono", monospace',
+            fontSize: 9,
+            fontWeight: 700,
+            color: section.color,
+            background: `${section.color}1A`,
+            border: `1px solid ${section.color}40`,
+            padding: '3px 8px',
+            borderRadius: 4,
+          }}>
+            {pending} PEND.
+          </span>
+        ) : null}
       </div>
-      {/* Color stripe below header */}
-      <div style={{ height: 3, background: section.color }} />
 
       {/* Items */}
       {items.map((item) => (
@@ -213,7 +209,7 @@ function ChecklistSection({
             onKeyDown={handleKeyDown}
             onBlur={handleBlur}
             placeholder="Nuevo ítem..."
-            className="flex-1 text-[14px] text-text placeholder:text-inactive outline-none bg-transparent"
+            className="flex-1 text-[14px] text-text placeholder:text-text-muted outline-none bg-transparent"
           />
           <button
             onMouseDown={(e) => { e.preventDefault(); handleConfirm() }}
@@ -226,12 +222,18 @@ function ChecklistSection({
       ) : (
         <button
           onClick={() => setAdding(true)}
-          className="w-full flex items-center gap-2 px-4 py-3 border-t border-border text-[13px] font-medium transition-colors duration-150"
-          style={{ color: '#A09890' }}
-          onMouseEnter={e => (e.currentTarget.style.color = section.color)}
-          onMouseLeave={e => (e.currentTarget.style.color = '#A09890')}
+          className="w-full flex items-center gap-2 px-4 py-3 border-t border-border transition-colors duration-150"
+          style={{
+            fontFamily: '"Azeret Mono", monospace',
+            fontSize: 10,
+            color: '#9A9A94',
+            background: 'none',
+            border: 'none',
+            borderTop: '1px solid #DDDDD8',
+            cursor: 'pointer',
+          }}
         >
-          <span style={{ fontSize: 16, lineHeight: 1, fontWeight: 300 }}>+</span>
+          <span style={{ fontSize: 14, lineHeight: 1, fontWeight: 300 }}>+</span>
           <span>Agregar</span>
         </button>
       )}
@@ -246,8 +248,8 @@ function Skeleton() {
     <div className="page flex flex-col gap-4">
       {[100, 80, 80].map((h, i) => (
         <div key={i} style={{
-          background: '#0D0D10', border: '1px solid #1E1E26',
-          borderRadius: 16, height: h, opacity: 0.6,
+          background: '#EAEAE6', border: '1px solid #DDDDD8',
+          borderRadius: 8, height: h, opacity: 0.6,
         }} className="animate-pulse" />
       ))}
     </div>
@@ -262,11 +264,54 @@ export function ChecklistPage() {
 
   if (loading) return <Skeleton />
 
+  const total = items.length
+  const done = items.filter(i => i.completado).length
+  const pct = total > 0 ? Math.round((done / total) * 100) : 0
+
   return (
     <div className="page flex flex-col gap-4">
       <div className="animate-card-enter card-stagger-1 page-title-row mb-1">
         <h2 className="page-title">Lista</h2>
       </div>
+
+      {/* Progress bar */}
+      {total > 0 && (
+        <div className="animate-card-enter card-stagger-1 px-1 flex items-center gap-3">
+          <span style={{
+            fontFamily: '"Azeret Mono", monospace',
+            fontSize: 28,
+            fontWeight: 700,
+            color: '#0F0F0F',
+            lineHeight: 1,
+          }}>
+            {pct}%
+          </span>
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 4 }}>
+            <span style={{
+              fontFamily: '"Azeret Mono", monospace',
+              fontSize: 12,
+              color: '#5A5A56',
+            }}>
+              {done}/{total}
+            </span>
+            <div style={{
+              height: 4,
+              background: '#EAEAE6',
+              borderRadius: 2,
+              overflow: 'hidden',
+            }}>
+              <div style={{
+                width: `${pct}%`,
+                height: '100%',
+                background: '#E10600',
+                borderRadius: 2,
+                transition: 'width 300ms ease',
+              }} />
+            </div>
+          </div>
+        </div>
+      )}
+
       {SECTIONS.map((section, i) => (
         <div key={section.id} className={`animate-card-enter card-stagger-${i + 2}`}>
           <ChecklistSection

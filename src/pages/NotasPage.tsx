@@ -15,7 +15,7 @@ function formatDate(ts: number): string {
 
 // ── NoteCard ──────────────────────────────────────────────────────────────────
 
-const NOTE_ACCENT_PALETTE = ['#C8472A', '#E8A04A', '#004D98', '#10b981', '#6366f1']
+const NOTE_ACCENT_PALETTE = ['#E10600', '#F09000', '#0070C8', '#00965E', '#7838C8']
 
 function NoteCard({ note, onEdit, onDelete, index }: {
   note: Note
@@ -27,39 +27,57 @@ function NoteCard({ note, onEdit, onDelete, index }: {
 
   return (
     <div
-      className="card p-0 overflow-hidden flex flex-col cursor-pointer active:scale-[0.98] transition-transform duration-150"
-      style={{ background: 'linear-gradient(145deg, #FFFFFF 0%, #FDF8F5 100%)' }}
+      className="overflow-hidden flex flex-col cursor-pointer active:scale-[0.98] transition-transform duration-150"
+      style={{
+        background: '#FFFFFF',
+        border: '1px solid #DDDDD8',
+        borderLeft: `3px solid ${accentColor}`,
+        borderRadius: 8,
+      }}
       onClick={onEdit}
     >
-      {/* Accent bar */}
-      <div style={{ height: 3, background: accentColor, flexShrink: 0 }} />
-
       {/* Content */}
       <div className="p-3 flex flex-col gap-2 flex-1">
         {note.titulo && (
-          <p className="text-[14px] font-extrabold text-text leading-snug">
+          <p style={{
+            fontFamily: '"DM Sans", sans-serif',
+            fontSize: 14,
+            fontWeight: 700,
+            color: '#0F0F0F',
+            lineHeight: 1.4,
+          }}>
             {note.titulo}
           </p>
         )}
         <p
-          className="text-[13px] leading-snug text-text flex-1"
           style={{
+            fontFamily: '"DM Sans", sans-serif',
+            fontSize: 13,
+            color: '#5A5A56',
             display: '-webkit-box',
             WebkitLineClamp: note.titulo ? 6 : 8,
             WebkitBoxOrient: 'vertical',
             overflow: 'hidden',
             whiteSpace: 'pre-wrap',
             wordBreak: 'break-word',
-            opacity: 0.85,
+            lineHeight: 1.4,
+            flex: 1,
           }}
         >
           {note.texto}
         </p>
         <div className="flex items-center justify-between mt-1">
-          <span style={{ fontSize: 10, fontWeight: 600, color: accentColor }}>{formatDate(note.creadoEn)}</span>
+          <span style={{
+            fontFamily: '"Azeret Mono", monospace',
+            fontSize: 10,
+            fontWeight: 600,
+            color: accentColor,
+          }}>
+            {formatDate(note.creadoEn)}
+          </span>
           <button
             onClick={e => { e.stopPropagation(); onDelete() }}
-            className="touch-target shrink-0 -mr-1 text-inactive hover:text-accent text-[11px] transition-colors duration-150"
+            className="touch-target shrink-0 -mr-1 text-text-muted hover:text-accent text-[11px] transition-colors duration-150"
             aria-label="Eliminar nota"
           >
             ✕
@@ -121,7 +139,7 @@ function NoteModal({ open, onClose, onSave, initialText = '', initialTitulo = ''
           value={text}
           onChange={e => setText(e.target.value)}
           placeholder="Escribe tu nota..."
-          className="w-full resize-none outline-none text-[15px] leading-relaxed text-text placeholder:text-inactive bg-transparent"
+          className="w-full resize-none outline-none text-[15px] leading-relaxed text-text placeholder:text-text-muted bg-transparent"
           style={{ minHeight: 140 }}
         />
         <button
@@ -170,8 +188,18 @@ export function NotasPage({ fabTrigger }: { fabTrigger?: number }) {
 
       {/* Empty state */}
       {!loading && notes.length === 0 && (
-        <div className="animate-card-enter card-stagger-2 flex flex-col items-center gap-2 py-10 rounded-card border border-dashed border-border bg-surface">
-          <p className="text-[13px] text-text-sub text-center px-6">
+        <div className="animate-card-enter card-stagger-2 flex flex-col items-center gap-2 py-10" style={{
+          border: '1px dashed #DDDDD8',
+          borderRadius: 8,
+          background: 'transparent',
+        }}>
+          <p style={{
+            fontFamily: '"DM Sans", sans-serif',
+            fontSize: 13,
+            color: '#5A5A56',
+            textAlign: 'center',
+            padding: '0 24px',
+          }}>
             Guarda ideas, restaurantes, lugares que visitar...
           </p>
           <button

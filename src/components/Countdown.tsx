@@ -28,9 +28,11 @@ export function Countdown() {
   if (diff.state === 'past') {
     return (
       <TimingBoard
-        label="Viaje completado"
+        topLabel="COMPLETADO"
         value="00"
-        sub="España 2026 · Gracias por los recuerdos"
+        unit="DÍAS"
+        dateRange="05.06 → 20.06"
+        badge="ESPAÑA 2026"
       />
     )
   }
@@ -38,92 +40,139 @@ export function Countdown() {
   if (diff.state === 'during') {
     return (
       <TimingBoard
-        label="En viaje · días restantes"
+        topLabel="EN VIAJE"
         value={String(diff.days).padStart(2, '0')}
-        sub="Gran Premio de España · Barcelona"
+        unit="DÍAS"
+        dateRange="05.06 → 20.06"
+        badge="GP ESPAÑA"
       />
     )
   }
 
   return (
     <TimingBoard
-      label="Lights Out In"
+      topLabel="FALTAN"
       value={String(diff.days).padStart(2, '0')}
-      sub="Gran Premio de España · 5 Jun 2026"
+      unit="DÍAS"
+      dateRange="05.06 → 20.06"
+      badge="GP ESPAÑA"
     />
   )
 }
 
-function TimingBoard({ label, value, sub }: { label: string; value: string; sub: string }) {
+function TimingBoard({ topLabel, value, unit, dateRange, badge }: {
+  topLabel: string
+  value: string
+  unit: string
+  dateRange: string
+  badge: string
+}) {
   return (
     <div
-      className="rounded-card overflow-hidden animate-card-enter"
-      style={{ background: '#0D0D0F', border: '1px solid #1E1E22', position: 'relative' }}
+      className="animate-card-enter"
+      style={{
+        background: '#0F0F0F',
+        borderRadius: 8,
+        padding: '14px 18px',
+        position: 'relative',
+        overflow: 'hidden',
+      }}
     >
-      {/* Franja roja superior */}
-      <div style={{ height: 3, background: 'linear-gradient(90deg, #C8472A 70%, #E8A04A 100%)', position: 'relative', overflow: 'hidden' }}>
-        <div className="animate-stripe-shimmer" style={{
-          position: 'absolute', top: 0, bottom: 0, width: '30%',
-          background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent)',
-        }} />
+      {/* Shimmer line */}
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        height: 1,
+        overflow: 'hidden',
+      }}>
+        <div
+          className="animate-shimmer"
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '30%',
+            height: '100%',
+            background: 'linear-gradient(90deg, transparent, #E10600, transparent)',
+          }}
+        />
       </div>
 
-      {/* Speed lines sutiles */}
       <div style={{
-        position: 'absolute', inset: '3px 0 0 0',
-        pointerEvents: 'none', overflow: 'hidden', opacity: 0.04,
-        background: 'repeating-linear-gradient(90deg, transparent, transparent 50px, #FFFFFF 50px, #FFFFFF 51px)',
-        animation: 'race-stripe 0.7s linear infinite',
-      }} />
-
-      <div style={{ padding: '12px 20px 14px', display: 'flex', alignItems: 'center', gap: 20, position: 'relative', zIndex: 1 }}>
-
-        {/* Número grande */}
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', lineHeight: 1 }}>
-          <span className="animate-rev-up" style={{
-            fontSize: 56, fontWeight: 900,
-            color: '#FFFFFF',
-            fontVariantNumeric: 'tabular-nums',
-            letterSpacing: '-3px',
-            textShadow: '0 0 20px rgba(200,71,42,0.5)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+      }}>
+        {/* Left — number */}
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <span style={{
+              fontFamily: '"Azeret Mono", monospace',
+              fontSize: 9,
+              color: 'rgba(245,245,243,0.35)',
+              letterSpacing: '0.1em',
+              fontWeight: 600,
+            }}>
+              {topLabel}
+            </span>
+            <span
+              className="animate-count-up"
+              style={{
+                fontFamily: '"Azeret Mono", monospace',
+                fontSize: 44,
+                fontWeight: 700,
+                color: '#F5F5F3',
+                lineHeight: 1,
+                fontVariantNumeric: 'tabular-nums',
+                letterSpacing: '-2px',
+              }}
+            >
+              {value}
+            </span>
+          </div>
+          <span style={{
+            fontFamily: '"Azeret Mono", monospace',
+            fontSize: 13,
+            color: 'rgba(245,245,243,0.35)',
+            fontWeight: 500,
           }}>
-            {value}
-          </span>
-          <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: 3, textTransform: 'uppercase', color: '#C8472A', marginTop: 3 }}>
-            DÍAS
+            {unit}
           </span>
         </div>
 
-        {/* Separador */}
-        <div style={{ width: 1, height: 48, background: '#2A2A2E', flexShrink: 0 }} />
-
-        {/* Info derecha */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+        {/* Right — info */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6 }}>
           <span style={{
-            fontSize: 9, fontWeight: 800, letterSpacing: 2.5,
-            textTransform: 'uppercase', color: '#C8472A',
+            fontFamily: '"Azeret Mono", monospace',
+            fontSize: 10,
+            color: 'rgba(245,245,243,0.35)',
+            fontWeight: 500,
           }}>
-            {label}
+            {dateRange}
           </span>
-          <span style={{ fontSize: 11, fontWeight: 600, color: '#555560', letterSpacing: 0.5 }}>
-            {sub}
-          </span>
-          {/* Barra decorativa */}
-          <div style={{ display: 'flex', gap: 3, marginTop: 2 }}>
-            {['#C8472A', '#E8A04A', '#2A2A2E', '#2A2A2E', '#2A2A2E'].map((c, i) => (
-              <div key={i} style={{ height: 2, flex: 1, background: c, borderRadius: 1 }} />
-            ))}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <span style={{
+              width: 5,
+              height: 5,
+              borderRadius: '50%',
+              background: '#E10600',
+              animation: 'lights-glow 2s ease-in-out infinite',
+              boxShadow: '0 0 4px #E10600',
+            }} />
+            <span style={{
+              fontFamily: '"Azeret Mono", monospace',
+              fontSize: 10,
+              fontWeight: 700,
+              color: '#E10600',
+              letterSpacing: '0.05em',
+            }}>
+              {badge}
+            </span>
           </div>
         </div>
-
       </div>
-
-      {/* Franja a cuadros inferior */}
-      <div style={{
-        height: 5,
-        background: 'repeating-conic-gradient(#2A2A2A 0% 25%, #0D0D0F 0% 50%) 0 0 / 6px 6px',
-      }} />
-
     </div>
   )
 }

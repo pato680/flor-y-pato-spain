@@ -22,7 +22,7 @@ export function ConfirmSheet({ open, title, message, onConfirm, onCancel }: Prop
           <button
             onClick={onConfirm}
             className="btn-primary flex-1"
-            style={{ background: '#C8472A', borderColor: '#C8472A' }}
+            style={{ background: '#E10600', borderColor: '#E10600' }}
           >
             Eliminar
           </button>

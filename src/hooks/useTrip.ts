@@ -67,11 +67,11 @@ export function useTrip() {
 }
 
 export const EVENT_COLORS: Record<EventType, string> = {
-  vuelo: '#6366f1',
-  hotel: '#f59e0b',
-  actividad: '#10b981',
-  comida: '#f97316',
-  transporte: '#3b82f6',
-  otro: '#6b7280',
+  vuelo: '#7838C8',
+  hotel: '#0070C8',
+  actividad: '#F09000',
+  comida: '#F09000',
+  transporte: '#00965E',
+  otro: '#9A9A94',
   gp: '#E10600',
 }

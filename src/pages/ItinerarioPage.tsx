@@ -3,6 +3,7 @@ import { useTrip, EVENT_COLORS } from '../hooks/useTrip'
 import type { Day, TripEvent, EventType } from '../lib/types'
 import { Modal } from '../components/Modal'
 import { ConfirmSheet } from '../components/ConfirmSheet'
+import { Countdown } from '../components/Countdown'
 import { parseDate, formatFecha } from '../lib/utils'
 
 // ── EventIcon ─────────────────────────────────────────────────────────────────
@@ -61,169 +62,6 @@ function EventIcon({ tipo, size = 16, color: colorProp }: {
   )
 }
 
-// ── Countdown logic ──────────────────────────────────────────────────────────
-const TRIP_START = new Date('2026-06-05T00:00:00')
-const TRIP_END = new Date('2026-06-20T00:00:00')
-
-function getDiff() {
-  const now = new Date()
-  if (now >= TRIP_END) return { state: 'past' as const, days: 0 }
-  if (now >= TRIP_START) {
-    const diff = TRIP_END.getTime() - now.getTime()
-    return { state: 'during' as const, days: Math.floor(diff / 86400000) }
-  }
-  const diff = TRIP_START.getTime() - now.getTime()
-  return { state: 'before' as const, days: Math.floor(diff / 86400000) }
-}
-
-// ── Hero Card ─────────────────────────────────────────────────────────────────
-function HeroCard() {
-  const [diff, setDiff] = useState(getDiff)
-  const [lit, setLit] = useState(0)
-
-  useEffect(() => {
-    const id = setInterval(() => setDiff(getDiff()), 60000)
-    return () => clearInterval(id)
-  }, [])
-
-  // Semáforo F1: enciende 1 por 1, luego apaga todo, repite
-  useEffect(() => {
-    const seq: [number, number][] = [
-      [1, 700], [2, 700], [3, 700], [4, 700], [5, 900], [0, 3000],
-    ]
-    let i = 0
-    let t: ReturnType<typeof setTimeout>
-    function next() {
-      const [count, delay] = seq[i % seq.length]
-      setLit(count)
-      i++
-      t = setTimeout(next, delay)
-    }
-    t = setTimeout(next, 600)
-    return () => clearTimeout(t)
-  }, [])
-
-  const countdownLabel =
-    diff.state === 'past' ? 'COMPLETADO' :
-      diff.state === 'during' ? 'EN RUTA' :
-        'DÍAS'
-  const countdownValue = diff.state === 'past' ? '—' : String(diff.days).padStart(2, '0')
-
-  return (
-    <div style={{
-      background: '#0D0D10',
-      border: '1px solid #1E1E26',
-      borderRadius: 16,
-      overflow: 'hidden',
-      position: 'relative',
-    }}>
-
-      <div className="f1-speedlines" />
-
-      {/* Franja roja superior */}
-      <div style={{ height: 8, background: '#E10600' }} />
-
-      <div style={{ padding: '16px 18px 12px' }}>
-        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 14 }}>
-
-          {/* Left: event info */}
-          <div style={{ flex: 1 }}>
-
-            {/* Badge row */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
-              <span style={{
-                background: '#E10600', color: '#fff',
-                fontSize: 9, fontWeight: 800, letterSpacing: 2.5,
-                textTransform: 'uppercase', padding: '3px 9px', borderRadius: 4,
-              }}>
-                GP España
-              </span>
-              <span style={{
-                fontSize: 9, fontWeight: 700, letterSpacing: 2,
-                textTransform: 'uppercase', color: '#7A7A8A',
-              }}>
-                · F1 2026
-              </span>
-            </div>
-
-            {/* Title */}
-            <h1 style={{
-              fontSize: 22, fontWeight: 800, color: '#FFFFFF',
-              letterSpacing: '-0.5px', lineHeight: 1.1, marginBottom: 10,
-            }}>
-              España 2026
-            </h1>
-
-            {/* Gradient divider */}
-            <div style={{
-              height: 1,
-              background: 'linear-gradient(90deg, #E10600 60%, transparent)',
-              marginBottom: 10,
-            }} />
-
-            {/* Dates + circuit */}
-            <p style={{
-              fontSize: 11, fontWeight: 600, color: '#A0A0AE', letterSpacing: 0.2,
-            }}>
-              5 – 20 jun · 16 días
-            </p>
-            <p style={{ fontSize: 10, color: '#7A7A8A', marginTop: 3 }}>
-              Circuit de Barcelona-Catalunya
-            </p>
-
-          </div>
-
-          {/* Right: timing board */}
-          <div style={{
-            textAlign: 'center',
-            background: '#08080C',
-            border: '1px solid #1E1E26',
-            borderRadius: 10,
-            padding: '10px 14px',
-            flexShrink: 0,
-          }}>
-            {/* Semáforo F1 */}
-            <div style={{ display: 'flex', justifyContent: 'center', gap: 5, marginBottom: 10 }}>
-              {[1, 2, 3, 4, 5].map(n => (
-                <div key={n} style={{
-                  width: 10, height: 10, borderRadius: '50%',
-                  background: lit >= n ? '#E10600' : '#1C0808',
-                  border: `1px solid ${lit >= n ? '#FF2800' : '#2E1010'}`,
-                  boxShadow: lit >= n ? '0 0 6px #E10600, 0 0 14px rgba(225,6,0,0.6)' : 'none',
-                  transition: 'background 80ms, box-shadow 80ms',
-                }} />
-              ))}
-            </div>
-
-            <span style={{
-              display: 'block',
-              fontSize: 52, fontWeight: 900, color: '#FFFFFF',
-              lineHeight: 1, letterSpacing: '-3px',
-              fontVariantNumeric: 'tabular-nums',
-              textShadow: '0 0 20px rgba(225,6,0,0.5)',
-            }}>
-              {countdownValue}
-            </span>
-            <span style={{
-              display: 'block',
-              fontSize: 8, fontWeight: 700, letterSpacing: 2.5,
-              textTransform: 'uppercase', color: '#E10600',
-              marginTop: 6,
-            }}>
-              {countdownLabel}
-            </span>
-          </div>
-
-        </div>
-      </div>
-
-      {/* Franja roja inferior */}
-      <div style={{ height: 8, background: '#E10600', boxShadow: '0 4px 16px rgba(225,6,0,0.5)' }} />
-
-    </div>
-  )
-}
-
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 function formatRango(fechaInicio: string, fechaFin: string): string {
@@ -242,221 +80,324 @@ function formatRango(fechaInicio: string, fechaFin: string): string {
   return `${wd1} ${d1.getDate()} ${mo1} – ${wd2} ${d2.getDate()} ${mo2}`
 }
 
-// ── EventRow ──────────────────────────────────────────────────────────────────
-
-interface EventRowProps {
-  event: TripEvent
-  onDelete: () => void
-  onEdit: () => void
-  isFirst?: boolean
-  isLast?: boolean
+const EVENT_TYPE_LABELS: Record<EventType, string> = {
+  vuelo: 'VUELO',
+  hotel: 'HOTEL',
+  actividad: 'ACTIVIDAD',
+  comida: 'COMIDA',
+  transporte: 'TRANSPORTE',
+  otro: 'OTRO',
+  gp: 'GP F1',
 }
 
-function EventRowGP({ event, onDelete, onEdit, isFirst, isLast }: EventRowProps) {
-  return (
-    <TimelineItem color="#E10600" isFirst={isFirst} isLast={isLast}>
-      <div className="card p-3 flex gap-3 bg-[#0D0D10] border border-[#1E1E26] shadow-md relative overflow-hidden mb-2">
-        <div className="absolute top-0 left-0 right-0 h-1" style={{ background: 'linear-gradient(90deg, #E10600, #FF4422)' }} />
-        <span className="shrink-0 mt-1"><EventIcon tipo="gp" /></span>
-        <div className="flex-1 min-w-0 pr-1">
-          <div className="flex items-center justify-between mb-1">
-            <span style={{ background: '#E10600', color: '#fff', fontSize: 9, fontWeight: 800, padding: '2px 7px', borderRadius: 3 }}>
-              GP F1
-            </span>
-            <span className="text-[12px] font-medium text-[#7A7A8A] tabular-nums">{event.hora || '—'}</span>
-          </div>
-          <p className="text-[14px] font-bold text-white leading-snug">{event.titulo}</p>
-          {event.detalle && <p className="text-[12px] mt-0.5 leading-snug text-[#7A7A8A]">{event.detalle}</p>}
-        </div>
-        <div className="flex flex-col gap-3 opacity-70">
-          <button onClick={onEdit} className="text-[#7A7A8A]"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M8.5 1.5L10.5 3.5M1 11H3L9.5 4.5L7.5 2.5L1 9V11Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg></button>
-          <button onClick={onDelete} className="text-[12px] text-[#7A7A8A]">✕</button>
-        </div>
-      </div>
-    </TimelineItem>
-  )
+function getDayLabel(fecha: string, tripStart: string): { dayNum: number; weekday: string } {
+  const d = parseDate(fecha)
+  const s = parseDate(tripStart)
+  const dayNum = Math.floor((d.getTime() - s.getTime()) / 86400000) + 1
+  const cap = (str: string) => str.charAt(0).toUpperCase() + str.slice(1)
+  const weekday = cap(d.toLocaleDateString('es-ES', { weekday: 'short' }).replace(/[.,]/g, '').trim())
+  return { dayNum, weekday }
 }
 
-function EventRow({ event, onDelete, onEdit, isFirst, isLast }: EventRowProps) {
-  if (event.tipo === 'gp') return <EventRowGP event={event} onDelete={onDelete} onEdit={onEdit} isFirst={isFirst} isLast={isLast} />
-  const color = EVENT_COLORS[event.tipo] || '#A39B94'
+// ── CitySection (timeline) ───────────────────────────────────────────────────
 
-  return (
-    <TimelineItem color={color} dotStyle="solid" isFirst={isFirst} isLast={isLast}>
-      <div className="card p-3 flex items-center gap-3 bg-surface border border-border shadow-sm mb-2 hover:shadow-md transition-shadow">
-        <span
-          className="shrink-0 flex items-center justify-center w-9 h-9 rounded-full"
-          style={{ background: `${color}15` }}
-        >
-          <EventIcon tipo={event.tipo} color={color} />
-        </span>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center justify-between mb-0.5">
-            <p className="text-[14px] font-semibold text-text leading-snug truncate pr-2">{event.titulo}</p>
-            <span className="text-[11px] font-semibold text-text-sub tabular-nums shrink-0">{event.hora || '—'}</span>
-          </div>
-          {event.detalle && (
-            <p className="text-[12px] text-text-sub leading-snug truncate">{event.detalle}</p>
-          )}
-        </div>
-        <div className="flex flex-col items-center gap-3 border-l border-border pl-3 ml-1 opacity-50">
-          <button onClick={onEdit} className="text-inactive hover:text-accent"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M8.5 1.5L10.5 3.5M1 11H3L9.5 4.5L7.5 2.5L1 9V11Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg></button>
-        </div>
-      </div>
-    </TimelineItem>
-  )
-}
-
-// ── TravelCard ────────────────────────────────────────────────────────────────
-
-function TravelCard({ fecha, ruta }: { fecha: string; ruta: string }) {
-  return (
-    <div className="overflow-hidden rounded-card border border-border" style={{ background: '#FDF0EC' }}>
-      <div className="h-1 bg-accent" />
-      <div className="flex items-center gap-3 px-4 py-3">
-        <EventIcon tipo="vuelo" size={20} color="#C8472A" />
-        <div>
-          <p className="text-[11px] font-semibold text-accent uppercase tracking-wider mb-0.5">
-            {formatFecha(fecha)}
-          </p>
-          <p className="text-[15px] font-bold text-text">{ruta}</p>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-// ── TimelineItem ──────────────────────────────────────────────────────────────
-
-function TimelineItem({
-  color, dotStyle = 'solid', isFirst = false, isLast = false, children,
-}: {
-  color: string
-  dotStyle?: 'solid' | 'outline'
-  isFirst?: boolean
-  isLast?: boolean
-  children: React.ReactNode
-}) {
-  return (
-    <div className="flex gap-3 items-stretch">
-      <div className="flex flex-col items-center w-5 shrink-0 pt-4">
-        <div className={`w-[2px] flex-none h-3 ${isFirst ? 'bg-transparent' : 'bg-border'}`} />
-        <div
-          className="w-3 h-3 rounded-full shrink-0 z-10"
-          style={{
-            backgroundColor: dotStyle === 'solid' ? color : 'var(--color-bg)',
-            border: `2px solid ${color}`,
-          }}
-        />
-        <div className={`w-[2px] flex-1 mt-1 ${isLast ? 'bg-transparent' : 'bg-border'}`} />
-      </div>
-      <div className="flex-1 min-w-0" style={{ paddingBottom: isLast ? 0 : 4 }}>
-        {children}
-      </div>
-    </div>
-  )
-}
-
-// ── DayCard ───────────────────────────────────────────────────────────────────
-
-interface DayCardProps {
+interface CitySectionProps {
   day: Day
+  cityIndex: number
   onAddEvent: () => void
   onDeleteEvent: (eventId: string) => void
   onEditEvent: (event: TripEvent) => void
-  onEdit: () => void
+  onEditCity: () => void
 }
 
-function DayCard({ day, onAddEvent, onDeleteEvent, onEditEvent, onEdit }: DayCardProps) {
+function CitySection({ day, cityIndex, onAddEvent, onDeleteEvent, onEditEvent, onEditCity }: CitySectionProps) {
   const sortedEvents = [...day.eventos].sort((a, b) => {
     if (a.fecha && b.fecha && a.fecha !== b.fecha) return a.fecha.localeCompare(b.fecha)
     return a.hora.localeCompare(b.hora)
   })
-  const noches = Math.round(
-    (parseDate(day.fechaFin).getTime() - parseDate(day.fechaInicio).getTime()) / 86400000
-  )
-  const nochesBadge = noches === 0 ? '1 día/s' : `${noches} noches`
 
+  // Group events by date
   const byDate = new Map<string, TripEvent[]>()
-  const noDateEvents: TripEvent[] = []
   for (const ev of sortedEvents) {
-    if (ev.fecha) {
-      if (!byDate.has(ev.fecha)) byDate.set(ev.fecha, [])
-      byDate.get(ev.fecha)!.push(ev)
-    } else {
-      noDateEvents.push(ev)
-    }
+    const key = ev.fecha || day.fechaInicio
+    if (!byDate.has(key)) byDate.set(key, [])
+    byDate.get(key)!.push(ev)
   }
   const groupedDates = [...byDate.entries()].sort(([a], [b]) => a.localeCompare(b))
 
+  const hasEvents = sortedEvents.length > 0
+  let dateGroupIndex = 0
+
   return (
-    <div className="mb-10 block">
-      {/* Header Minimalista */}
-      <div className="flex items-start justify-between mb-4">
-        <div>
-          {day.ciudad && (
-            <h2 className="text-[18px] font-bold text-text uppercase tracking-wide flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full" style={{ background: day.color }}></span>
-              {day.ciudad}
-            </h2>
-          )}
-          <p className="text-[13px] font-medium text-text-sub mt-0.5 ml-4.5 pl-1.5">
-            {formatRango(day.fechaInicio, day.fechaFin)} • <span className="text-accent">{nochesBadge}</span>
-          </p>
+    <div
+      style={{ animation: `card-enter 350ms cubic-bezier(.32,.72,0,1) ${80 + cityIndex * 60}ms both` }}
+    >
+      {/* City node + header */}
+      <div style={{ position: 'relative', paddingLeft: 36, marginBottom: 12, minHeight: 28 }}>
+        {/* City dot */}
+        <div style={{
+          position: 'absolute',
+          left: -8,
+          top: 2,
+          width: 18,
+          height: 18,
+          borderRadius: '50%',
+          background: day.color,
+          border: '3px solid #F5F5F3',
+          boxShadow: `0 0 0 2px ${day.color}40`,
+          animation: `dot-pop 400ms cubic-bezier(.32,.72,0,1) ${100 + cityIndex * 80}ms both`,
+          zIndex: 2,
+        }} />
+
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8 }}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+              <span style={{
+                fontFamily: '"DM Sans", sans-serif',
+                fontSize: 17,
+                fontWeight: 700,
+                color: '#0F0F0F',
+              }}>
+                {day.ciudad}
+              </span>
+              {day.eventos.some(e => e.tipo === 'gp') && (
+                <span style={{
+                  fontFamily: '"Azeret Mono", monospace',
+                  fontSize: 9,
+                  fontWeight: 700,
+                  color: '#FFF',
+                  background: '#E10600',
+                  padding: '3px 8px',
+                  borderRadius: 4,
+                }}>
+                  GP F1
+                </span>
+              )}
+            </div>
+            <span style={{
+              fontFamily: '"Azeret Mono", monospace',
+              fontSize: 10,
+              color: '#9A9A94',
+              marginTop: 2,
+              display: 'block',
+            }}>
+              {formatRango(day.fechaInicio, day.fechaFin)}
+            </span>
+          </div>
+          <button
+            onClick={onEditCity}
+            style={{
+              opacity: 0.5,
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              padding: 4,
+              marginTop: 2,
+            }}
+            aria-label="Editar ciudad"
+          >
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <path d="M8.5 1.5L10.5 3.5M1 11H3L9.5 4.5L7.5 2.5L1 9V11Z" stroke="#9A9A94" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
         </div>
-        <button
-          onClick={onEdit}
-          className="flex items-center justify-center w-8 h-8 rounded-full bg-surface border border-border shadow-sm text-text-sub hover:text-accent transition-colors active:scale-95"
-          aria-label="Editar ciudad"
-        >
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9.5 2.5L11.5 4.5M2 12H4L10.5 5.5L8.5 3.5L2 10V12Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
-        </button>
       </div>
 
-      <div className="ml-1.5">
-        {/* Eventos sin fecha */}
-        {noDateEvents.map((ev, i) => (
-          <EventRow
-            key={ev.id} event={ev} onDelete={() => onDeleteEvent(ev.id)} onEdit={() => onEditEvent(ev)}
-            isFirst={i === 0 && groupedDates.length === 0}
-            isLast={i === noDateEvents.length - 1 && groupedDates.length === 0}
-          />
-        ))}
+      {/* Events grouped by date */}
+      {hasEvents && groupedDates.map(([fecha, events]) => {
+        const { dayNum, weekday } = getDayLabel(fecha, '2026-06-05')
+        const currentIdx = dateGroupIndex++
+        return (
+          <div
+            key={fecha}
+            style={{
+              paddingLeft: 36,
+              marginBottom: 12,
+              animation: `card-enter 350ms cubic-bezier(.32,.72,0,1) ${120 + cityIndex * 60 + currentIdx * 40}ms both`,
+            }}
+          >
+            {/* Day node */}
+            <div style={{ position: 'relative', marginBottom: 8 }}>
+              <div style={{
+                position: 'absolute',
+                left: -36 - 4,
+                top: 3,
+                width: 10,
+                height: 10,
+                borderRadius: '50%',
+                background: '#F5F5F3',
+                border: `2.5px solid ${day.color}`,
+                zIndex: 2,
+                animation: `dot-pop 300ms cubic-bezier(.32,.72,0,1) ${140 + currentIdx * 50}ms both`,
+              }} />
 
-        {/* Eventos por día */}
-        {groupedDates.map(([fecha, events], gIndex) => {
-          const isLastGroup = gIndex === groupedDates.length - 1
-          return (
-            <div key={fecha} className="mb-2">
-              <div className="flex items-center gap-3 ml-2 mb-3 mt-4">
-                <span className="text-[12px] font-bold text-text bg-accent-light text-accent px-2 py-0.5 rounded-md">
-                  {formatFecha(fecha)}
+              {/* Day header */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span style={{
+                  fontFamily: '"Azeret Mono", monospace',
+                  fontSize: 13,
+                  fontWeight: 700,
+                  color: '#E10600',
+                }}>
+                  D{dayNum}
+                </span>
+                <span style={{
+                  fontFamily: '"Azeret Mono", monospace',
+                  fontSize: 10,
+                  color: '#5A5A56',
+                  textTransform: 'uppercase',
+                }}>
+                  {weekday}
+                </span>
+                <div style={{ flex: 1, height: 1, background: '#DDDDD8', opacity: 0.5 }} />
+                <span style={{
+                  fontFamily: '"Azeret Mono", monospace',
+                  fontSize: 9,
+                  color: '#9A9A94',
+                }}>
+                  {events.length}
                 </span>
               </div>
-              {events.map((ev, i) => (
-                <EventRow
-                  key={ev.id} event={ev} onDelete={() => onDeleteEvent(ev.id)} onEdit={() => onEditEvent(ev)}
-                  isFirst={i === 0 && gIndex === 0 && noDateEvents.length === 0}
-                  isLast={i === events.length - 1 && isLastGroup}
-                />
-              ))}
             </div>
-          )
-        })}
 
-        {/* Botón Flotante para agregar evento al final del timeline */}
-        <div className="flex gap-3 items-center ml-1 mt-3 pb-2">
-          <div className="w-7 flex justify-center">
-            <button
-              onClick={onAddEvent}
-              className="w-6 h-6 rounded-full bg-surface border-[1.5px] border-dashed border-accent flex items-center justify-center text-accent transition-transform active:scale-90"
-              aria-label="Agregar evento"
-            >
-              <svg width="10" height="10" viewBox="0 0 10 10" stroke="currentColor" strokeWidth="2"><path d="M5 2v6M2 5h6" /></svg>
-            </button>
+            {/* Event rows */}
+            {events.map((ev, i) => {
+              const evColor = EVENT_COLORS[ev.tipo] || '#9A9A94'
+              const isLast = i === events.length - 1
+              return (
+                <div
+                  key={ev.id}
+                  onClick={() => onEditEvent(ev)}
+                  style={{
+                    position: 'relative',
+                    padding: '6px 0',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 8,
+                    cursor: 'pointer',
+                    borderBottom: isLast ? 'none' : '1px solid #EAEAE6',
+                  }}
+                >
+                  {/* Tick mark */}
+                  <div style={{
+                    position: 'absolute',
+                    left: -36 + 1,
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    width: 6,
+                    height: 2,
+                    background: day.color,
+                    opacity: 0.3,
+                  }} />
+
+                  {/* Time */}
+                  <span style={{
+                    fontFamily: '"Azeret Mono", monospace',
+                    fontSize: 10,
+                    fontWeight: 600,
+                    color: evColor,
+                    width: 34,
+                    flexShrink: 0,
+                  }}>
+                    {ev.hora || '—'}
+                  </span>
+
+                  {/* Name */}
+                  <span style={{
+                    fontFamily: '"DM Sans", sans-serif',
+                    fontSize: 12,
+                    fontWeight: 500,
+                    color: '#0F0F0F',
+                    flex: 1,
+                    minWidth: 0,
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                  }}>
+                    {ev.titulo}
+                  </span>
+
+                  {/* Type tag */}
+                  <span style={{
+                    fontFamily: '"Azeret Mono", monospace',
+                    fontSize: 8,
+                    color: '#9A9A94',
+                    letterSpacing: '0.06em',
+                    textTransform: 'uppercase',
+                    flexShrink: 0,
+                  }}>
+                    {EVENT_TYPE_LABELS[ev.tipo]}
+                  </span>
+
+                  {/* Delete */}
+                  <button
+                    onClick={(e) => { e.stopPropagation(); onDeleteEvent(ev.id) }}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      padding: '0 2px',
+                      color: '#9A9A94',
+                      fontSize: 10,
+                      opacity: 0.5,
+                      flexShrink: 0,
+                    }}
+                    aria-label="Eliminar evento"
+                  >
+                    ✕
+                  </button>
+                </div>
+              )
+            })}
           </div>
-          <span className="text-[13px] font-semibold text-text-sub cursor-pointer hover:text-accent" onClick={onAddEvent}>Añadir plan</span>
+        )
+      })}
+
+      {/* Empty state */}
+      {!hasEvents && (
+        <div style={{ paddingLeft: 36, marginBottom: 12 }}>
+          <div style={{ position: 'relative' }}>
+            <div style={{
+              position: 'absolute',
+              left: -36 - 4,
+              top: 8,
+              width: 10,
+              height: 10,
+              borderRadius: '50%',
+              background: '#F5F5F3',
+              border: '2px dashed #DDDDD8',
+              zIndex: 2,
+            }} />
+            <div style={{
+              fontFamily: '"Azeret Mono", monospace',
+              fontSize: 10,
+              color: '#9A9A94',
+              border: '1px dashed #DDDDD8',
+              borderRadius: 8,
+              padding: '10px 14px',
+            }}>
+              Sin planes
+            </div>
+          </div>
         </div>
+      )}
+
+      {/* Add event button */}
+      <div style={{ paddingLeft: 36, marginBottom: 20 }}>
+        <button
+          onClick={onAddEvent}
+          style={{
+            fontFamily: '"Azeret Mono", monospace',
+            fontSize: 10,
+            color: '#9A9A94',
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            padding: 0,
+          }}
+        >
+          + Agregar evento
+        </button>
       </div>
     </div>
   )
@@ -555,8 +496,8 @@ function AddDayModal({ open, onClose, onSave, onDelete, initialValues, mode = 'a
                   onClick={() => setForm(f => ({ ...f, ciudad: nombre, color }))}
                   className="flex items-center gap-2 px-3 h-11 rounded-btn transition-all duration-150"
                   style={{
-                    backgroundColor: selected ? color : '#F5F3F0',
-                    color: selected ? '#fff' : '#1C1917',
+                    backgroundColor: selected ? color : '#EAEAE6',
+                    color: selected ? '#fff' : '#0F0F0F',
                   }}
                 >
                   <span
@@ -582,7 +523,7 @@ function AddDayModal({ open, onClose, onSave, onDelete, initialValues, mode = 'a
           <button
             onClick={onDelete}
             className="w-full text-[14px] font-semibold py-2 transition-opacity active:opacity-60"
-            style={{ color: '#C8472A' }}
+            style={{ color: '#E10600' }}
           >
             Eliminar ciudad
           </button>
@@ -660,14 +601,14 @@ function AddEventModal({ open, onClose, onSave, fechaInicio, fechaFin, initialVa
 
         {/* ── Tipo ── */}
         <div>
-          <p className="text-[11px] font-bold text-text-sub uppercase tracking-wider mb-2.5">Tipo</p>
+          <p style={{ fontFamily: '"Azeret Mono", monospace', fontSize: 9, fontWeight: 700, color: '#5A5A56', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>Tipo</p>
           <div className="grid grid-cols-4 gap-1.5">
             {EVENT_TYPES.map(({ tipo, label }) => {
-              const isGP = tipo === 'gp'
               const selected = form.tipo === tipo
-              const bg = selected ? (isGP ? '#0D0D10' : '#FDF0EC') : '#F5F3F0'
-              const borderColor = selected ? (isGP ? '#E10600' : '#C8472A') : 'transparent'
-              const labelColor = selected ? (isGP ? '#E10600' : '#C8472A') : '#A09890'
+              const evColor = EVENT_COLORS[tipo]
+              const bg = selected ? `${evColor}15` : '#EAEAE6'
+              const borderColor = selected ? evColor : 'transparent'
+              const labelColor = selected ? evColor : '#9A9A94'
               return (
                 <button
                   key={tipo}
@@ -676,7 +617,7 @@ function AddEventModal({ open, onClose, onSave, fechaInicio, fechaFin, initialVa
                   style={{ backgroundColor: bg, border: `1.5px solid ${borderColor}` }}
                 >
                   <EventIcon tipo={tipo} size={20} color={labelColor} />
-                  <span className="text-[10px] font-bold leading-none" style={{ color: labelColor }}>{label}</span>
+                  <span style={{ fontFamily: '"Azeret Mono", monospace', fontSize: 9, fontWeight: 600, color: labelColor }}>{label}</span>
                 </button>
               )
             })}
@@ -687,31 +628,31 @@ function AddEventModal({ open, onClose, onSave, fechaInicio, fechaFin, initialVa
 
         {/* ── Cuándo ── */}
         <div className="flex flex-col gap-3">
-          <p className="text-[11px] font-bold text-text-sub uppercase tracking-wider">Cuándo</p>
+          <p style={{ fontFamily: '"Azeret Mono", monospace', fontSize: 9, fontWeight: 700, color: '#5A5A56', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Cuándo</p>
 
           {/* All-day segmented control */}
-          <div className="flex p-1 gap-1 rounded-input" style={{ background: '#EDEAE6' }}>
+          <div className="flex p-1 gap-1 rounded-input" style={{ background: '#EAEAE6' }}>
             <button
               onClick={() => setForm(f => ({ ...f, allDay: false }))}
-              className="flex-1 h-11 rounded-[9px] text-[13px] font-semibold transition-all duration-200 active:scale-[0.97]"
+              className="flex-1 h-11 rounded-[5px] text-[13px] font-semibold transition-all duration-200 active:scale-[0.97]"
               style={{
                 background: !form.allDay ? '#FFFFFF' : 'transparent',
-                color: !form.allDay ? '#1C1917' : '#A09890',
-                boxShadow: !form.allDay ? '0 1px 3px rgba(28,25,23,0.10)' : 'none',
+                color: !form.allDay ? '#0F0F0F' : '#9A9A94',
+                boxShadow: !form.allDay ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
               }}
             >
-              🕐 Hora
+              Hora
             </button>
             <button
               onClick={() => setForm(f => ({ ...f, allDay: true, hora: '' }))}
-              className="flex-1 h-11 rounded-[9px] text-[13px] font-semibold transition-all duration-200 active:scale-[0.97]"
+              className="flex-1 h-11 rounded-[5px] text-[13px] font-semibold transition-all duration-200 active:scale-[0.97]"
               style={{
                 background: form.allDay ? '#FFFFFF' : 'transparent',
-                color: form.allDay ? '#1C1917' : '#A09890',
-                boxShadow: form.allDay ? '0 1px 3px rgba(28,25,23,0.10)' : 'none',
+                color: form.allDay ? '#0F0F0F' : '#9A9A94',
+                boxShadow: form.allDay ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
               }}
             >
-              ☀️ Todo el día
+              Todo el día
             </button>
           </div>
 
@@ -750,7 +691,7 @@ function AddEventModal({ open, onClose, onSave, fechaInicio, fechaFin, initialVa
 
         {/* ── Detalles ── */}
         <div className="flex flex-col gap-3">
-          <p className="text-[11px] font-bold text-text-sub uppercase tracking-wider">Detalles</p>
+          <p style={{ fontFamily: '"Azeret Mono", monospace', fontSize: 9, fontWeight: 700, color: '#5A5A56', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Detalles</p>
           <div>
             <label className="text-[11px] font-medium text-text-sub block mb-1.5">Título</label>
             <input
@@ -808,80 +749,104 @@ export function ItinerarioPage({ fabTrigger }: { fabTrigger?: number }) {
   const editEventDay = editEventFor ? days.find(d => d.id === editEventFor.dayId) : null
 
   return (
-    <div className="page flex flex-col gap-4">
+    <div className="page flex flex-col gap-4" style={{ position: 'relative' }}>
 
-      {/* Hero */}
-      <div className="animate-card-enter card-stagger-1">
-        <HeroCard />
+      {/* Carbon fiber background texture */}
+      <div style={{
+        position: 'absolute',
+        inset: 0,
+        pointerEvents: 'none',
+        zIndex: 0,
+        opacity: 0.03,
+        backgroundImage: 'repeating-linear-gradient(45deg, #0F0F0F 0px, #0F0F0F 1px, transparent 1px, transparent 4px), repeating-linear-gradient(-45deg, #0F0F0F 0px, #0F0F0F 1px, transparent 1px, transparent 4px)',
+        backgroundSize: '6px 6px',
+        animation: 'carbon-breathe 4s ease-in-out infinite',
+      }} />
+
+      {/* Countdown */}
+      <div className="animate-card-enter card-stagger-1" style={{ padding: '0 0 4px', position: 'relative', zIndex: 1 }}>
+        <Countdown />
       </div>
 
-      {/* Section */}
-      <div className="animate-card-enter card-stagger-2 flex flex-col gap-0">
+      {/* Timeline */}
+      <div style={{ position: 'relative', zIndex: 1, marginLeft: 30, paddingBottom: 20 }}>
 
-        {/* Header row */}
-        <div className="page-title-row mb-3">
-          <h2 className="page-title">Viaje</h2>
-        </div>
+        {/* Continuous vertical line */}
+        {days.length > 0 && (
+          <div style={{
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            bottom: 0,
+            width: 2,
+            background: days.length === 1
+              ? days[0].color
+              : `linear-gradient(to bottom, ${days.map((d, i) => `${d.color} ${(i / (days.length - 1)) * 100}%`).join(', ')})`,
+            opacity: 0.3,
+            borderRadius: 1,
+            animation: 'line-grow 800ms cubic-bezier(.32,.72,0,1) 200ms both',
+            transformOrigin: 'top',
+          }} />
+        )}
 
-        {/* ── Timeline ── */}
-        <div className="flex flex-col">
+        {/* Loading */}
+        {loading && (
+          <div style={{ padding: '24px 0 24px 36px' }}>
+            <div className="w-5 h-5 rounded-full border-2 border-border border-t-accent animate-spin" />
+          </div>
+        )}
 
-          {/* Vuelo de ida */}
-          <TimelineItem color="#C8472A" dotStyle="outline" isFirst>
-            <TravelCard fecha="2026-06-05" ruta="Montevideo → Madrid" />
-          </TimelineItem>
-
-          {/* Loading */}
-          {loading && (
-            <div className="flex gap-3 items-stretch">
-              <div className="flex flex-col items-center w-5 shrink-0">
-                <div className="w-px flex-1 bg-border" />
-              </div>
-              <div className="flex-1 py-6 flex justify-center">
-                <div className="w-5 h-5 rounded-full border-2 border-border border-t-accent animate-spin" />
-              </div>
+        {/* Empty state */}
+        {!loading && days.length === 0 && (
+          <div style={{ padding: '16px 0' }}>
+            <div style={{
+              border: '1px dashed #DDDDD8',
+              borderRadius: 8,
+              padding: '20px 16px',
+              textAlign: 'center',
+            }}>
+              <p style={{
+                fontFamily: '"DM Sans", sans-serif',
+                fontSize: 13,
+                color: '#5A5A56',
+                marginBottom: 12,
+              }}>
+                Agrega las ciudades que vas a visitar
+              </p>
+              <button onClick={() => setShowAddDay(true)} className="btn-primary w-full">
+                + Ciudad
+              </button>
             </div>
-          )}
+          </div>
+        )}
 
-          {/* Empty state */}
-          {!loading && days.length === 0 && (
-            <div className="flex gap-3 items-stretch">
-              <div className="flex flex-col items-center w-5 shrink-0">
-                <div className="w-px flex-1 bg-border" />
-              </div>
-              <div className="flex-1 py-4 pb-4">
-                <div className="flex flex-col items-center gap-2 py-5 rounded-card border border-dashed border-border bg-surface">
-                  <p className="text-[13px] text-text-sub text-center px-4">
-                    Agrega las ciudades que vas a visitar
-                  </p>
-                  <button onClick={() => setShowAddDay(true)} className="btn-primary h-12 px-6 text-[15px] w-full">
-                    + Ciudad
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
+        {/* Cities */}
+        {!loading && days.map((day, i) => (
+          <CitySection
+            key={day.id}
+            day={day}
+            cityIndex={i}
+            onAddEvent={() => setAddEventFor({ dayId: day.id, fechaInicio: day.fechaInicio, fechaFin: day.fechaFin })}
+            onDeleteEvent={(eventId) => setConfirmDeleteEvent({ dayId: day.id, eventId })}
+            onEditEvent={(event) => setEditEventFor({ dayId: day.id, event })}
+            onEditCity={() => setEditDayId(day.id)}
+          />
+        ))}
 
-          {/* Ciudades */}
-          {!loading && days.map((day) => (
-            <TimelineItem key={day.id} color={day.color} dotStyle="solid">
-              <DayCard
-                day={day}
-                onAddEvent={() => setAddEventFor({ dayId: day.id, fechaInicio: day.fechaInicio, fechaFin: day.fechaFin })}
-                onDeleteEvent={(eventId) => setConfirmDeleteEvent({ dayId: day.id, eventId })}
-                onEditEvent={(event) => setEditEventFor({ dayId: day.id, event })}
-                onEdit={() => setEditDayId(day.id)}
-              />
-            </TimelineItem>
-          ))}
-
-          {/* Vuelo de vuelta */}
-          <TimelineItem color="#C8472A" dotStyle="outline" isLast>
-            <TravelCard fecha="2026-06-20" ruta="Madrid → Montevideo" />
-          </TimelineItem>
-
-        </div>
-
+        {/* Final dot */}
+        {!loading && days.length > 0 && (
+          <div style={{
+            position: 'absolute',
+            left: -3,
+            bottom: 16,
+            width: 8,
+            height: 8,
+            borderRadius: '50%',
+            background: days[days.length - 1].color,
+            opacity: 0.6,
+            zIndex: 2,
+          }} />
+        )}
       </div>
 
       {/* Modals */}

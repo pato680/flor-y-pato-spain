@@ -26,19 +26,37 @@ export function Modal({ open, onClose, title, children }: Props) {
     >
       <div className="absolute inset-0 bg-black/50" />
       <div
-        className="relative w-full max-w-lg bg-surface border border-border rounded-t-2xl p-5 animate-modal-enter"
-        style={{ paddingBottom: 'calc(20px + env(safe-area-inset-bottom, 0px))' }}
+        className="relative w-full max-w-lg animate-modal-enter"
+        style={{
+          background: '#FFFFFF',
+          border: '1px solid #DDDDD8',
+          borderRadius: '16px 16px 0 0',
+          padding: 20,
+          paddingBottom: 'calc(20px + env(safe-area-inset-bottom, 0px))',
+        }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Handle bar */}
-        <div className="absolute top-3 left-1/2 -translate-x-1/2 w-9 h-1 rounded-full bg-border" />
+        <div className="absolute top-3 left-1/2 -translate-x-1/2" style={{
+          width: 36,
+          height: 4,
+          borderRadius: 2,
+          background: '#DDDDD8',
+        }} />
 
         <div className="flex items-center justify-between mb-5 mt-1">
-          <h2 className="text-[17px] font-bold text-text">{title}</h2>
+          <h2 style={{
+            fontFamily: '"DM Sans", sans-serif',
+            fontSize: 17,
+            fontWeight: 700,
+            color: '#0F0F0F',
+          }}>
+            {title}
+          </h2>
           <button
             onClick={onClose}
-            className="touch-target text-inactive hover:text-text w-9 h-9 flex items-center justify-center rounded-full transition-colors duration-150"
-            style={{ background: '#F0EDE9' }}
+            className="touch-target text-text-muted hover:text-text w-9 h-9 flex items-center justify-center rounded-full transition-colors duration-150"
+            style={{ background: '#EAEAE6' }}
           >
             <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
               <path d="M1 1L9 9M9 1L1 9" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>

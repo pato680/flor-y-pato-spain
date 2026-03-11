@@ -40,7 +40,7 @@ export default function App() {
           top: 0, left: 0, right: 0, bottom: 0,
           display: 'flex',
           flexDirection: 'column',
-          background: '#FAF8F5',
+          background: '#F5F5F3',
           paddingTop: 'env(safe-area-inset-top, 0px)',
           overflow: 'hidden',
           opacity: splash ? 0 : 1,

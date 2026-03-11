@@ -8,9 +8,9 @@ import { formatFecha } from '../lib/utils'
 // ── Constants ─────────────────────────────────────────────────────────────────
 
 const PERSONA_COLOR: Record<string, string> = {
-  flor: '#C8472A',
-  pato: '#004D98',
-  ambos: '#78716C',
+  flor: '#E10600',
+  pato: '#0070C8',
+  ambos: '#5A5A56',
 }
 const PERSONA_LABEL: Record<string, string> = {
   flor: 'Flor',
@@ -85,40 +85,103 @@ function ResumenCard({ eurData, usdData }: { eurData: CurrencyData | null; usdDa
   if (!mainData) return null
   const mainSym = eurData ? '€' : '$'
 
-  // Dummy logic for a dynamic looking circular dash
-  const strokeDasharray = 440
-  const randomOffset = 440 * 0.35 // fixed visual representing spent budget
-
   return (
-    <div className="card border border-border bg-surface shadow-md py-6 px-5 flex flex-col items-center mb-0">
-      <h3 className="text-[18px] font-bold text-text mb-6 tracking-wide">Presupuesto Viaje</h3>
-
-      {/* Circular Progress using SVG */}
-      <div className="relative w-40 h-40 flex items-center justify-center mb-6">
-        <svg className="absolute inset-0 w-full h-full transform -rotate-90">
-          <circle cx="80" cy="80" r="70" fill="none" stroke="var(--color-bg)" strokeWidth="12" />
-          <circle cx="80" cy="80" r="70" fill="none" stroke="var(--color-accent)" strokeWidth="12" strokeDasharray={strokeDasharray} strokeDashoffset={randomOffset} strokeLinecap="round" className="transition-all duration-1000 ease-out" />
-        </svg>
-        <div className="text-center">
-          <p className="text-[11px] font-bold text-text-sub uppercase tracking-wide mb-1">Total Gastado</p>
-          <p className="text-[26px] font-black text-text leading-none mb-1">{mainSym}{mainData.total.toFixed(2)}</p>
-          {eurData && usdData && <p className="text-[15px] font-bold text-text-sub leading-none">${usdData.total.toFixed(2)}</p>}
-        </div>
+    <div style={{
+      background: '#0F0F0F',
+      borderRadius: 8,
+      padding: 18,
+      position: 'relative',
+      overflow: 'hidden',
+    }}>
+      {/* Shimmer line */}
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        height: 1,
+        overflow: 'hidden',
+      }}>
+        <div
+          className="animate-shimmer"
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '30%',
+            height: '100%',
+            background: 'linear-gradient(90deg, transparent, #E10600, transparent)',
+          }}
+        />
       </div>
 
-      <div className="w-full flex justify-between px-2">
-        <div className="text-center">
-          <p className="text-[11px] text-text-sub font-medium mb-1">Flor</p>
-          <p className="text-[14px] font-bold text-text">{mainSym}{mainData.florTotal.toFixed(2)}</p>
-        </div>
-        <div className="text-center">
-          <p className="text-[11px] text-text-sub font-medium mb-1">Ambos</p>
-          <p className="text-[14px] font-bold text-text">{mainSym}{mainData.ambosTotal.toFixed(2)}</p>
-        </div>
-        <div className="text-center">
-          <p className="text-[11px] text-text-sub font-medium mb-1">Pato</p>
-          <p className="text-[14px] font-bold text-text">{mainSym}{mainData.patoTotal.toFixed(2)}</p>
-        </div>
+      {/* TOTAL label */}
+      <span style={{
+        fontFamily: '"Azeret Mono", monospace',
+        fontSize: 10,
+        color: 'rgba(245,245,243,0.35)',
+        letterSpacing: '0.08em',
+        fontWeight: 600,
+        display: 'block',
+        marginBottom: 4,
+      }}>
+        TOTAL
+      </span>
+
+      {/* Main amount */}
+      <span style={{
+        fontFamily: '"Azeret Mono", monospace',
+        fontSize: 32,
+        fontWeight: 700,
+        color: '#E10600',
+        letterSpacing: '-1px',
+        lineHeight: 1,
+        display: 'block',
+        marginBottom: 14,
+      }}>
+        {mainSym}{mainData.total.toFixed(2)}
+      </span>
+      {eurData && usdData && (
+        <span style={{
+          fontFamily: '"Azeret Mono", monospace',
+          fontSize: 13,
+          fontWeight: 700,
+          color: '#F5F5F3',
+          display: 'block',
+          marginTop: -8,
+          marginBottom: 14,
+        }}>
+          ${usdData.total.toFixed(2)}
+        </span>
+      )}
+
+      {/* Breakdown */}
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        {[
+          { label: 'FLOR', value: mainData.florTotal },
+          { label: 'AMBOS', value: mainData.ambosTotal },
+          { label: 'PATO', value: mainData.patoTotal },
+        ].map(({ label, value }) => (
+          <div key={label}>
+            <span style={{
+              fontFamily: '"Azeret Mono", monospace',
+              fontSize: 9,
+              color: 'rgba(245,245,243,0.35)',
+              display: 'block',
+              marginBottom: 2,
+            }}>
+              {label}
+            </span>
+            <span style={{
+              fontFamily: '"Azeret Mono", monospace',
+              fontSize: 13,
+              fontWeight: 700,
+              color: '#F5F5F3',
+            }}>
+              {mainSym}{value.toFixed(2)}
+            </span>
+          </div>
+        ))}
       </div>
     </div>
   )
@@ -137,13 +200,26 @@ function CategoryBreakdown({ byCatEUR, byCatUSD }: {
   const totalRaw = categories.reduce((s, c) => s + (byCatEUR[c] ?? 0) + (byCatUSD[c] ?? 0), 0)
 
   return (
-    <div className="card px-4 py-2 border border-border bg-surface shadow-sm mb-0">
+    <div style={{
+      background: '#FFFFFF',
+      border: '1px solid #DDDDD8',
+      borderRadius: 8,
+      padding: '4px 16px',
+    }}>
+      {/* Bar */}
+      <div style={{ display: 'flex', height: 4, borderRadius: 2, overflow: 'hidden', margin: '12px 0' }}>
+        {categories.map(cat => {
+          const raw = (byCatEUR[cat] ?? 0) + (byCatUSD[cat] ?? 0)
+          const pct = totalRaw > 0 ? (raw / totalRaw) * 100 : 0
+          return (
+            <div key={cat} style={{ width: `${pct}%`, background: CATEGORY_COLORS[cat], transition: 'width 400ms ease' }} />
+          )
+        })}
+      </div>
+
       {categories.map((cat, i) => {
         const eur = byCatEUR[cat] ?? 0
         const usd = byCatUSD[cat] ?? 0
-        const raw = eur + usd
-        const pct = totalRaw > 0 ? Math.min((raw / totalRaw) * 100, 100) : 0
-        const color = CATEGORY_COLORS[cat]
         const amtLabel =
           eur > 0 && usd > 0 ? `€${eur.toFixed(2)} · $${usd.toFixed(2)}` :
             eur > 0 ? `€${eur.toFixed(2)}` :
@@ -153,16 +229,30 @@ function CategoryBreakdown({ byCatEUR, byCatUSD }: {
             key={cat}
             className={`flex items-center gap-3 py-3${i > 0 ? ' border-t border-border' : ''}`}
           >
-            <span className="flex items-center justify-center w-8 h-8 rounded-full" style={{ background: `${color}15` }}>
-              <CategoryIcon categoria={cat} size={16} color={color} />
+            <span className="flex items-center justify-center w-8 h-8 rounded-full" style={{ background: `${CATEGORY_COLORS[cat]}15` }}>
+              <CategoryIcon categoria={cat} size={16} color={CATEGORY_COLORS[cat]} />
             </span>
-            <span className="text-[13px] font-semibold text-text flex-1 min-w-0 truncate">
+            <span style={{
+              fontFamily: '"DM Sans", sans-serif',
+              fontSize: 13,
+              fontWeight: 600,
+              color: '#0F0F0F',
+              flex: 1,
+              minWidth: 0,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}>
               {CATEGORY_LABELS[cat]}
             </span>
-            <div style={{ width: 60, height: 6, borderRadius: 3, background: `${color}20`, flexShrink: 0, overflow: 'hidden' }}>
-              <div style={{ width: `${pct}%`, height: '100%', borderRadius: 3, background: color }} />
-            </div>
-            <span className="text-[13px] font-bold text-text tabular-nums text-right min-w-[60px]">
+            <span style={{
+              fontFamily: '"Azeret Mono", monospace',
+              fontSize: 13,
+              fontWeight: 700,
+              color: '#0F0F0F',
+              textAlign: 'right',
+              minWidth: 60,
+            }}>
               {amtLabel}
             </span>
           </div>
@@ -179,36 +269,67 @@ function ExpenseRow({ expense, onDelete, onEdit }: { expense: Expense; onDelete:
   const catColor = CATEGORY_COLORS[expense.categoria]
   const sym = CURRENCY_SYMBOL[expense.moneda ?? 'EUR']
   return (
-    <div className="card flex items-center mb-2 px-3 py-3 gap-3 border border-border bg-surface shadow-sm hover:shadow-md transition-shadow">
-      <span className="shrink-0 flex items-center justify-center w-10 h-10 rounded-xl" style={{ background: `${catColor}15` }}>
-        <CategoryIcon categoria={expense.categoria} color={catColor} size={20} />
+    <div
+      className="flex items-center px-4 py-3 gap-3"
+      style={{ borderBottom: '1px solid #EAEAE6' }}
+    >
+      {/* Category dot */}
+      <span style={{
+        fontFamily: '"Azeret Mono", monospace',
+        fontSize: 11,
+        fontWeight: 600,
+        color: catColor,
+        flexShrink: 0,
+      }}>
+        ●
       </span>
-      <div className="flex-1 min-w-0" onClick={onEdit}>
-        <p className="text-[14px] font-semibold text-text leading-snug truncate">
+
+      <div className="flex-1 min-w-0" onClick={onEdit} style={{ cursor: 'pointer' }}>
+        <p style={{
+          fontFamily: '"DM Sans", sans-serif',
+          fontSize: 13,
+          fontWeight: 600,
+          color: '#0F0F0F',
+          lineHeight: 1.3,
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+        }}>
           {expense.descripcion}
         </p>
-        <div className="flex items-center gap-2 mt-0.5">
-          <span className="text-[11px] font-medium text-text-sub">{formatFecha(expense.fecha)}</span>
-        </div>
-      </div>
-      <div className="flex flex-col items-end gap-1">
-        <span className="text-[15px] font-bold text-text tabular-nums">{sym}{expense.monto.toFixed(2)}</span>
         <span style={{
-          background: PERSONA_COLOR[persona], color: '#fff',
-          fontSize: 9, fontWeight: 700, letterSpacing: 0.5,
-          textTransform: 'uppercase', padding: '2px 6px', borderRadius: 4,
+          fontFamily: '"DM Sans", sans-serif',
+          fontSize: 11,
+          color: '#5A5A56',
         }}>
           {PERSONA_LABEL[persona]}
         </span>
       </div>
-      <div className="border-l border-border pl-2 border-opacity-60 overflow-hidden flex flex-col items-center">
-        <button
-          onClick={onDelete}
-          className="text-text-sub hover:text-accent opacity-50 block p-1 transition-opacity active:scale-90"
-        >
-          <svg width="12" height="12" viewBox="0 0 12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 2l8 8M10 2l-8 8" /></svg>
-        </button>
-      </div>
+
+      <span style={{
+        fontFamily: '"Azeret Mono", monospace',
+        fontSize: 14,
+        fontWeight: 700,
+        color: '#E10600',
+        flexShrink: 0,
+      }}>
+        {sym}{expense.monto.toFixed(2)}
+      </span>
+
+      <button
+        onClick={onDelete}
+        style={{
+          background: 'none',
+          border: 'none',
+          cursor: 'pointer',
+          color: '#9A9A94',
+          opacity: 0.5,
+          padding: '0 2px',
+          flexShrink: 0,
+        }}
+      >
+        <svg width="12" height="12" viewBox="0 0 12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 2l8 8M10 2l-8 8" /></svg>
+      </button>
     </div>
   )
 }
@@ -301,28 +422,26 @@ function AddExpenseModal({ open, onClose, onSave, initialValues, mode = 'add' }:
           />
         </div>
 
-        {/* Monto + moneda en la misma fila */}
+        {/* Monto + moneda */}
         <div>
           <label className="text-[11px] font-medium text-text-sub block mb-1.5">Monto</label>
           <div className="flex gap-2">
-            {/* EUR / USD toggle */}
-            <div className="flex p-0.5 gap-0.5 rounded-[10px] shrink-0" style={{ background: '#EDEAE6' }}>
+            <div className="flex p-0.5 gap-0.5 rounded-[5px] shrink-0" style={{ background: '#EAEAE6' }}>
               {(['EUR', 'USD'] as const).map(m => (
                 <button
                   key={m}
                   onClick={() => setForm(f => ({ ...f, moneda: m }))}
-                  className="px-3 h-full rounded-[8px] text-[12px] font-bold transition-all duration-150 active:scale-95"
+                  className="px-3 h-full rounded-[4px] text-[12px] font-bold transition-all duration-150 active:scale-95"
                   style={{
                     background: form.moneda === m ? '#fff' : 'transparent',
-                    color: form.moneda === m ? '#1C1917' : '#A09890',
-                    boxShadow: form.moneda === m ? '0 1px 3px rgba(28,25,23,0.10)' : 'none',
+                    color: form.moneda === m ? '#0F0F0F' : '#9A9A94',
+                    boxShadow: form.moneda === m ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
                   }}
                 >
                   {m === 'EUR' ? '€ EUR' : '$ USD'}
                 </button>
               ))}
             </div>
-            {/* Amount input */}
             <div className="relative flex-1">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[14px] font-medium text-text-sub pointer-events-none">
                 {CURRENCY_SYMBOL[form.moneda]}
@@ -345,7 +464,7 @@ function AddExpenseModal({ open, onClose, onSave, initialValues, mode = 'add' }:
 
         {/* Categoría */}
         <div>
-          <p className="text-[11px] font-bold text-text-sub uppercase tracking-wider mb-2.5">Categoría</p>
+          <p style={{ fontFamily: '"Azeret Mono", monospace', fontSize: 9, fontWeight: 700, color: '#5A5A56', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>Categoría</p>
           <div className="grid grid-cols-3 gap-1.5">
             {CATEGORIES.map(cat => {
               const selected = form.categoria === cat
@@ -356,12 +475,12 @@ function AddExpenseModal({ open, onClose, onSave, initialValues, mode = 'add' }:
                   onClick={() => setForm(f => ({ ...f, categoria: cat }))}
                   className="flex flex-col items-center gap-1 py-3 rounded-btn transition-all duration-150 active:scale-95"
                   style={{
-                    backgroundColor: selected ? `${color}18` : '#F5F3F0',
+                    backgroundColor: selected ? `${color}18` : '#EAEAE6',
                     border: `1.5px solid ${selected ? color : 'transparent'}`,
                   }}
                 >
-                  <CategoryIcon categoria={cat} size={18} color={selected ? color : '#A09890'} />
-                  <span className="text-[10px] font-bold leading-none" style={{ color: selected ? color : '#A09890' }}>
+                  <CategoryIcon categoria={cat} size={18} color={selected ? color : '#9A9A94'} />
+                  <span style={{ fontFamily: '"Azeret Mono", monospace', fontSize: 9, fontWeight: 600, color: selected ? color : '#9A9A94' }}>
                     {CATEGORY_LABELS[cat]}
                   </span>
                 </button>
@@ -374,17 +493,17 @@ function AddExpenseModal({ open, onClose, onSave, initialValues, mode = 'add' }:
 
         {/* Quién pagó */}
         <div>
-          <p className="text-[11px] font-bold text-text-sub uppercase tracking-wider mb-2.5">Quién pagó</p>
-          <div className="flex p-1 gap-1 rounded-input" style={{ background: '#EDEAE6' }}>
+          <p style={{ fontFamily: '"Azeret Mono", monospace', fontSize: 9, fontWeight: 700, color: '#5A5A56', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>Quién pagó</p>
+          <div className="flex p-1 gap-1 rounded-input" style={{ background: '#EAEAE6' }}>
             {(['flor', 'pato', 'ambos'] as const).map(p => (
               <button
                 key={p}
                 onClick={() => setForm(f => ({ ...f, persona: p }))}
-                className="flex-1 h-11 rounded-[9px] text-[13px] font-semibold transition-all duration-200 active:scale-[0.97]"
+                className="flex-1 h-11 rounded-[5px] text-[13px] font-semibold transition-all duration-200 active:scale-[0.97]"
                 style={{
                   background: form.persona === p ? PERSONA_COLOR[p] : 'transparent',
-                  color: form.persona === p ? '#fff' : '#A09890',
-                  boxShadow: form.persona === p ? '0 1px 3px rgba(28,25,23,0.10)' : 'none',
+                  color: form.persona === p ? '#fff' : '#9A9A94',
+                  boxShadow: form.persona === p ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
                 }}
               >
                 {PERSONA_LABEL[p]}
@@ -475,10 +594,10 @@ export function GastosPage({ fabTrigger }: { fabTrigger?: number }) {
   const hasExpenses = expenses.length > 0
 
   const FILTER_OPTIONS = [
-    { value: 'todos' as const, label: 'Todos', color: '#C8472A' },
-    { value: 'flor' as const, label: 'Flor', color: '#C8472A' },
-    { value: 'pato' as const, label: 'Pato', color: '#004D98' },
-    { value: 'ambos' as const, label: 'Compartido', color: '#78716C' },
+    { value: 'todos' as const, label: 'Todos' },
+    { value: 'flor' as const, label: 'Flor' },
+    { value: 'pato' as const, label: 'Pato' },
+    { value: 'ambos' as const, label: 'Compartido' },
   ]
 
   return (
@@ -508,17 +627,23 @@ export function GastosPage({ fabTrigger }: { fabTrigger?: number }) {
         {/* Filter chips */}
         {hasExpenses && (
           <div className="flex gap-2 px-1">
-            {FILTER_OPTIONS.map(({ value, label, color }) => {
+            {FILTER_OPTIONS.map(({ value, label }) => {
               const active = filterPersona === value
               return (
                 <button
                   key={value}
                   onClick={() => setFilterPersona(value)}
-                  className="px-4 h-10 rounded-full text-[13px] font-semibold transition-all duration-150"
                   style={{
-                    background: active ? color : 'transparent',
-                    color: active ? '#FFFFFF' : '#78716C',
-                    border: active ? 'none' : '1px solid #E7E2DC',
+                    fontFamily: '"DM Sans", sans-serif',
+                    fontSize: 12,
+                    fontWeight: 600,
+                    padding: '6px 14px',
+                    borderRadius: 6,
+                    background: active ? '#0F0F0F' : 'transparent',
+                    color: active ? '#FFFFFF' : '#5A5A56',
+                    border: active ? '1px solid #0F0F0F' : '1px solid #DDDDD8',
+                    cursor: 'pointer',
+                    transition: 'all 150ms',
                   }}
                 >
                   {label}
@@ -530,8 +655,18 @@ export function GastosPage({ fabTrigger }: { fabTrigger?: number }) {
 
         {/* Empty state */}
         {!loading && !hasExpenses && (
-          <div className="flex flex-col items-center gap-2 py-8 rounded-card border border-dashed border-border bg-surface">
-            <p className="text-[13px] text-text-sub text-center px-4">
+          <div style={{
+            border: '1px dashed #DDDDD8',
+            borderRadius: 8,
+            padding: '20px 16px',
+            textAlign: 'center',
+          }}>
+            <p style={{
+              fontFamily: '"DM Sans", sans-serif',
+              fontSize: 13,
+              color: '#5A5A56',
+              marginBottom: 12,
+            }}>
               Registra los gastos del viaje para llevar el balance
             </p>
             <button
@@ -545,7 +680,13 @@ export function GastosPage({ fabTrigger }: { fabTrigger?: number }) {
 
         {/* Filtered empty */}
         {hasExpenses && filterPersona !== 'todos' && filteredExpenses.length === 0 && (
-          <div className="py-6 text-center text-[13px] text-text-sub">
+          <div style={{
+            padding: '24px 0',
+            textAlign: 'center',
+            fontFamily: '"DM Sans", sans-serif',
+            fontSize: 13,
+            color: '#5A5A56',
+          }}>
             Sin gastos de {filterPersona === 'flor' ? 'Flor' : filterPersona === 'pato' ? 'Pato' : 'compartidos'} aún
           </div>
         )}
@@ -556,18 +697,33 @@ export function GastosPage({ fabTrigger }: { fabTrigger?: number }) {
             {groupedDates.map(([fecha, exps]) => (
               <div key={fecha}>
                 <div className="flex items-center gap-3 mb-2 ml-1">
-                  <span className="text-[12px] font-bold text-text bg-accent-light text-accent px-2.5 py-1 rounded-md">
+                  <span style={{
+                    fontFamily: '"Azeret Mono", monospace',
+                    fontSize: 10,
+                    fontWeight: 700,
+                    color: '#E10600',
+                    background: '#FFE8E6',
+                    padding: '3px 10px',
+                    borderRadius: 4,
+                  }}>
                     {formatFecha(fecha)}
                   </span>
                 </div>
-                {exps.map(exp => (
-                  <ExpenseRow
-                    key={exp.id}
-                    expense={exp}
-                    onDelete={() => setConfirmDeleteId(exp.id)}
-                    onEdit={() => setEditExpense(exp)}
-                  />
-                ))}
+                <div style={{
+                  background: '#FFFFFF',
+                  border: '1px solid #DDDDD8',
+                  borderRadius: 8,
+                  overflow: 'hidden',
+                }}>
+                  {exps.map(exp => (
+                    <ExpenseRow
+                      key={exp.id}
+                      expense={exp}
+                      onDelete={() => setConfirmDeleteId(exp.id)}
+                      onEdit={() => setEditExpense(exp)}
+                    />
+                  ))}
+                </div>
               </div>
             ))}
           </div>
